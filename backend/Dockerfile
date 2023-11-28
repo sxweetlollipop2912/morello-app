@@ -1,4 +1,4 @@
-FROM python:3.10.13-alpine3.18
+FROM python:3.10.13-alpine
 LABEL maintainer="morello-app"
 
 ENV PYTHONUNBUFFERED 1
