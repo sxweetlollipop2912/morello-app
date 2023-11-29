@@ -5,7 +5,7 @@ lint:
 	docker-compose run --rm app sh -c "flake8"
 
 up:
-	docker-compose up -d
+	docker-compose up
 
 down:
 	docker-compose down
