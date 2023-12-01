@@ -12,3 +12,6 @@ down:
 
 build:
 	docker-compose build
+
+startapp:
+	docker-compose run --rm app sh -c "python manage.py startapp $(name)"
