@@ -21,3 +21,12 @@ makemigrations:
 
 migrate:
 	docker-compose run --rm app sh -c "python manage.py migrate"
+
+shell:
+	docker-compose run --rm app sh -c "python manage.py shell"
+
+clean:
+	docker-compose down -v
+
+createsuperuser:
+	docker-compose run --rm app sh -c "python manage.py createsuperuser"
