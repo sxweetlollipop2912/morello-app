@@ -4,6 +4,9 @@ test:
 lint:
 	docker-compose run --rm app sh -c "flake8"
 
+check:
+	make test && make lint
+
 up:
 	docker-compose up
 
