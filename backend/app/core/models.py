@@ -5,20 +5,20 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 class UserManager(BaseUserManager):
     """Manager for users."""
 
-    def _create_user(self, email, password, **kwargs):
+    def _create_user(self, email, password, **extra_fields):
         if not email:
             raise ValueError('User must have an email address.')
 
         email = self.normalize_email(email)
-        is_staff = kwargs.pop('is_staff', False)
-        is_superuser = kwargs.pop('is_superuser', False)
+        is_staff = extra_fields.pop('is_staff', False)
+        is_superuser = extra_fields.pop('is_superuser', False)
 
         user = self.model(
             email=email,
             is_active=True,
             is_staff=is_staff,
             is_superuser=is_superuser,
-            **kwargs
+            **extra_fields
         )
         user.set_password(password)
 
