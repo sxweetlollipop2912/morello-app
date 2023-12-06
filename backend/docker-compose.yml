@@ -30,8 +30,8 @@ services:
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=password
     healthcheck:
-      test: ['CMD', 'pg_isready', '-U', 'devuser']
-      interval: 5s
+      test: ['CMD', 'pg_isready', '-q', '-U', 'devuser', '-d', 'devdb']
+      interval: 10s
       timeout: 5s
       retries: 5
 
