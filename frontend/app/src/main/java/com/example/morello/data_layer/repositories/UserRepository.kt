@@ -14,6 +14,10 @@ class UserRepository(
         it.isNotEmpty()
     }
 
+    suspend fun fetchUserDetail(userId: Int): User {
+        return remoteUserDataSource.fetchUserDetail(userId)
+    }
+
     suspend fun login(username: String, password: String) {
         val token = remoteUserDataSource.login(username, password)
         settingDataStore.setToken(token)
@@ -31,7 +35,7 @@ class UserRepository(
     suspend fun updateUserDetail(user: User) {
         TODO()
     }
-    
+
     fun getLeadedGroups(userId: Int): Flow<List<Int>> = TODO()
     fun getModeratedGroups(userId: Int): Flow<List<Int>> = TODO()
 }
