@@ -7,14 +7,18 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface ModeratorApi {
     @GET("groups/{id}/moderators")
-    suspend fun getModeratorsByGroupId(id: Int): Call<List<User>>
+    suspend fun getModeratorsByGroupId(@Path("id") id: Int): Call<List<User>>
 
     @POST("groups/{id}/moderators")
     suspend fun addModeratorToGroup(@Body moderator: User): Call<User>
 
     @DELETE("groups/{id}/moderators/{moderatorId}")
-    suspend fun deleteModeratorFromGroup(id: Int, moderatorId: Int): Call<User>
+    suspend fun deleteModeratorFromGroup(
+        @Path("id") groupId: Int,
+        @Path("moderatorId") moderatorId: Int
+    ): Call<User>
 }
