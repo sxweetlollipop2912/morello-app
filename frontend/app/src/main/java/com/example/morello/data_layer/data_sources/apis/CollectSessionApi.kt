@@ -20,6 +20,12 @@ interface CollectSessionApi {
         @Body collectSession: CollectSession
     ): Call<CollectSession>
 
+    @GET("groups/{groupId}/sessions/{sessionId}/entries")
+    suspend fun getCollectSessionEntriesBySessionId(
+        @Path("groupId") groupId: Int,
+        @Path("sessionId") sessionId: Int,
+    ): Call<List<CollectSessionEntry>>
+
     @POST("groups/{groupId}/sessions/{sessionId}/entries")
     suspend fun addCollectSessionEntry(
         @Path("groupId") groupId: Int,
