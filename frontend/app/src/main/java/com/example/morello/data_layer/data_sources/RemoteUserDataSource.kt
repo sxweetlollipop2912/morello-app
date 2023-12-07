@@ -7,6 +7,7 @@ import com.example.morello.data_layer.data_sources.apis.client.RetrofitClient
 import com.example.morello.data_layer.data_sources.apis.client.UserApi
 import com.example.morello.data_layer.data_sources.data_types.LoginRequest
 import com.example.morello.data_layer.data_sources.data_types.RegisterRequest
+import com.example.morello.data_layer.data_sources.data_types.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -44,6 +45,17 @@ class RemoteUserDataSource {
                 return@withContext res.body()!!
             } else {
                 throw Exception("Error registering")
+            }
+        }
+    }
+
+    suspend fun fetchUserDetail(userId: Int): User {
+        return withContext(ioDispatcher) {
+            val res = userApi.fetchUserDetail(userId).execute()
+            if (res.isSuccessful) {
+                return@withContext res.body()!!
+            } else {
+                throw Exception("Error fetching user detail")
             }
         }
     }
