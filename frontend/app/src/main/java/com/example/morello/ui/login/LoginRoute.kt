@@ -18,12 +18,12 @@ fun LoginRoute(
         onEmailChanged = { viewModel.updateEmail(it) },
         onPasswordChanged = { viewModel.updatePassword(it) },
         onLoginButtonClicked = { viewModel.submitLogin() },
-        onForgotPasswordClicked = { /*TODO*/ },
-        onRegisterClicked = { /*TODO*/ },
+        onForgotPasswordClicked = { viewModel.onForgotPasswordClicked() },
+        onRegisterClicked = { viewModel.onRegisterClicked() },
         onRememberMeChanged = { viewModel.setRememberMe(it) },
-        onBack = { /*TODO*/ },
-        onShowPasswordChanged = { /*TODO*/ },
+        onShowPasswordChanged = { viewModel.onShowPasswordChanged(it) },
         onGoogleLoginClicked = { /*TODO*/ },
+        onBack = { /*TODO*/ },
         modifier = modifier,
     )
 }
