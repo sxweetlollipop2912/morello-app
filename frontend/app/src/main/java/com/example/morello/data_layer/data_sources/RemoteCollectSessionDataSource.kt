@@ -21,7 +21,6 @@ class RemoteCollectSessionDataSource(
         return withContext(ioDispatcher) {
             val res =
                 collectSessionApi.getCollectSessionEntriesBySessionId(groupId, collectSessionId)
-                    .execute()
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
@@ -42,7 +41,7 @@ class RemoteCollectSessionDataSource(
                 sessionId,
                 entry.id,
                 entry
-            ).execute()
+            )
             if (!res.isSuccessful) {
                 throw Exception("Error updating collect session entry")
             }
@@ -51,7 +50,7 @@ class RemoteCollectSessionDataSource(
 
     suspend fun getCollectSessions(groupId: Int): List<CollectSession> {
         return withContext(ioDispatcher) {
-            val res = collectSessionApi.getCollectSessionsByGroupId(groupId).execute()
+            val res = collectSessionApi.getCollectSessionsByGroupId(groupId)
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
@@ -65,7 +64,7 @@ class RemoteCollectSessionDataSource(
             val res = collectSessionApi.deleteCollectSession(
                 groupId,
                 collectSessionId
-            ).execute()
+            )
             if (!res.isSuccessful) {
                 throw Exception("Error deleting collect session")
             }
@@ -78,7 +77,7 @@ class RemoteCollectSessionDataSource(
                 groupId,
                 collectSession.id,
                 collectSession
-            ).execute()
+            )
             if (!res.isSuccessful) {
                 throw Exception("Error updating collect session")
             }
@@ -90,7 +89,7 @@ class RemoteCollectSessionDataSource(
             val res = collectSessionApi.addCollectSessionToGroup(
                 groupId,
                 collectSession
-            ).execute()
+            )
             if (!res.isSuccessful) {
                 throw Exception("Error creating collect session")
             }

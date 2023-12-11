@@ -1,26 +1,28 @@
 package com.example.morello.data_layer.data_sources
 
+import android.util.Log
 import com.example.morello.data_layer.data_sources.apis.BalanceEntryApi
-import com.example.morello.data_layer.data_sources.apis.GroupApi
-import com.example.morello.data_layer.data_sources.apis.MemberApi
 import com.example.morello.data_layer.data_sources.apis.client.RetrofitClient
-import com.example.morello.data_layer.data_sources.apis.client.UserApi
+import com.example.morello.data_layer.data_sources.apis.UserApi
+import com.example.morello.data_layer.data_sources.apis.mocked_apis.MockedUserApi
 import com.example.morello.data_layer.data_sources.data_types.LoginRequest
 import com.example.morello.data_layer.data_sources.data_types.RegisterRequest
 import com.example.morello.data_layer.data_sources.data_types.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Response
 
-class RemoteUserDataSource {
-    private val retrofit = RetrofitClient.getClient()
-    private val userApi = retrofit.create(UserApi::class.java)
-    private val balanceEntryApi = retrofit.create(BalanceEntryApi::class.java)
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-
+class RemoteUserDataSource(
+    private val balanceEntryApi: BalanceEntryApi,
+    private val userApi: UserApi,
+    private val dispatcher: CoroutineDispatcher,
+) {
     suspend fun login(username: String, password: String): String {
-        return withContext(ioDispatcher) {
-            val res = userApi.login(LoginRequest(username, password)).execute()
+        return withContext(dispatcher) {
+            val res = userApi.login(LoginRequest(username, password))
+            Log.d("RemoteUserDataSource", res.toString())
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
@@ -30,8 +32,8 @@ class RemoteUserDataSource {
     }
 
     suspend fun logout() {
-        withContext(ioDispatcher) {
-            val res = userApi.logout().execute()
+        withContext(dispatcher) {
+            val res = userApi.logout()
             if (!res.isSuccessful) {
                 throw Exception("Error logging out")
             }
@@ -39,8 +41,8 @@ class RemoteUserDataSource {
     }
 
     suspend fun register(username: String, password: String, email: String): String {
-        return withContext(ioDispatcher) {
-            val res = userApi.register(RegisterRequest(username, password, email)).execute()
+        return withContext(dispatcher) {
+            val res = userApi.register(RegisterRequest(username, password, email))
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
@@ -50,13 +52,23 @@ class RemoteUserDataSource {
     }
 
     suspend fun fetchUserDetail(userId: Int): User {
-        return withContext(ioDispatcher) {
-            val res = userApi.fetchUserDetail(userId).execute()
+        return withContext(dispatcher) {
+            val res = userApi.fetchUserDetail(userId)
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
                 throw Exception("Error fetching user detail")
             }
+        }
+    }
+
+    companion object Mocked {
+        fun createMockedInstance(): RemoteUserDataSource {
+            val retrofit = RetrofitClient.getClient()
+            val balanceEntryApi = retrofit.create(BalanceEntryApi::class.java)
+            val userApi = MockedUserApi()
+            val dispatcher: CoroutineDispatcher = Dispatchers.IO
+            return RemoteUserDataSource(balanceEntryApi, userApi, dispatcher)
         }
     }
 }

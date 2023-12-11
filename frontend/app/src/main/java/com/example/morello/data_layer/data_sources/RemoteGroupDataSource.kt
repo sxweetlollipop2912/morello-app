@@ -5,6 +5,9 @@ import com.example.morello.data_layer.data_sources.apis.GroupApi
 import com.example.morello.data_layer.data_sources.apis.MemberApi
 import com.example.morello.data_layer.data_sources.apis.client.ErrorResponse
 import com.example.morello.data_layer.data_sources.apis.client.RetrofitClient
+import com.example.morello.data_layer.data_sources.apis.mocked_apis.MockedBalanceEntryApi
+import com.example.morello.data_layer.data_sources.apis.mocked_apis.MockedGroupApi
+import com.example.morello.data_layer.data_sources.apis.mocked_apis.MockedMemberApi
 import com.example.morello.data_layer.data_sources.data_types.BalanceEntry
 import com.example.morello.data_layer.data_sources.data_types.CollectSession
 import com.example.morello.data_layer.data_sources.data_types.Group
@@ -14,16 +17,16 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class RemoteGroupDataSource {
-    private val retrofit = RetrofitClient.getClient()
-    private val groupApi = retrofit.create(GroupApi::class.java)
-    private val memberApi = retrofit.create(MemberApi::class.java)
-    private val balanceEntryApi = retrofit.create(BalanceEntryApi::class.java)
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+class RemoteGroupDataSource(
+    private val groupApi: GroupApi,
+    private val memberApi: MemberApi,
+    private val balanceEntryApi: BalanceEntryApi,
+    private val dispatcher: CoroutineDispatcher,
+) {
 
     suspend fun getGroupById(id: Int): Group {
-        return withContext(ioDispatcher) {
-            val res = groupApi.getGroupById(id).execute()
+        return withContext(dispatcher) {
+            val res = groupApi.getGroupById(id)
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
@@ -33,8 +36,8 @@ class RemoteGroupDataSource {
     }
 
     suspend fun getLeader(groupId: Int): User {
-        return withContext(ioDispatcher) {
-            val res = groupApi.getLeaderByGroupId(groupId).execute()
+        return withContext(dispatcher) {
+            val res = groupApi.getLeaderByGroupId(groupId)
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
@@ -44,8 +47,8 @@ class RemoteGroupDataSource {
     }
 
     suspend fun deleteGroup(groupId: Int) {
-        withContext(ioDispatcher) {
-            val res = groupApi.deleteGroupById(groupId).execute()
+        withContext(dispatcher) {
+            val res = groupApi.deleteGroupById(groupId)
             if (!res.isSuccessful) {
                 throw Exception("Error deleting group")
             }
@@ -53,8 +56,8 @@ class RemoteGroupDataSource {
     }
 
     suspend fun createNewGroup(newGroup: Group) {
-        withContext(ioDispatcher) {
-            val res = groupApi.createGroup(newGroup).execute()
+        withContext(dispatcher) {
+            val res = groupApi.createGroup(newGroup)
             if (!res.isSuccessful) {
                 throw Exception("Error creating group")
             }
@@ -62,8 +65,8 @@ class RemoteGroupDataSource {
     }
 
     suspend fun updateGroup(updatedGroup: Group) {
-        withContext(ioDispatcher) {
-            val res = groupApi.updateGroupById(updatedGroup.id, updatedGroup).execute()
+        withContext(dispatcher) {
+            val res = groupApi.updateGroupById(updatedGroup.id, updatedGroup)
             if (!res.isSuccessful) {
                 throw Exception("Error updating group")
             }
@@ -78,8 +81,8 @@ class RemoteGroupDataSource {
     suspend fun getCollectSessions(groupId: Int): List<CollectSession> = TODO()
 
     suspend fun getMembers(groupId: Int): List<Member> {
-        return withContext(ioDispatcher) {
-            val res = memberApi.getMembersByGroupId(groupId).execute()
+        return withContext(dispatcher) {
+            val res = memberApi.getMembersByGroupId(groupId)
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
@@ -90,8 +93,8 @@ class RemoteGroupDataSource {
     }
 
     suspend fun removeMember(groupId: Int, memberId: Int) {
-        withContext(ioDispatcher) {
-            val res = memberApi.deleteMemberFromGroup(groupId, memberId).execute()
+        withContext(dispatcher) {
+            val res = memberApi.deleteMemberFromGroup(groupId, memberId)
             if (!res.isSuccessful) {
                 val err = ErrorResponse.fromResponseBody(res.errorBody())
                 throw Exception("Error removing member: ${err}}")
@@ -100,8 +103,8 @@ class RemoteGroupDataSource {
     }
 
     suspend fun addMember(groupId: Int, member: Member) {
-        withContext(ioDispatcher) {
-            val res = memberApi.addMemberToGroup(groupId, member).execute()
+        withContext(dispatcher) {
+            val res = memberApi.addMemberToGroup(groupId, member)
             if (!res.isSuccessful) {
                 val err = ErrorResponse.fromResponseBody(res.errorBody())
                 throw Exception("Error adding member: ${err}}")
@@ -110,8 +113,8 @@ class RemoteGroupDataSource {
     }
 
     suspend fun getBalanceEntries(groupId: Int): List<BalanceEntry> {
-        return withContext(ioDispatcher) {
-            val res = balanceEntryApi.getBalanceEntriesByGroupId(groupId).execute()
+        return withContext(dispatcher) {
+            val res = balanceEntryApi.getBalanceEntriesByGroupId(groupId)
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
@@ -122,8 +125,8 @@ class RemoteGroupDataSource {
     }
 
     suspend fun deleteBalanceEntry(groupId: Int, balanceEntryId: Int) {
-        withContext(ioDispatcher) {
-            val res = balanceEntryApi.deleteBalanceEntryFromGroup(groupId, balanceEntryId).execute()
+        withContext(dispatcher) {
+            val res = balanceEntryApi.deleteBalanceEntryFromGroup(groupId, balanceEntryId)
             if (!res.isSuccessful) {
                 val err = ErrorResponse.fromResponseBody(res.errorBody())
                 throw Exception("Error deleting balance entry: ${err}}")
@@ -132,10 +135,9 @@ class RemoteGroupDataSource {
     }
 
     suspend fun updateBalanceEntry(groupId: Int, balanceEntry: BalanceEntry) {
-        withContext(ioDispatcher) {
+        withContext(dispatcher) {
             val res =
                 balanceEntryApi.updateBalanceEntryInGroup(groupId, balanceEntry.id, balanceEntry)
-                    .execute()
             if (!res.isSuccessful) {
                 val err = ErrorResponse.fromResponseBody(res.errorBody())
                 throw Exception("Error updating balance entry: ${err}}")
@@ -144,12 +146,23 @@ class RemoteGroupDataSource {
     }
 
     suspend fun createBalanceEntry(groupId: Int, balanceEntry: BalanceEntry) {
-        withContext(ioDispatcher) {
-            val res = balanceEntryApi.addBalanceEntryToGroup(groupId, balanceEntry).execute()
+        withContext(dispatcher) {
+            val res = balanceEntryApi.addBalanceEntryToGroup(groupId, balanceEntry)
             if (!res.isSuccessful) {
                 val err = ErrorResponse.fromResponseBody(res.errorBody())
                 throw Exception("Error creating balance entry: ${err}}")
             }
+        }
+    }
+
+    companion object Mocked {
+        fun createMockedInstance(): RemoteGroupDataSource {
+            val retrofit = RetrofitClient.getClient()
+            val groupApi = MockedGroupApi()
+            val memberApi = MockedMemberApi()
+            val balanceEntryApi = MockedBalanceEntryApi()
+            val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+            return RemoteGroupDataSource(groupApi, memberApi, balanceEntryApi, ioDispatcher)
         }
     }
 }
