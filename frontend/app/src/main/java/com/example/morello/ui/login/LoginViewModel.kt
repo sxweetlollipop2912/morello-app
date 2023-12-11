@@ -14,6 +14,8 @@ data class LoginUiState(
     val password: String,
     val isLoading: Boolean,
     val isLoginButtonEnabled: Boolean,
+    val rememberMe: Boolean = false,
+    val showPassword: Boolean = false,
     val error: String?,
 ) {
     companion object {
@@ -22,6 +24,7 @@ data class LoginUiState(
             password = "",
             isLoading = false,
             isLoginButtonEnabled = false,
+            rememberMe = false,
             error = null
         )
     }
@@ -51,6 +54,10 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
         } else {
             _uiState.value = _uiState.value.copy(isLoginButtonEnabled = false)
         }
+    }
+
+    fun setRememberMe(rememberMe: Boolean) {
+        _uiState.value = _uiState.value.copy(rememberMe = rememberMe)
     }
 
     fun submitLogin() {
