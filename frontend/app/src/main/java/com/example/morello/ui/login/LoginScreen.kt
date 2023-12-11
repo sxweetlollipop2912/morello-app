@@ -1,9 +1,11 @@
 package com.example.morello.ui.theme.login
 
+import android.widget.Space
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +16,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -97,7 +100,14 @@ fun LoginScreen(
                 onClick = onLoginButtonClicked,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Login")
+                Text(text = "Login", fontSize = MaterialTheme.typography.headlineSmall.fontSize)
+                if (uiState.isLoading) {
+                    Spacer(modifier = Modifier.padding(4.dp))
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.secondary,
+                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    )
+                }
             }
             Spacer(modifier = Modifier.padding(spacing))
             Row(

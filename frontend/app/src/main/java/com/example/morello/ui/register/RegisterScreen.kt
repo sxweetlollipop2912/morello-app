@@ -10,9 +10,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -93,6 +95,13 @@ fun RegisterScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = "Register")
+                if (uiState.isLoading) {
+                    Spacer(modifier = Modifier.padding(4.dp))
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.secondary,
+                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    )
+                }
             }
         }
     }
