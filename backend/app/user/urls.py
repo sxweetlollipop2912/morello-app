@@ -1,12 +1,11 @@
 """
 URL mappings for the user API.
 """
-from django.urls import path
-
-from user import views
+from rest_framework.routers import DefaultRouter
+from .views import UserViewSet
 
 app_name = 'user'
+router = DefaultRouter()
+router.register(r'^', UserViewSet)
 
-urlpatterns = [
-    path('create/', views.CreateUserView.as_view(), name='create'),
-]
+urlpatterns = router.urls
