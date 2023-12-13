@@ -11,7 +11,7 @@ from user.serializers import (
 )
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.contrib.auth import authenticate, login, logout
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 # GET /users/: List all users. This corresponds to the list() method in the viewset.
 # POST /users/: Create a new user. This corresponds to the create() method in the viewset.
@@ -25,21 +25,13 @@ from django.contrib.auth import authenticate, login, logout
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('id')
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
 
-
-class LoginView(APIView):
-    def post(self, request):
-        email = request.data.get('email')
-        password = request.data.get('password')
-        user = authenticate(request, email=email, password=password)
-        if user is not None:
-            login(request, user)
-            return Response({"status": "Logged in"})
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            # Actions that require authentication
+            permission_classes = [IsAuthenticated]
         else:
-            return Response({"status": "Invalid credentials"}, status=400)
-
-
-class LogoutView(APIView):
-    def post(self, request):
-        logout(request)
-        return Response({"status": "Logged out"})
+            # Actions that don't require authentication
+            permission_classes = [AllowAny]
+        return [permission() for permission in permission_classes]
