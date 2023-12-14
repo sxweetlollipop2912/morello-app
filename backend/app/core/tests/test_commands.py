@@ -1,7 +1,5 @@
 from unittest.mock import patch
 
-from psycopg2 import OperationalError as Psycopg2OpError
-
 from django.core.management import call_command
 from django.db.utils import OperationalError
 from django.test import TestCase
@@ -16,7 +14,7 @@ class CommandTests(TestCase):
 
     def test_wait_for_database_ready(self):
         """Test waiting for database if database ready."""
-        with patch('core.management.commands.wait_for_database.Command.check') as patched_check:
+        with patch('core.management.commands.wait_for_database.Command.check') as patched_check:  # noqa
             patched_check.return_value = True
 
             call_command('wait_for_database')
@@ -25,7 +23,7 @@ class CommandTests(TestCase):
 
     def test_wait_for_database_delay(self):
         """Test waiting for database when getting OperationalError."""
-        with patch('time.sleep') as patched_sleep, patch('core.management.commands.wait_for_database.Command.check') as patched_check:
+        with patch('time.sleep') as patched_sleep, patch('core.management.commands.wait_for_database.Command.check') as patched_check:  # noqa
             patched_sleep.return_value = True
             patched_check.side_effect = [OperationalError] * 5 + [True]
 

@@ -18,7 +18,8 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_HOST=db
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:16-alpine
@@ -28,6 +29,11 @@ services:
       - POSTGRES_DB=devdb
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=password
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-q', '-U', 'devuser', '-d', 'devdb']
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   dev-postgres-data:
