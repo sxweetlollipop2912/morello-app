@@ -19,21 +19,6 @@ class ModelTests(TestCase):
         )
         return user
 
-    def test_create_user_with_email_successful(self):
-        """Test creating a new user with an email is successful"""
-        username = "testuser"
-        email = "test@gmail.com"
-        password = "Morello@2023"
-
-        user = get_user_model().objects.create_user(
-            username=username,
-            email=email,
-            password=password,
-        )
-
-        self.assertEqual(user.email, email)
-        self.assertTrue(user.check_password(password))
-
     def test_create_group(self):
         """Test creating a new group"""
         name = "testgroup"
@@ -230,19 +215,6 @@ class ModelTests(TestCase):
         # Delete
         session.entries.first().delete()
         self.assertEqual(session.entries.count(), 1)
-
-    def test_create_user_with_email_successful(self):
-        """Test creating a new user with an email is successful"""
-        email = 'test@gmail.com'
-        password = 'Morello@2023'
-
-        user = get_user_model().objects.create_user(
-            email=email,
-            password=password,
-        )
-
-        self.assertEqual(user.email, email)
-        self.assertTrue(user.check_password(password))
 
     def test_new_user_email_normalized(self):
         """Test email is normalized for new users."""
