@@ -1,6 +1,8 @@
 from .models import BalanceEntry, CollectEntry
 from rest_framework.response import Response
 from django.shortcuts import render
+from .permissions import IsGroupAdminOrModerator, IsGroupAdmin
+from rest_framework.permissions import IsAuthenticated
 
 from .models import (
     Group,
@@ -19,24 +21,50 @@ from .serializers import (
     ModeratorSerializer
 )
 from rest_framework import viewsets
-from django.db.models import Sum
+from django.db.models import (
+    Sum,
+    Q
+)
 
 # Create your views here.
 
 
-class GroupViewSet(viewsets.ModelViewSet):
+class GroupPermissionMixin:
+    def get_queryset(self):
+        user = self.request.user
+        return Group.objects.filter(
+            Q(leader_user_id=user) | Q(moderators__user_id=user)
+        ).distinct().select_related('leader_user_id')
+
+    def get_permissions(self):
+        if self.request.method in ['PUT', 'PATCH', 'DELETE']:
+            self.permission_classes = [IsAuthenticated, IsGroupAdmin]
+        else:
+            self.permission_classes = [IsAuthenticated, IsGroupAdminOrModerator]
+        return super().get_permissions()
+
+
+class GroupViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Group.objects.all().select_related('leader_user_id')
     serializer_class = GroupSerializer
 
+    def get_queryset(self):
+        user = self.request.user
+        return Group.objects.filter(
+            Q(leader_user_id=user) | Q(moderators__user_id=user)
+        ).distinct().select_related('leader_user_id')
 
-class MemberViewSet(viewsets.ModelViewSet):
+
+class MemberViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
     serializer_class = MemberSerializer
 
     def get_queryset(self):
         group_id = self.kwargs['group_pk']
+        groups = super().get_queryset()
+        if group_id not in groups.values_list('id', flat=True):
+            return Member.objects.none()  # Return an empty queryset
         return Member.objects.filter(group_id=group_id)
 
 

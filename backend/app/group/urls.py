@@ -11,7 +11,7 @@ from .views import (
 )
 
 router = routers.SimpleRouter()
-router.register(r'groups', GroupViewSet)
+router.register(r'groups', GroupViewSet, basename='groups')
 
 groups_router = routers.NestedSimpleRouter(router, r'groups', lookup='group')
 groups_router.register(r'members', MemberViewSet, basename='group-members')
