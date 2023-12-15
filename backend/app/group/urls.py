@@ -6,7 +6,7 @@ from .views import (
     MemberViewSet,
     BalanceViewSet,
     # CollectSessionViewSet,
-    # BalanceEntryViewSet,
+    BalanceEntryViewSet,
     # CollectEntryViewSet
 )
 
@@ -20,6 +20,10 @@ router.register(r'groups', GroupViewSet)
 groups_router = routers.NestedSimpleRouter(router, r'groups', lookup='group')
 groups_router.register(r'members', MemberViewSet, basename='group-members')
 groups_router.register(r'balance', BalanceViewSet, basename='group-balance')
+groups_router.register(
+    r'balance/entries',
+    BalanceEntryViewSet,
+    basename='group-balance-entries')
 
 urlpatterns = [
     path('', include(router.urls)),
