@@ -1,11 +1,6 @@
-from .models import BalanceEntry, CollectEntry
 from rest_framework.response import Response
-from django.shortcuts import render
-from .permissions import IsGroupAdminOrModerator, IsGroupAdmin
-from rest_framework.permissions import IsAuthenticated
 
 from .models import (
-    Group,
     Member,
     BalanceEntry,
     CollectEntry,
@@ -16,32 +11,17 @@ from .serializers import (
     GroupSerializer,
     MemberSerializer,
     BalanceEntrySerializer,
-    CollectEntrySerializer,
     CollectSessionSerializer,
     ModeratorSerializer
 )
 from rest_framework import viewsets
 from django.db.models import (
     Sum,
-    Q
 )
 
+from .mixins import GroupPermissionMixin
+
 # Create your views here.
-
-
-class GroupPermissionMixin:
-    def get_queryset(self):
-        user = self.request.user
-        return Group.objects.filter(
-            Q(leader_user_id=user) | Q(moderators__user_id=user)
-        ).distinct().select_related('leader_user_id')
-
-    def get_permissions(self):
-        if self.request.method in ['PUT', 'PATCH', 'DELETE']:
-            self.permission_classes = [IsAuthenticated, IsGroupAdmin]
-        else:
-            self.permission_classes = [IsAuthenticated, IsGroupAdminOrModerator]
-        return super().get_permissions()
 
 
 class GroupViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
@@ -49,12 +29,6 @@ class GroupViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
     API endpoint that allows groups to be viewed or edited.
     """
     serializer_class = GroupSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        return Group.objects.filter(
-            Q(leader_user_id=user) | Q(moderators__user_id=user)
-        ).distinct().select_related('leader_user_id')
 
 
 class MemberViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
@@ -70,7 +44,6 @@ class MemberViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
 
 class BalanceViewSet(viewsets.ViewSet):
     def list(self, request, group_pk=None):
-        print(group_pk)
         book_balance = BalanceEntry.objects.filter(
             group_id=group_pk).aggregate(
             Sum('amount'))['amount__sum']
@@ -98,7 +71,8 @@ class CollectSessionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         group_id = self.kwargs['group_pk']
-        return CollectSession.objects.filter(balance_entries__group_id=group_id)
+        return CollectSession.objects.filter(
+            balance_entries__group_id=group_id)
 
 
 class ModeratorViewSet(viewsets.ModelViewSet):

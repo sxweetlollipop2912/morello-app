@@ -7,7 +7,6 @@ from user.models import User
 from user.serializers import (
     UserSerializer,
 )
-from rest_framework.permissions import IsAuthenticated, AllowAny
 
 # GET /users/: List all users. This corresponds to the list() method in the viewset. # noqa
 # POST /users/: Create a new user. This corresponds to the create() method in the viewset. # noqa
