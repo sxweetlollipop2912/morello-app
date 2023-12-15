@@ -10,7 +10,7 @@ class MockedMemberApi : MemberApi {
     }
 
     override suspend fun addMemberToGroup(id: Int, member: Member): Response<Member> {
-        TODO("Not yet implemented")
+        return Response.success(member)
     }
 
     override suspend fun deleteMemberFromGroup(id: Int, memberId: Int): Response<Member> {
