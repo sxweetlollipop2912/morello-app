@@ -7,14 +7,16 @@ from .models import (
     Member,
     BalanceEntry,
     CollectEntry,
-    CollectSession
+    CollectSession,
+    Moderator
 )
 from .serializers import (
     GroupSerializer,
     MemberSerializer,
     BalanceEntrySerializer,
     CollectEntrySerializer,
-    CollectSessionSerializer
+    CollectSessionSerializer,
+    ModeratorSerializer
 )
 from rest_framework import viewsets
 from django.db.models import Sum
@@ -26,7 +28,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Group.objects.all()
+    queryset = Group.objects.all().select_related('leader_user_id')
     serializer_class = GroupSerializer
 
 
@@ -69,3 +71,12 @@ class CollectSessionViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         group_id = self.kwargs['group_pk']
         return CollectSession.objects.filter(balance_entries__group_id=group_id)
+
+
+class ModeratorViewSet(viewsets.ModelViewSet):
+    serializer_class = ModeratorSerializer
+
+    def get_queryset(self):
+        group_id = self.kwargs['group_pk']
+        return Moderator.objects.filter(
+            group_id=group_id).select_related('user_id')

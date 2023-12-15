@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework_nested import routers
 from .views import (
     GroupViewSet,
-    # ModeratorViewSet,
+    ModeratorViewSet,
     MemberViewSet,
     BalanceViewSet,
     CollectSessionViewSet,
@@ -12,10 +12,6 @@ from .views import (
 
 router = routers.SimpleRouter()
 router.register(r'groups', GroupViewSet)
-# router.register(r'moderators', ModeratorViewSet)
-# router.register(r'collectsessions', CollectSessionViewSet)
-# router.register(r'balanceentries', BalanceEntryViewSet)
-# router.register(r'collectentries', CollectEntryViewSet)
 
 groups_router = routers.NestedSimpleRouter(router, r'groups', lookup='group')
 groups_router.register(r'members', MemberViewSet, basename='group-members')
@@ -24,11 +20,15 @@ groups_router.register(
     r'balance/entries',
     BalanceEntryViewSet,
     basename='group-balance-entries')
-
 groups_router.register(
     r'sessions',
     CollectSessionViewSet,
     basename='group-sessions')
+groups_router.register(
+    r'moderators',
+    ModeratorViewSet,
+    basename='group-moderators')
+
 
 urlpatterns = [
     path('', include(router.urls)),
