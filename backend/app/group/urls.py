@@ -5,7 +5,7 @@ from .views import (
     # ModeratorViewSet,
     MemberViewSet,
     BalanceViewSet,
-    # CollectSessionViewSet,
+    CollectSessionViewSet,
     BalanceEntryViewSet,
     # CollectEntryViewSet
 )
@@ -24,6 +24,11 @@ groups_router.register(
     r'balance/entries',
     BalanceEntryViewSet,
     basename='group-balance-entries')
+
+groups_router.register(
+    r'sessions',
+    CollectSessionViewSet,
+    basename='group-sessions')
 
 urlpatterns = [
     path('', include(router.urls)),

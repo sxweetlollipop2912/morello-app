@@ -7,12 +7,14 @@ from .models import (
     Member,
     BalanceEntry,
     CollectEntry,
+    CollectSession
 )
 from .serializers import (
     GroupSerializer,
     MemberSerializer,
     BalanceEntrySerializer,
-    CollectEntrySerializer
+    CollectEntrySerializer,
+    CollectSessionSerializer
 )
 from rest_framework import viewsets
 from django.db.models import Sum
@@ -59,3 +61,11 @@ class BalanceEntryViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         group_id = self.kwargs['group_pk']
         return BalanceEntry.objects.filter(group_id=group_id)
+
+
+class CollectSessionViewSet(viewsets.ModelViewSet):
+    serializer_class = CollectSessionSerializer
+
+    def get_queryset(self):
+        group_id = self.kwargs['group_pk']
+        return CollectSession.objects.filter(balance_entries__group_id=group_id)
