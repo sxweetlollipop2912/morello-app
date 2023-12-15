@@ -2,7 +2,7 @@
 URL mappings for the user API.
 """
 from django.urls import path
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import SimpleRouter
 from .views import UserViewSet
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -10,7 +10,7 @@ from rest_framework_simplejwt.views import (
 )
 
 app_name = 'user'
-router = DefaultRouter()
+router = SimpleRouter()
 router.register(r'users', UserViewSet, basename='user')
 
 urlpatterns = [
