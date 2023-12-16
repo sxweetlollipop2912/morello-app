@@ -1,11 +1,7 @@
 from django.contrib import admin
-from group.models import (
+from .models import (
     Group,
-    Moderator,
-    Member,
-    CollectSession,
-    BalanceEntry,
-    CollectEntry,
+    # CollectEntry,
 )
 
 
@@ -17,8 +13,3 @@ class GroupAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Group, GroupAdmin)
-admin.site.register(Moderator)
-admin.site.register(Member)
-admin.site.register(CollectSession)
-admin.site.register(BalanceEntry)
-admin.site.register(CollectEntry)

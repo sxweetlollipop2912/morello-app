@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'user',
     'group',
+    'moderator',
+    'member',
+    'balance',
+    'collect_session',
     'rest_framework_simplejwt',
 ]
 

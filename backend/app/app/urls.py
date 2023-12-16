@@ -26,5 +26,9 @@ urlpatterns = [
         name='api-docs',
     ),
     path('api/', include('user.urls')),
-    path('api/', include('group.urls'))
+    path('api/', include('group.urls')),
+    path('api/', include('moderator.urls')),
+    path('api/', include('member.urls')),
+    path('api/', include('balance.urls')),
+    path('api/', include('collect_session.urls')),
 ]
