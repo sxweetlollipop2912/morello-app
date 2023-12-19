@@ -14,6 +14,7 @@ fun LoginRoute(
     switchToForgotPassword: () -> Unit,
     onGoogleLoginRequest: () -> Unit,
     onFacebookLoginRequest: () -> Unit,
+    onLoginSuccess: () -> Unit,
     modifier: Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -27,6 +28,7 @@ fun LoginRoute(
         onShowPasswordChanged = viewModel::updatePasswordVisibility,
         onSignInClicked = switchToSignIn,
         onGoogleLoginClicked = onGoogleLoginRequest,
+        onLoginSuccess = onLoginSuccess,
         modifier = modifier,
     )
 }

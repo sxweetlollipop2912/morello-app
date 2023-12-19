@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
@@ -23,6 +24,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
@@ -45,8 +47,12 @@ fun LoginScreen(
     onShowPasswordChanged: (Boolean) -> Unit,
     onGoogleLoginClicked: () -> Unit,
     onSignInClicked: () -> Unit,
+    onLoginSuccess: () -> Unit,
     modifier: Modifier,
 ) {
+    if (uiState.requestStatus == LoginRequestStatus.SUCCESS) {
+        onLoginSuccess()
+    }
     Scaffold(
         topBar = {
             MorelloTopBar(head = {
@@ -105,6 +111,12 @@ fun LoginScreen(
                 singleLine = true,
                 onValueChange = onEmailChanged,
                 modifier = Modifier.fillMaxWidth(),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Email,
+                        contentDescription = "Email",
+                    )
+                },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
             Spacer(modifier = Modifier.padding(spacing))
@@ -116,13 +128,20 @@ fun LoginScreen(
                 onShowPasswordChanged = onShowPasswordChanged,
             )
             Spacer(modifier = Modifier.padding(spacing))
+            if (uiState.requestStatus == LoginRequestStatus.ERROR) {
+                Text(
+                    text = uiState.error ?: "",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
             Button(
                 onClick = onLoginButtonClicked,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = "Login", fontSize = MaterialTheme.typography.headlineSmall.fontSize)
-                if (uiState.isLoading) {
+                if (uiState.requestStatus == LoginRequestStatus.LOADING) {
                     Spacer(modifier = Modifier.padding(4.dp))
                     CircularProgressIndicator(
                         color = MaterialTheme.colorScheme.secondary,

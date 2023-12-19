@@ -17,13 +17,21 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+enum class LoginRequestStatus {
+    SUCCESS,
+    ERROR,
+    LOADING,
+}
+
 data class LoginUiState(
     val email: String,
     val password: String,
     val isLoading: Boolean,
+    val loggedIn: Boolean = false,
     val isLoginButtonEnabled: Boolean,
     val rememberMe: Boolean = false,
     val showPassword: Boolean = false,
+    val requestStatus: LoginRequestStatus? = null,
     val error: String?,
 ) {
     companion object {
@@ -41,20 +49,6 @@ data class LoginUiState(
 class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState.Empty)
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            userRepository.isLoggedIn.collectLatest {
-                if (it) {
-                    Log.d("LoginViewModel", "Logged in")
-                    _uiState.value = _uiState.value.copy(isLoading = true)
-                } else {
-                    Log.d("LoginViewModel", "Not logged in")
-                    _uiState.value = _uiState.value.copy(isLoading = false)
-                }
-            }
-        }
-    }
 
     private fun shouldEnableLoginButton(): Boolean {
         return _uiState.value.email.isNotEmpty() && _uiState.value.password.isNotEmpty()
@@ -88,12 +82,16 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     fun submitLogin() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            _uiState.value = _uiState.value.copy(requestStatus = LoginRequestStatus.LOADING)
             try {
                 userRepository.login(_uiState.value.email, _uiState.value.password)
-                _uiState.value = _uiState.value.copy(isLoading = false)
+                Log.d("LoginViewModel", "Logged in")
+                _uiState.value = _uiState.value.copy(
+                    requestStatus = LoginRequestStatus.SUCCESS,
+                )
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(error = e.message)
+                _uiState.value =
+                    _uiState.value.copy(error = e.message, requestStatus = LoginRequestStatus.ERROR)
             }
         }
     }
