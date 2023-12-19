@@ -14,7 +14,7 @@ class MockedUserApi : UserApi {
         withContext(Dispatchers.IO) {
             Thread.sleep(1000)
         }
-        if (loginRequest.username == "username" && loginRequest.password == "password")
+        if (loginRequest.email == "user@gmail.com" && loginRequest.password == "password")
             return Response.success("token")
         return Response.error(401, ResponseBody.create(null, "Unauthorized"))
     }

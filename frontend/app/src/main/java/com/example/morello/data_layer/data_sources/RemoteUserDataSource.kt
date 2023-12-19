@@ -26,7 +26,7 @@ class RemoteUserDataSource(
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
-                throw Exception("Error logging in")
+                throw Exception(res.errorBody().toString())
             }
         }
     }
