@@ -50,7 +50,7 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     modifier: Modifier,
 ) {
-    if (uiState.requestStatus == LoginRequestStatus.SUCCESS) {
+    if (uiState.loginState == LoginState.Success) {
         onLoginSuccess()
     }
     Scaffold(
@@ -128,7 +128,7 @@ fun LoginScreen(
                 onShowPasswordChanged = onShowPasswordChanged,
             )
             Spacer(modifier = Modifier.padding(spacing))
-            if (uiState.requestStatus == LoginRequestStatus.ERROR) {
+            if (uiState.loginState == LoginState.Error) {
                 Text(
                     text = uiState.error ?: "",
                     style = MaterialTheme.typography.bodySmall,
@@ -137,11 +137,12 @@ fun LoginScreen(
             }
             Button(
                 onClick = onLoginButtonClicked,
+                enabled = uiState.isLoginButtonEnabled,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = "Login", fontSize = MaterialTheme.typography.headlineSmall.fontSize)
-                if (uiState.requestStatus == LoginRequestStatus.LOADING) {
+                if (uiState.loginState == LoginState.Loading) {
                     Spacer(modifier = Modifier.padding(4.dp))
                     CircularProgressIndicator(
                         color = MaterialTheme.colorScheme.secondary,

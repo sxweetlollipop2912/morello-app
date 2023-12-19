@@ -17,28 +17,26 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-enum class LoginRequestStatus {
-    SUCCESS,
-    ERROR,
-    LOADING,
+enum class LoginState {
+    Input,
+    Loading,
+    Success,
+    Error,
 }
 
 data class LoginUiState(
     val email: String,
     val password: String,
-    val isLoading: Boolean,
-    val loggedIn: Boolean = false,
     val isLoginButtonEnabled: Boolean,
     val rememberMe: Boolean = false,
     val showPassword: Boolean = false,
-    val requestStatus: LoginRequestStatus? = null,
+    val loginState: LoginState = LoginState.Input,
     val error: String?,
 ) {
     companion object {
         val Empty = LoginUiState(
             email = "",
             password = "",
-            isLoading = false,
             isLoginButtonEnabled = false,
             rememberMe = false,
             error = null
@@ -82,16 +80,17 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     fun submitLogin() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(requestStatus = LoginRequestStatus.LOADING)
+            _uiState.value = _uiState.value.copy(loginState = LoginState.Loading)
             try {
                 userRepository.login(_uiState.value.email, _uiState.value.password)
                 Log.d("LoginViewModel", "Logged in")
                 _uiState.value = _uiState.value.copy(
-                    requestStatus = LoginRequestStatus.SUCCESS,
+                    loginState = LoginState.Success,
+                    error = null
                 )
             } catch (e: Exception) {
                 _uiState.value =
-                    _uiState.value.copy(error = e.message, requestStatus = LoginRequestStatus.ERROR)
+                    _uiState.value.copy(loginState = LoginState.Error, error = e.message)
             }
         }
     }
