@@ -19,14 +19,9 @@ class UserRepository(
         return remoteUserDataSource.fetchUserDetail(userId)
     }
 
-    suspend fun login(username: String, password: String) {
-        try {
-            val token = remoteUserDataSource.login(username, password)
-            Log.d("UserRepository", "Token: $token")
-            settingDataSource.setToken(token)
-        } catch (e: Exception) {
-            Log.d("UserRepository", e.toString())
-        }
+    suspend fun login(email: String, password: String) {
+        val token = remoteUserDataSource.login(email, password)
+        settingDataSource.setToken(token)
     }
 
     suspend fun register(username: String, password: String, email: String) {
