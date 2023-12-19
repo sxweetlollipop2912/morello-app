@@ -2,11 +2,14 @@ package com.example.morello.ui.components
 
 import android.graphics.drawable.shapes.RectShape
 import android.graphics.drawable.shapes.Shape
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -19,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun PasswordFormField(
@@ -34,6 +38,13 @@ fun PasswordFormField(
         shape = MaterialTheme.shapes.medium,
         value = password,
         onValueChange = onPasswordChanged,
+        singleLine = true,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Filled.Lock,
+                contentDescription = "Password",
+            )
+        },
         visualTransformation = if (showPassword) {
             VisualTransformation.None
         } else {
@@ -42,14 +53,18 @@ fun PasswordFormField(
         modifier = Modifier.fillMaxWidth(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         suffix = {
-            IconButton(onClick = { onShowPasswordChanged(!showPassword) }) {
+            IconButton(
+                onClick = { onShowPasswordChanged(!showPassword) },
+                modifier = Modifier
+            ) {
                 Icon(
                     imageVector = if (showPassword) {
                         Icons.Filled.Favorite
                     } else {
                         Icons.Filled.FavoriteBorder
                     },
-                    contentDescription = "Show password"
+                    contentDescription = "Show password",
+                    modifier = Modifier.size(48.dp)
                 )
             }
         },
