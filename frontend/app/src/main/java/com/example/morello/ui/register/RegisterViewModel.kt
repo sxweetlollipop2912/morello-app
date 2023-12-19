@@ -10,6 +10,7 @@ data class RegisterUiState(
     val isRegisterButtonEnabled: Boolean,
     val showPassword: Boolean = false,
     val showConfirmPassword: Boolean = false,
+    val termsAndPolicyAgreed: Boolean = false,
     val error: String?,
 ) {
     companion object {
