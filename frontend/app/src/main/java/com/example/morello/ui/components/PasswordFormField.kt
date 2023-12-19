@@ -1,5 +1,7 @@
 package com.example.morello.ui.components
 
+import android.graphics.drawable.shapes.RectShape
+import android.graphics.drawable.shapes.Shape
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -7,6 +9,9 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -24,8 +29,9 @@ fun PasswordFormField(
     onShowPasswordChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    TextField(
+    OutlinedTextField(
         label = { Text(text = label) },
+        shape = MaterialTheme.shapes.medium,
         value = password,
         onValueChange = onPasswordChanged,
         visualTransformation = if (showPassword) {
@@ -46,6 +52,6 @@ fun PasswordFormField(
                     contentDescription = "Show password"
                 )
             }
-        }
+        },
     )
 }
