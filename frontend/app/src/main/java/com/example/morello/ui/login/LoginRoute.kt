@@ -24,6 +24,7 @@ fun LoginRoute(
         onShowPasswordChanged = { viewModel.onShowPasswordChanged(it) },
         onGoogleLoginClicked = { /*TODO*/ },
         onBack = { /*TODO*/ },
+        onSwitchToSignInClicked = { /*TODO*/ },
         modifier = modifier,
     )
 }
