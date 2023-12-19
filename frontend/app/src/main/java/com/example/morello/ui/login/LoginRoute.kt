@@ -10,21 +10,23 @@ import com.example.morello.ui.theme.login.LoginViewModel
 @Composable
 fun LoginRoute(
     viewModel: LoginViewModel,
+    switchToSignIn: () -> Unit,
+    switchToForgotPassword: () -> Unit,
+    onGoogleLoginRequest: () -> Unit,
+    onFacebookLoginRequest: () -> Unit,
     modifier: Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     LoginScreen(
         uiState = uiState,
-        onEmailChanged = { viewModel.updateEmail(it) },
-        onPasswordChanged = { viewModel.updatePassword(it) },
-        onLoginButtonClicked = { viewModel.submitLogin() },
-        onForgotPasswordClicked = { viewModel.onForgotPasswordClicked() },
-        onRegisterClicked = { viewModel.onRegisterClicked() },
-        onRememberMeChanged = { viewModel.setRememberMe(it) },
-        onShowPasswordChanged = { viewModel.onShowPasswordChanged(it) },
-        onGoogleLoginClicked = { /*TODO*/ },
-        onBack = { /*TODO*/ },
-        onSwitchToSignInClicked = { /*TODO*/ },
+        onEmailChanged = viewModel::updateEmail,
+        onPasswordChanged = viewModel::updatePassword,
+        onLoginButtonClicked = viewModel::submitLogin,
+        onForgotPasswordClicked = switchToForgotPassword,
+        onRememberMeChanged = viewModel::updateRememberMeStatus,
+        onShowPasswordChanged = viewModel::updatePasswordVisibility,
+        onSignInClicked = switchToSignIn,
+        onGoogleLoginClicked = onGoogleLoginRequest,
         modifier = modifier,
     )
 }

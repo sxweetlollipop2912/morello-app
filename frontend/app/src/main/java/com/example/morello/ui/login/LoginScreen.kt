@@ -1,6 +1,5 @@
 package com.example.morello.ui.theme.login
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,12 +41,10 @@ fun LoginScreen(
     onPasswordChanged: (String) -> Unit,
     onLoginButtonClicked: () -> Unit,
     onForgotPasswordClicked: () -> Unit,
-    onRegisterClicked: () -> Unit,
     onRememberMeChanged: (Boolean) -> Unit,
     onShowPasswordChanged: (Boolean) -> Unit,
     onGoogleLoginClicked: () -> Unit,
-    onSwitchToSignInClicked: () -> Unit,
-    onBack: () -> Unit,
+    onSignInClicked: () -> Unit,
     modifier: Modifier,
 ) {
     Scaffold(
@@ -80,7 +77,7 @@ fun LoginScreen(
                             fontWeight = FontWeight.Bold
                         )
                     ) {
-                        onSwitchToSignInClicked()
+                        onSignInClicked()
                     }
                 }
             })
@@ -105,6 +102,7 @@ fun LoginScreen(
                 label = { Text(text = "Email") },
                 shape = MaterialTheme.shapes.medium,
                 value = uiState.email,
+                singleLine = true,
                 onValueChange = onEmailChanged,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)

@@ -1,13 +1,11 @@
 package com.example.morello.ui.theme.login
 
 import android.util.Log
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.morello.data_layer.data_sources.RemoteUserDataSource
@@ -80,19 +78,11 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
         }
     }
 
-    fun onShowPasswordChanged(showPassword: Boolean) {
+    fun updatePasswordVisibility(showPassword: Boolean) {
         _uiState.value = _uiState.value.copy(showPassword = showPassword)
     }
 
-    fun onForgotPasswordClicked() {
-        // TODO
-    }
-
-    fun onRegisterClicked() {
-        // TODO
-    }
-
-    fun setRememberMe(rememberMe: Boolean) {
+    fun updateRememberMeStatus(rememberMe: Boolean) {
         _uiState.value = _uiState.value.copy(rememberMe = rememberMe)
     }
 
