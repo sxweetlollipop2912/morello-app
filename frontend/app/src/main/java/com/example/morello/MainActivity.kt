@@ -3,24 +3,24 @@ package com.example.morello
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.morello.ui.register.RegisterScreen
-import com.example.morello.ui.register.RegisterUiState
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.morello.ui.login.LoginRoute
+import com.example.morello.ui.register.RegisterRoute
+import com.example.morello.ui.register.RegisterViewModel
 import com.example.morello.ui.theme.MorelloTheme
-import com.example.morello.ui.theme.login.LoginScreen
-import com.example.morello.ui.theme.login.LoginUiState
+import com.example.morello.ui.theme.login.LoginViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,43 +32,41 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    var loginUiState by remember { mutableStateOf(LoginUiState.Empty) }
-//                    var registerUiState by remember { mutableStateOf(RegisterUiState.Empty) }
-//                    RegisterScreen(
-//                        uiState = registerUiState,
-//                        onEmailChanged = { registerUiState = registerUiState.copy(email = it) },
-//                        onPasswordChanged = {
-//                            registerUiState = registerUiState.copy(password = it)
-//                        },
-//                        onConfirmPasswordChanged = {
-//                            registerUiState = registerUiState.copy(confirmPassword = it)
-//                        },
-//                        onRegisterButtonClicked = { /*TODO*/ },
-//                        onShowPasswordChanged = {
-//                            registerUiState = registerUiState.copy(showPassword = it)
-//                        },
-//                        onShowConfirmPasswordChanged = {
-//                            registerUiState = registerUiState.copy(showConfirmPassword = it)
-//                        },
-//                        onNameChanged = { registerUiState = registerUiState.copy(name = it) },
-//                        onBack = { /*TODO*/ })
-                    LoginScreen(
-                        uiState = loginUiState,
-                        onEmailChanged = { loginUiState = loginUiState.copy(email = it) },
-                        onPasswordChanged = {
-                            loginUiState = loginUiState.copy(password = it)
-                        },
-                        onLoginButtonClicked = { /*TODO*/ },
-                        onBack = { /*TODO*/ },
-                        onForgotPasswordClicked = { /*TODO*/ },
-                        onRegisterClicked = { /*TODO*/ },
-                        onRememberMeChanged = { loginUiState = loginUiState.copy(rememberMe = it) },
-                        onShowPasswordChanged = {
-                            loginUiState = loginUiState.copy(showPassword = it)
-                        },
-                        onGoogleLoginClicked = { /*TODO*/ },
-                        modifier = Modifier.padding(10.dp),
-                    )
+                    val navController = rememberNavController()
+                    NavHost(
+                        navController = navController,
+                        startDestination = "register",
+                    ) {
+                        composable("login") {
+                            val viewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
+                            LoginRoute(
+                                viewModel = viewModel,
+                                switchToSignIn = {
+                                    navController.navigate("register")
+                                },
+                                switchToForgotPassword = {
+                                    navController.navigate("forgotPassword")
+                                },
+                                onGoogleLoginRequest = {
+                                    navController.navigate("login")
+                                },
+                                onFacebookLoginRequest = {
+                                    navController.navigate("login")
+                                },
+                                modifier = Modifier.padding(10.dp),
+                            )
+                        }
+                        composable("register") {
+                            val viewModel: RegisterViewModel by viewModels()
+                            RegisterRoute(
+                                viewModel = viewModel,
+                                switchToLogin = {
+                                    navController.navigate("login")
+                                },
+                                modifier = Modifier.padding(10.dp),
+                            )
+                        }
+                    }
                 }
             }
         }
