@@ -12,7 +12,6 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
@@ -20,14 +19,11 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,8 +47,7 @@ fun RegisterScreen(
     onShowPasswordChanged: (Boolean) -> Unit,
     onShowConfirmPasswordChanged: (Boolean) -> Unit,
     onAgreeTermsAndPolicyChanged: (Boolean) -> Unit,
-    onSwitchToLoginClicked: () -> Unit,
-    onBack: () -> Unit,
+    onLoginClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -74,7 +69,7 @@ fun RegisterScreen(
             }, tail = {
                 Row {
                     Text(
-                        text = "Joint us before?",
+                        text = "Joined us before?",
                         style = MaterialTheme.typography.bodySmall
                     )
                     Spacer(modifier = Modifier.padding(4.dp))
@@ -85,7 +80,7 @@ fun RegisterScreen(
                             fontWeight = FontWeight.Bold
                         )
                     ) {
-                        onRegisterButtonClicked()
+                        onLoginClicked()
                     }
                 }
             })
@@ -109,8 +104,8 @@ fun RegisterScreen(
                 label = { Text(text = "Email") },
                 shape = MaterialTheme.shapes.medium,
                 singleLine = true,
-                value = uiState.name,
-                onValueChange = onNameChanged,
+                value = uiState.email,
+                onValueChange = onEmailChanged,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 leadingIcon = {
@@ -125,7 +120,7 @@ fun RegisterScreen(
                 label = { Text(text = "Username") },
                 shape = MaterialTheme.shapes.medium,
                 singleLine = true,
-                value = uiState.name,
+                value = uiState.username,
                 onValueChange = onNameChanged,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
