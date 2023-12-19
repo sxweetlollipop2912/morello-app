@@ -45,7 +45,7 @@ class CreateGroupViewModel(
                     name = _loginUiState.value.groupName,
                     description = "",
                 ),
-                members = _loginUiState.value.membersList,
+                members = listOf()
             )
         }
     }
