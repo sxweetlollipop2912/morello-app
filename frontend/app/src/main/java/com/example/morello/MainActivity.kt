@@ -53,6 +53,9 @@ class MainActivity : ComponentActivity() {
                                 onFacebookLoginRequest = {
                                     navController.navigate("login")
                                 },
+                                onLoginSuccess = {
+                                    navController.navigate("home")
+                                },
                                 modifier = Modifier.padding(10.dp),
                             )
                         }
@@ -65,6 +68,9 @@ class MainActivity : ComponentActivity() {
                                 },
                                 modifier = Modifier.padding(10.dp),
                             )
+                        }
+                        composable("home") {
+                            Text(text = "Home")
                         }
                     }
                 }
