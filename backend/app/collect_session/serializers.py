@@ -8,7 +8,7 @@ from .models import (
 class CollectSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = CollectSession
-        fields = ['id', 'start', 'due', 'description', 'is_open']
+        fields = ['id', 'start', 'due', 'is_open']
 
 
 class CollectEntrySerializer(serializers.ModelSerializer):

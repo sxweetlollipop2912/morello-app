@@ -1,24 +1,13 @@
 # morello-app
 
-## See all endpoints
+# Authorized
 
-Go to `127.0.0.1:8000/api/docs/`
+[Group Endpoints](./backend/app/group/README.md)
 
-## How to login
+[Moderator Endpoints](./backend/app/moderator/README.md)
 
-First send a request to the server to get the access and refresh tokens:
+[User Endpoints](./backend/app/user/README.md)
 
-```bash
-POST 127.0.0.1:8000/api/users/token/
-Body:
-{
-    "email": "admin@morello.app",
-    "password": "admin"
-}
-```
+[Member Endpoints](./backend/app/member/README.md)
 
-Then for authorized requests, include Authorization header with the access token:
-
-```bash
-Authorization: Bearer <access_token>
-```
+[Balance Endpoints](./backend/app/balance/README.md)

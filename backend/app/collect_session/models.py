@@ -7,7 +7,6 @@ from member.models import Member
 class CollectSession(models.Model):
     start = models.DateTimeField()
     due = models.DateTimeField()
-    description = models.CharField(max_length=255)
     is_open = models.BooleanField(default=True)
 
 
