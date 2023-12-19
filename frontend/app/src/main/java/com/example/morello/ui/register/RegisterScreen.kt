@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -107,19 +108,33 @@ fun RegisterScreen(
             OutlinedTextField(
                 label = { Text(text = "Email") },
                 shape = MaterialTheme.shapes.medium,
+                singleLine = true,
                 value = uiState.name,
                 onValueChange = onNameChanged,
                 modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.MailOutline,
+                        contentDescription = "Email",
+                    )
+                }
             )
             Spacer(modifier = Modifier.padding(spacing))
             OutlinedTextField(
                 label = { Text(text = "Username") },
                 shape = MaterialTheme.shapes.medium,
+                singleLine = true,
                 value = uiState.name,
                 onValueChange = onNameChanged,
                 modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Username",
+                    )
+                }
             )
             Spacer(modifier = Modifier.padding(spacing))
             PasswordFormField(
