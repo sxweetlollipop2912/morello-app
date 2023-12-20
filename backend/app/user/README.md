@@ -36,7 +36,7 @@ None
 {
     "name": <string>,
     "password": <string>,
-    @optional "avatar_url": <url>,
+    @optional "avatar": // TODO: how to send image to the server?,
 }
 ```
 
@@ -52,7 +52,7 @@ None
 
 ---
 
-### Delete a specific moderator
+### Delete the current user profile
 
 `DELETE /me/`
 

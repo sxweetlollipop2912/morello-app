@@ -96,7 +96,7 @@ None
 
 ---
 
-### Update/Archive a specific member
+### Update/Archive/Unarchive a specific member
 
 `PUT/PATCH /<int:member_id>/`
 

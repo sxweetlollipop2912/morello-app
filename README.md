@@ -11,3 +11,5 @@
 [Member Endpoints](./backend/app/member/README.md)
 
 [Balance Endpoints](./backend/app/balance/README.md)
+
+[Collect Session Endpoints](./backend/app/collect_session/README.md)
