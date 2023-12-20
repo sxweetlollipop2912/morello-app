@@ -34,7 +34,6 @@ None
     "name": <string>,
     "amount": <float>,
     "description": <string>,
-    "created_at": <datetime>,
     @optional "session": {
         "start": <datetime>,
         "due": <datetime>,

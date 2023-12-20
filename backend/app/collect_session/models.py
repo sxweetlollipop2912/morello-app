@@ -8,6 +8,7 @@ class CollectSession(models.Model):
     start = models.DateTimeField()
     due = models.DateTimeField()
     is_open = models.BooleanField(default=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
 
 
 class CollectEntry(models.Model):
@@ -20,4 +21,6 @@ class CollectEntry(models.Model):
         on_delete=models.CASCADE,
         related_name='collect_entries')
     status = models.BooleanField(default=False)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        unique_together = ('session_id', 'member_id')
