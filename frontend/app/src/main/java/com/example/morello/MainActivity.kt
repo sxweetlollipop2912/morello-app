@@ -10,17 +10,28 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.morello.ui.create_balance_entry.CreateExpenseScreen
+import com.example.morello.ui.create_balance_entry.CreateIncomeScreen
+import com.example.morello.ui.forgot_password.ForgotPasswordCodeValidationScreen
+import com.example.morello.ui.forgot_password.ForgotPasswordEmailScreen
 import com.example.morello.ui.login.LoginRoute
 import com.example.morello.ui.register.RegisterRoute
 import com.example.morello.ui.register.RegisterViewModel
 import com.example.morello.ui.theme.MorelloTheme
 import com.example.morello.ui.theme.login.LoginViewModel
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.Date
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +46,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = "register",
+                        startDestination = "createBalanceEntry/income",
                     ) {
                         composable("login") {
                             val viewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
@@ -71,6 +82,61 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("home") {
                             Text(text = "Home")
+                        }
+                        composable("forgotPassword") {
+                            ForgotPasswordEmailScreen(
+                                email = "",
+                                onEmailChanged = {},
+                                onEmailSent = {
+                                    navController.navigate("forgotPassword/code")
+                                },
+                                onLoginClicked = { /*TODO*/ },
+                                onBack = { },
+                                modifier = Modifier.padding(10.dp),
+                            )
+                        }
+                        composable("forgotPassword/code") {
+                            ForgotPasswordCodeValidationScreen(
+                                email = "ltp@gmail.com",
+                                onBack = { /*TODO*/ })
+                        }
+                        composable("createBalanceEntry/expense") {
+                            var dateTime by remember { mutableStateOf(LocalDateTime.now()) }
+                            var amount by remember { mutableStateOf(100) }
+                            var name by remember { mutableStateOf("") }
+                            CreateExpenseScreen(
+                                amount = amount,
+                                balanceAfter = 1000 - amount,
+                                name = name,
+                                description = "Nothing",
+                                dateTime = dateTime,
+                                onBalanceChanged = { amount = it },
+                                onNameChanged = { name = it },
+                                onDescriptionChanged = {},
+                                onDateTimeChanged = { dateTime = it },
+                                onCreate = {},
+                                onBack = {},
+                                modifier = Modifier.padding(10.dp)
+                            )
+                        }
+                        composable("createBalanceEntry/income") {
+                            var dateTime by remember { mutableStateOf(LocalDateTime.now()) }
+                            var amount by remember { mutableStateOf(100) }
+                            var name by remember { mutableStateOf("") }
+                            CreateIncomeScreen(
+                                amount = amount,
+                                balanceAfter = 1000 - amount,
+                                name = name,
+                                description = "Nothing",
+                                dateTime = dateTime,
+                                onBalanceChanged = { amount = it },
+                                onNameChanged = { name = it },
+                                onDescriptionChanged = {},
+                                onDateTimeChanged = { dateTime = it },
+                                onCreate = {},
+                                onBack = {},
+                                modifier = Modifier.padding(10.dp)
+                            )
                         }
                     }
                 }
