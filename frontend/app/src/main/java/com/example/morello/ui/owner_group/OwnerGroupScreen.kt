@@ -64,12 +64,7 @@ data object OwnerGroupScreen {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OwnerGroupScreen(
-    groupBalance: Int,
-    afterCollectingBalance: Int,
-    subCollections: List<OwnerGroupScreen.CollectSessionInfo>,
-    subTransactions: List<OwnerGroupScreen.TransactionInfo>,
-    subMembers: List<OwnerGroupScreen.MemberInfo>,
-    subModerators: List<OwnerGroupScreen.ModeratorInfo>,
+    uiState: OwnerGroupUiState,
     onSeeAllModeratorClicked: () -> Unit,
     onSeeAllMemberClicked: () -> Unit,
     onSeeAllTransactionClicked: () -> Unit,
@@ -83,6 +78,14 @@ fun OwnerGroupScreen(
 ) {
     val scrollState = rememberScrollState()
     var fabExpanded by remember { mutableStateOf(false) }
+    val (
+        groupBalance,
+        afterCollectingBalance,
+        subCollections,
+        subTransactions,
+        subMembers,
+        subModerators,
+    ) = uiState
     Scaffold(
         modifier = modifier,
         floatingActionButton = {
