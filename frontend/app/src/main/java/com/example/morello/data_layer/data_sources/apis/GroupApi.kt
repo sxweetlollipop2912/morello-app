@@ -2,6 +2,7 @@ package com.example.morello.data_layer.data_sources.apis
 
 import com.example.morello.data_layer.data_sources.data_types.Group
 import com.example.morello.data_layer.data_sources.data_types.Member
+import com.example.morello.data_layer.data_sources.data_types.NewGroup
 import com.example.morello.data_layer.data_sources.data_types.User
 import retrofit2.Call
 import retrofit2.Response
@@ -26,5 +27,5 @@ interface GroupApi {
     suspend fun deleteGroupById(@Path("id") id: Int): Response<Group>
 
     @POST("groups")
-    suspend fun createGroup(@Body group: Group): Response<Group>
+    suspend fun createGroup(@Body group: NewGroup): Response<Group>
 }

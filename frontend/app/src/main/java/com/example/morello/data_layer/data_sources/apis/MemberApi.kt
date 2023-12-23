@@ -1,6 +1,8 @@
 package com.example.morello.data_layer.data_sources.apis
 
 import com.example.morello.data_layer.data_sources.data_types.Member
+import com.example.morello.data_layer.data_sources.data_types.NewMember
+import com.example.morello.data_layer.data_sources.data_types.UpdatedMember
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -17,7 +19,7 @@ interface MemberApi {
     @POST("groups/{id}/members")
     suspend fun addMemberToGroup(
         @Path("id") id: Int,
-        @Body member: Member,
+        @Body member: NewMember,
     ): Response<Member>
 
     @DELETE("groups/{id}/members/{memberId}")
@@ -30,6 +32,6 @@ interface MemberApi {
     suspend fun updateMemberInGroup(
         @Path("id") id: Int,
         @Path("memberId") memberId: Int,
-        @Body member: Member,
+        @Body member: UpdatedMember,
     ): Response<Member>
 }

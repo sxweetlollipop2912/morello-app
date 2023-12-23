@@ -12,6 +12,7 @@ import com.example.morello.data_layer.data_sources.data_types.BalanceEntry
 import com.example.morello.data_layer.data_sources.data_types.CollectSession
 import com.example.morello.data_layer.data_sources.data_types.Group
 import com.example.morello.data_layer.data_sources.data_types.Member
+import com.example.morello.data_layer.data_sources.data_types.NewGroup
 import com.example.morello.data_layer.data_sources.data_types.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -55,7 +56,7 @@ class RemoteGroupDataSource(
         }
     }
 
-    suspend fun createNewGroup(newGroup: Group) {
+    suspend fun createNewGroup(newGroup: NewGroup) {
         withContext(dispatcher) {
             val res = groupApi.createGroup(newGroup)
             if (!res.isSuccessful) {
