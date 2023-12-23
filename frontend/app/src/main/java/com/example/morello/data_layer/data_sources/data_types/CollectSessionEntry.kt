@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class CollectSessionEntry(
     @JsonProperty("id") val id: Int,
+    @JsonProperty("name") val name: String,
     @JsonProperty("collect_session") val collectSession: String,
-    @JsonProperty("member") val member: String,
     @JsonProperty("paid") val paid: Boolean,
-    @JsonProperty("amount") val amount: Int,
+    @JsonProperty("is_open") val isOpen: Boolean,
+    @JsonProperty("due") val due: String,
+    @JsonProperty("due_amount") val dueAmount: Int,
 )
