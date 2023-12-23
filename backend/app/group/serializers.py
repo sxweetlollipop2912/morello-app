@@ -4,6 +4,7 @@ from .models import (
 )
 from collect_session.models import CollectSession
 from collect_session.serializers import OpenCollectSessionOverviewSerializer
+from balance.serializers import BalanceEntrySerializer
 
 
 class GroupListSerializer(serializers.ModelSerializer):
@@ -27,72 +28,11 @@ class GroupCreateSerializer(serializers.ModelSerializer):
         }
 
 
-# {
-#     "id": <int>,
-#     "name": <string>,
-#     "description": <string>,
-#     "member_count": <int>,
-#     "balance": {
-#         "current": <float>,
-#         "expected": <float>,
-#     },
-#     "recent_open_sessions": [ // contains at most <open_session_count> sessions
-#         {
-#             "id": <ID>,
-#             "name": <string>,
-#             "start": <datetime>,
-#             "due": <datetime>,
-#             "is_open": <bool>,
-#             "member_count": <int>,
-#             "paid_count": <int>,
-#             "current_amount": <float>,
-#             "expected_amount": <float>,
-#             "amount_per_member": <float>,
-#         },
-#         {
-#             "id": <ID>,
-#             "name": <string>,
-#             "start": <datetime>,
-#             "due": <datetime>,
-#             "is_open": <bool>,
-#             "member_count": <int>,
-#             "paid_count": <int>,
-#             "current_amount": <float>,
-#             "expected_amount": <float>,
-#             "amount_per_member": <float>,
-#         },
-#     ],
-#     "recent_balance_entries": [ // contains at most <balance_entry_count> balance entries
-#         {
-#             "id": <ID>,
-#             "current_amount": <float>,
-#             "expected_amount": <float>,
-#             "description": <string>,
-#             "created_at": <datetime>,
-#             "session": {
-#                 "id": <ID>,
-#                 "start": <datetime>,
-#                 "due": <datetime>,
-#                 "is_open": <bool>,
-#                 "member_count": <int>,
-#                 "paid_count": <int>,
-#                 "amount_per_member": <float>,
-#             },
-#         },
-#         {
-#             "id": <ID>,
-#             "current_amount": <float>,
-#             "expected_amount": <float>,
-#             "description": <string>,
-#             "created_at": <datetime>,
-#             @optional "session": NULL,
-#         },
-#     ],
-#     @optional "avatar_url": <url>,
-# }
 class GroupDetailSerializer(serializers.ModelSerializer):
     recent_open_sessions = serializers.SerializerMethodField()
+    recent_balance_entries = serializers.SerializerMethodField()
     DEFAULT_OPEN_SESSION_COUNT = 5
+    DEFAULT_OPEN_BALANCE_ENTRY_COUNT = 5
 
     class Meta:
         model = Group
@@ -103,6 +43,7 @@ class GroupDetailSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
             "recent_open_sessions",
+            "recent_balance_entries",
         ]
 
     def get_recent_open_sessions(self, obj):
@@ -116,6 +57,16 @@ class GroupDetailSerializer(serializers.ModelSerializer):
         return OpenCollectSessionOverviewSerializer(
             recent_open_sessions, many=True
         ).data
+
+    def get_recent_balance_entries(self, obj):
+        balance_entry_count = self.context["request"].query_params.get(
+            "balance_entry_count", self.DEFAULT_OPEN_BALANCE_ENTRY_COUNT
+        )
+
+        recent_balance_entries = obj.balance_entries.order_by("-recorded_at")[
+            :balance_entry_count
+        ]
+        return BalanceEntrySerializer(recent_balance_entries, many=True).data
 
 
 class GroupUpdateSerializer(serializers.ModelSerializer):

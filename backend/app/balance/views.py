@@ -12,6 +12,7 @@ from rest_framework.response import Response
 
 class BalanceViewSet(viewsets.ViewSet):
     def list(self, request, group_pk=None):
+        # TODO: fix the logic of book_balance and actual_balance
         book_balance = BalanceEntry.objects.filter(group_id=group_pk).aggregate(
             Sum("amount")
         )["amount__sum"]

@@ -12,16 +12,7 @@ class BalanceEntrySerializer(serializers.ModelSerializer):
             "name",
             "amount",
             "description",
-            "date",
-        ]
-
-
-class BalanceEntryCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BalanceEntry
-        fields = [
-            "name",
-            "amount",
-            "date",
-            "description",
+            "recorded_at",
+            "created_at",
+            "updated_at",
         ]
