@@ -14,8 +14,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.example.morello.MorelloApp
 import com.example.morello.ui.create_balance_entry.CreateExpenseRoute
 import com.example.morello.ui.create_balance_entry.CreateExpenseScreen
@@ -24,10 +27,59 @@ import com.example.morello.ui.forgot_password.ForgotPasswordCodeValidationScreen
 import com.example.morello.ui.forgot_password.ForgotPasswordEmailScreen
 import com.example.morello.ui.login.LoginRoute
 import com.example.morello.ui.login.LoginViewModel
+import com.example.morello.ui.owner_group.OwnerGroupRoute
+import com.example.morello.ui.owner_group.OwnerGroupViewModel
 import com.example.morello.ui.register.RegisterRoute
 import com.example.morello.ui.register.RegisterViewModel
 import dagger.hilt.android.internal.lifecycle.HiltViewModelFactory
 import dagger.hilt.android.internal.lifecycle.HiltViewModelMap
+
+fun NavGraphBuilder.ownerGroupHomeGraph(
+    groupId: Int,
+    viewModelProvider: ViewModelProvider,
+    navController: NavHostController,
+) {
+    navigation(
+        startDestination = "groupOwnerHome",
+        route = "home",
+    ) {
+        composable("groupOwnerHome") {
+            OwnerGroupRoute(
+                groupId = groupId,
+                viewModel = viewModelProvider[OwnerGroupViewModel::class.java],
+                onAddNewIncomeEntry = {
+                    navController.navigate("createBalanceEntry/income")
+                },
+                onAddNewExpenseEntry = {
+                    navController.navigate("createBalanceEntry/expense")
+                },
+                onAddNewMember = {
+                    navController.navigate("addMember")
+                },
+                onBack = {
+                    navController.popBackStack()
+                })
+        }
+        composable("createBalanceEntry/expense") {
+            CreateExpenseRoute(
+                groupId = groupId,
+                viewModel = viewModelProvider[CreateExpenseViewModel::class.java],
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable("createBalanceEntry/income") {
+            CreateExpenseRoute(
+                groupId = groupId,
+                viewModel = viewModelProvider[CreateExpenseViewModel::class.java],
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+    }
+}
 
 
 @Composable
@@ -72,9 +124,6 @@ fun MorelloNavHost(
                 modifier = Modifier.padding(10.dp),
             )
         }
-        composable("home") {
-            Text(text = "Home")
-        }
         composable("forgotPassword") {
             ForgotPasswordEmailScreen(
                 email = "",
@@ -92,28 +141,10 @@ fun MorelloNavHost(
                 email = "ltp@gmail.com",
                 onBack = { /*TODO*/ })
         }
-        composable("createBalanceEntry/expense") {
-            CreateExpenseRoute(
-                groupId = 1,
-                viewModel = viewModelProvider[CreateExpenseViewModel::class.java],
-                onBack = { /*TODO*/ },
-            )
-        }
-//        composable("createBalanceEntry/income") {
-//            CreateIncomeScreen(
-//                amount = amount,
-//                balanceAfter = 1000 - amount,
-//                name = name,
-//                description = "Nothing",
-//                dateTime = dateTime,
-//                onBalanceChanged = { amount = it },
-//                onNameChanged = { name = it },
-//                onDescriptionChanged = {},
-//                onDateTimeChanged = { dateTime = it },
-//                onCreate = {},
-//                onBack = {},
-//                modifier = Modifier.padding(10.dp)
-//            )
-//        }
+        ownerGroupHomeGraph(
+            groupId = 1,
+            viewModelProvider = viewModelProvider,
+            navController = navController,
+        )
     }
 }
