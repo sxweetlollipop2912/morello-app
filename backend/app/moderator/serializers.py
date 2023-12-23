@@ -7,7 +7,7 @@ class ModeratorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Moderator
-        fields = ["id", "user_id", "user_email", "group_id", "created_at"]
+        fields = ["id", "user_id", "user_email", "group_id", "created_at", "updated_at"]
 
     def get_user_email(self, obj):
         return obj.user_id.email
