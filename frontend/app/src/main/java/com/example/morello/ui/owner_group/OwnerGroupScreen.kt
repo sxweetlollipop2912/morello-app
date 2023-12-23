@@ -77,11 +77,17 @@ fun OwnerGroupScreen(
     onSeeAllMemberClicked: () -> Unit,
     onSeeAllTransactionClicked: () -> Unit,
     onSeeAllCollectSessionClicked: () -> Unit,
+    onAddNewExpenseEntry: () -> Unit,
+    onAddNewIncomeEntry: () -> Unit,
+    onAddNewMember: () -> Unit,
+    onAddNewModerator: () -> Unit,
     onBack: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
     var fabExpanded by remember { mutableStateOf(false) }
     Scaffold(
+        modifier = modifier,
         floatingActionButton = {
             Box(
                 modifier = Modifier
@@ -105,11 +111,11 @@ fun OwnerGroupScreen(
                             Icon(Icons.Default.Add, contentDescription = "Expand")
                         }
                         Spacer(modifier = Modifier.padding(10.dp))
-                        FloatingActionButton(onClick = { /*TODO*/ }) {
+                        FloatingActionButton(onClick = onAddNewExpenseEntry) {
                             Icon(Icons.Default.Add, contentDescription = "Expand")
                         }
                         Spacer(modifier = Modifier.padding(10.dp))
-                        FloatingActionButton(onClick = { /*TODO*/ }) {
+                        FloatingActionButton(onClick = onAddNewIncomeEntry) {
                             Icon(Icons.Default.Add, contentDescription = "Expand")
                         }
                         Spacer(modifier = Modifier.padding(10.dp))
