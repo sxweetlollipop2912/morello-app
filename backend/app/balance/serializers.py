@@ -9,9 +9,24 @@ class BalanceEntrySerializer(serializers.ModelSerializer):
         model = BalanceEntry
         fields = [
             'id',
-            'group_id',
+            'name',
             'amount',
             'description',
             'date',
-            'session_id'
         ]
+
+
+class BalanceEntryCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BalanceEntry
+        fields = [
+            'name',
+            'amount',
+            'date',
+            'description',
+        ]
+
+    def validate(self, data):
+        if data['amount'] <= 0:
+            raise serializers.ValidationError("Amount must be greater than 0")
+        return data
