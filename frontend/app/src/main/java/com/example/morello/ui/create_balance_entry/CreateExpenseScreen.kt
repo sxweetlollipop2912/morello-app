@@ -41,11 +41,7 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateExpenseScreen(
-    amount: Int,
-    balanceAfter: Int,
-    name: String,
-    description: String,
-    dateTime: LocalDateTime,
+    uiState: CreateExpenseUiState,
     onAmountChanged: (Int) -> Unit,
     onNameChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
@@ -57,6 +53,7 @@ fun CreateExpenseScreen(
     var datePickerDisplayed by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    val (amount, balanceAfter, name, description, dateTime, state, error) = uiState
     Scaffold(
         topBar = {
             CreateBalanceEntryTopBar(
@@ -75,6 +72,25 @@ fun CreateExpenseScreen(
             val titleTextStyle = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Bold,
             )
+            if (state == State.Error) {
+                Text(
+                    text = error!!,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.error
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                )
+                Spacer(modifier = Modifier.padding(8.dp))
+            } else if (state == State.Submitting) {
+                Text(
+                    text = "Submitting...",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                )
+                Spacer(modifier = Modifier.padding(8.dp))
+            }
             FixedSignNumberEditField(
                 value = amount.toUInt(),
                 negativeSign = true,

@@ -6,8 +6,10 @@ import com.example.morello.data_layer.data_sources.data_types.BalanceEntry
 import com.example.morello.data_layer.data_sources.data_types.CollectSession
 import com.example.morello.data_layer.data_sources.data_types.Group
 import com.example.morello.data_layer.data_sources.data_types.Member
+import com.example.morello.data_layer.data_sources.data_types.NewBalanceEntry
 import com.example.morello.data_layer.data_sources.data_types.NewGroup
 import com.example.morello.data_layer.data_sources.data_types.NewMember
+import com.example.morello.data_layer.data_sources.data_types.UpdatedBalanceEntry
 import com.example.morello.data_layer.data_sources.data_types.User
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -38,8 +40,20 @@ class GroupRepository @Inject constructor(
     suspend fun removeMember(groupId: Int, memberId: Int): Nothing = TODO()
     suspend fun addMember(groupId: Int, memberId: Int): Nothing = TODO()
 
-    fun getBalanceEntries(groupId: Int): Flow<List<BalanceEntry>> = TODO()
+    suspend fun getBalanceEntries(groupId: Int): List<BalanceEntry> {
+        return remoteGroupDataSource.getBalanceEntries(groupId)
+    }
+
     suspend fun deleteBalanceEntry(groupId: Int, balanceEntryId: Int): Nothing = TODO()
-    suspend fun updateBalanceEntry(groupId: Int, balanceEntry: BalanceEntry): Nothing = TODO()
-    suspend fun createBalanceEntry(groupId: Int, balanceEntry: BalanceEntry): Nothing = TODO()
+    suspend fun updateBalanceEntry(
+        groupId: Int,
+        balanceEntryId: Int,
+        balanceEntry: UpdatedBalanceEntry
+    ) {
+        remoteGroupDataSource.updateBalanceEntry(groupId, balanceEntryId, balanceEntry)
+    }
+
+    suspend fun createBalanceEntry(groupId: Int, balanceEntry: NewBalanceEntry) {
+        remoteGroupDataSource.createBalanceEntry(groupId, balanceEntry)
+    }
 }
