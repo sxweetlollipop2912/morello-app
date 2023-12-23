@@ -5,21 +5,42 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('member', '0001_initial'),
-        ('collect_session', '0001_initial'),
+        ("member", "0001_initial"),
+        ("collect_session", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CollectEntry',
+            name="CollectEntry",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.BooleanField(default=False)),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('member_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='collect_entries', to='member.member')),
-                ('session_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='collect_entries', to='collect_session.collectsession')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("status", models.BooleanField(default=False)),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=10)),
+                (
+                    "member_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="collect_entries",
+                        to="member.member",
+                    ),
+                ),
+                (
+                    "session_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="collect_entries",
+                        to="collect_session.collectsession",
+                    ),
+                ),
             ],
         ),
     ]

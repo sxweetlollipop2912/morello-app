@@ -4,66 +4,65 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0002_collectsessionmodel_groupmodel_usermodel_and_more'),
+        ("core", "0002_collectsessionmodel_groupmodel_usermodel_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='collectentrymodel',
-            name='member_id',
+            model_name="collectentrymodel",
+            name="member_id",
         ),
         migrations.RemoveField(
-            model_name='collectentrymodel',
-            name='session_id',
+            model_name="collectentrymodel",
+            name="session_id",
         ),
         migrations.RemoveField(
-            model_name='groupmodel',
-            name='leader_user_id',
+            model_name="groupmodel",
+            name="leader_user_id",
         ),
         migrations.RemoveField(
-            model_name='membermodel',
-            name='group_id',
+            model_name="membermodel",
+            name="group_id",
         ),
         migrations.RemoveField(
-            model_name='moderatormodel',
-            name='group_id',
+            model_name="moderatormodel",
+            name="group_id",
         ),
         migrations.RemoveField(
-            model_name='moderatormodel',
-            name='user_id',
+            model_name="moderatormodel",
+            name="user_id",
         ),
         migrations.RemoveField(
-            model_name='user',
-            name='groups',
+            model_name="user",
+            name="groups",
         ),
         migrations.RemoveField(
-            model_name='user',
-            name='user_permissions',
+            model_name="user",
+            name="user_permissions",
         ),
         migrations.DeleteModel(
-            name='BalanceEntryModel',
+            name="BalanceEntryModel",
         ),
         migrations.DeleteModel(
-            name='CollectEntryModel',
+            name="CollectEntryModel",
         ),
         migrations.DeleteModel(
-            name='CollectSessionModel',
+            name="CollectSessionModel",
         ),
         migrations.DeleteModel(
-            name='GroupModel',
+            name="GroupModel",
         ),
         migrations.DeleteModel(
-            name='MemberModel',
+            name="MemberModel",
         ),
         migrations.DeleteModel(
-            name='ModeratorModel',
+            name="ModeratorModel",
         ),
         migrations.DeleteModel(
-            name='User',
+            name="User",
         ),
         migrations.DeleteModel(
-            name='UserModel',
+            name="UserModel",
         ),
     ]

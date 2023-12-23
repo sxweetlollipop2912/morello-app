@@ -52,7 +52,6 @@ Or if a `Session` is opened with this `Balance Entry`:
 }
 ```
 
-
 #### Response
 
 ```json
@@ -110,11 +109,29 @@ None
 
 #### Request Body
 
+Create a session when updating a balance entry:
+
 ```json
 {
     "name": <string>,
     "description": <string>,
-    "amount": <float>, // only updatable if this Balance Entry has no Session
+    "session": {
+        "start": <datetime>,
+        "due": <datetime>,
+        "amount_per_member": <float>,
+        @optional "member_ids": [<ID>, <ID>, ...],
+    },
+}
+```
+
+Delete a session when updating a balance entry:
+
+```json
+{
+    "name": <string>,
+    "description": <string>,
+    "amount": <float>, // required
+    "session": null,
 }
 ```
 

@@ -7,4 +7,4 @@ from .models import (
 class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ['id', 'group_id', 'name', 'created_at']
+        fields = ["id", "group_id", "name", "created_at"]

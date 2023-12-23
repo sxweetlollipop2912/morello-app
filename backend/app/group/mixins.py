@@ -1,22 +1,14 @@
-from django.db.models import Q
 from .models import (
     Group,
 )
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, SAFE_METHODS
 from .permissions import IsGroupAdminOrModerator, IsGroupAdmin
 
 
 class GroupPermissionMixin:
-    def get_queryset(self):
-        user = self.request.user
-        return Group.objects.filter(
-            Q(leader_user_id=user) | Q(moderators__user_id=user)
-        ).distinct().select_related('leader_user_id')
-
     def get_permissions(self):
-        if self.request.method in ['PUT', 'PATCH', 'DELETE']:
-            self.permission_classes = [IsAuthenticated, IsGroupAdmin]
+        if self.request.method in SAFE_METHODS:
+            self.permission_classes = [IsAuthenticated, IsGroupAdminOrModerator]
         else:
-            self.permission_classes = [
-                IsAuthenticated, IsGroupAdminOrModerator]
+            self.permission_classes = [IsAuthenticated, IsGroupAdmin]
         return super().get_permissions()

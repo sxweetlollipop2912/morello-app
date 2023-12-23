@@ -7,9 +7,8 @@ from collect_session.models import CollectSession
 
 class BalanceEntry(models.Model):
     group_id = models.ForeignKey(
-        Group,
-        on_delete=models.CASCADE,
-        related_name='balance_entries')
+        Group, on_delete=models.CASCADE, related_name="balance_entries"
+    )
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.CharField(max_length=255)
     date = models.DateTimeField()
@@ -17,4 +16,5 @@ class BalanceEntry(models.Model):
         CollectSession,
         on_delete=models.SET_NULL,
         null=True,
-        related_name='balance_entries')
+        related_name="balance_entries",
+    )

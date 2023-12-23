@@ -1,7 +1,9 @@
 from django.db import models
 
 from django.contrib.auth.models import (
-    AbstractBaseUser, PermissionsMixin, BaseUserManager
+    AbstractBaseUser,
+    PermissionsMixin,
+    BaseUserManager,
 )
 
 
@@ -10,11 +12,11 @@ class UserManager(BaseUserManager):
 
     def _create_user(self, email, password, **extra_fields):
         if not email:
-            raise ValueError('User must have an email address.')
+            raise ValueError("User must have an email address.")
 
         email = self.normalize_email(email)
-        is_staff = extra_fields.pop('is_staff', False)
-        is_superuser = extra_fields.pop('is_superuser', False)
+        is_staff = extra_fields.pop("is_staff", False)
+        is_superuser = extra_fields.pop("is_superuser", False)
 
         user = self.model(
             email=email,
@@ -34,11 +36,13 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password, **extra_fields):
         return self._create_user(
-            email, password, is_staff=True, is_superuser=True, **extra_fields)
+            email, password, is_staff=True, is_superuser=True, **extra_fields
+        )
 
 
 class User(AbstractBaseUser, PermissionsMixin):
     """User in the system."""
+
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -47,4 +51,4 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"

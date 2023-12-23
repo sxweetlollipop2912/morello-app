@@ -7,7 +7,8 @@ from .models import (
 
 class GroupAdmin(admin.ModelAdmin):
     # Display these fields in the list view
-    list_display = ('name', 'leader_user_id')
+    list_display = ("name", "leader_user_id")
+
 
 # Register your models here.
 

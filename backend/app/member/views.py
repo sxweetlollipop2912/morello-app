@@ -16,5 +16,5 @@ class MemberViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
     serializer_class = MemberSerializer
 
     def get_queryset(self):
-        group_id = self.kwargs['group_pk']
+        group_id = self.kwargs["group_pk"]
         return Member.objects.filter(group_id=group_id)
