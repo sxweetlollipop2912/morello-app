@@ -1,7 +1,9 @@
 package com.example.morello.ui.create_balance_entry
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDateTime
+import javax.inject.Inject
 
 data class CreateNewSessionData(
     val name: String,
@@ -18,7 +20,8 @@ data class CreateIncomeEntryData(
     val dateTime: LocalDateTime,
 )
 
-class CreateIncomeViewModel : ViewModel() {
+@HiltViewModel
+class CreateIncomeViewModel @Inject constructor() : ViewModel() {
     fun updateAmount(amount: Int) {
     }
 

@@ -5,7 +5,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.example.morello.ui.theme.login.LoginScreen
-import com.example.morello.ui.theme.login.LoginViewModel
 
 @Composable
 fun LoginRoute(

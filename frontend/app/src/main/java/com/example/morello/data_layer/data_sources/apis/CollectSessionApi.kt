@@ -2,7 +2,6 @@ package com.example.morello.data_layer.data_sources.apis
 
 import com.example.morello.data_layer.data_sources.data_types.CollectSession
 import com.example.morello.data_layer.data_sources.data_types.CollectSessionEntry
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

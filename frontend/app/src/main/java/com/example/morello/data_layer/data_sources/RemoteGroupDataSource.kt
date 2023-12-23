@@ -4,26 +4,23 @@ import com.example.morello.data_layer.data_sources.apis.BalanceEntryApi
 import com.example.morello.data_layer.data_sources.apis.GroupApi
 import com.example.morello.data_layer.data_sources.apis.MemberApi
 import com.example.morello.data_layer.data_sources.apis.client.ErrorResponse
-import com.example.morello.data_layer.data_sources.apis.client.RetrofitClient
-import com.example.morello.data_layer.data_sources.apis.mocked_apis.MockedBalanceEntryApi
-import com.example.morello.data_layer.data_sources.apis.mocked_apis.MockedGroupApi
-import com.example.morello.data_layer.data_sources.apis.mocked_apis.MockedMemberApi
 import com.example.morello.data_layer.data_sources.data_types.BalanceEntry
 import com.example.morello.data_layer.data_sources.data_types.CollectSession
 import com.example.morello.data_layer.data_sources.data_types.Group
 import com.example.morello.data_layer.data_sources.data_types.Member
 import com.example.morello.data_layer.data_sources.data_types.NewGroup
+import com.example.morello.data_layer.data_sources.data_types.NewMember
 import com.example.morello.data_layer.data_sources.data_types.User
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class RemoteGroupDataSource(
+class RemoteGroupDataSource @Inject constructor(
     private val groupApi: GroupApi,
     private val memberApi: MemberApi,
     private val balanceEntryApi: BalanceEntryApi,
-    private val dispatcher: CoroutineDispatcher,
 ) {
+    private val dispatcher = Dispatchers.IO
 
     suspend fun getGroupById(id: Int): Group {
         return withContext(dispatcher) {
@@ -47,28 +44,34 @@ class RemoteGroupDataSource(
         }
     }
 
-    suspend fun deleteGroup(groupId: Int) {
-        withContext(dispatcher) {
+    suspend fun deleteGroup(groupId: Int): Group {
+        return withContext(dispatcher) {
             val res = groupApi.deleteGroupById(groupId)
-            if (!res.isSuccessful) {
+            if (res.isSuccessful) {
+                return@withContext res.body()!!
+            } else {
                 throw Exception("Error deleting group")
             }
         }
     }
 
-    suspend fun createNewGroup(newGroup: NewGroup) {
-        withContext(dispatcher) {
+    suspend fun createNewGroup(newGroup: NewGroup): Group {
+        return withContext(dispatcher) {
             val res = groupApi.createGroup(newGroup)
-            if (!res.isSuccessful) {
+            if (res.isSuccessful) {
+                return@withContext res.body()!!
+            } else {
                 throw Exception("Error creating group")
             }
         }
     }
 
-    suspend fun updateGroup(updatedGroup: Group) {
-        withContext(dispatcher) {
+    suspend fun updateGroup(updatedGroup: Group): Group {
+        return withContext(dispatcher) {
             val res = groupApi.updateGroupById(updatedGroup.id, updatedGroup)
-            if (!res.isSuccessful) {
+            if (res.isSuccessful) {
+                return@withContext res.body()!!
+            } else {
                 throw Exception("Error updating group")
             }
         }
@@ -103,7 +106,7 @@ class RemoteGroupDataSource(
         }
     }
 
-    suspend fun addMember(groupId: Int, member: Member) {
+    suspend fun addMember(groupId: Int, member: NewMember) {
         withContext(dispatcher) {
             val res = memberApi.addMemberToGroup(groupId, member)
             if (!res.isSuccessful) {
@@ -153,17 +156,6 @@ class RemoteGroupDataSource(
                 val err = ErrorResponse.fromResponseBody(res.errorBody())
                 throw Exception("Error creating balance entry: ${err}}")
             }
-        }
-    }
-
-    companion object Mocked {
-        fun createMockedInstance(): RemoteGroupDataSource {
-            val retrofit = RetrofitClient.getClient()
-            val groupApi = MockedGroupApi()
-            val memberApi = MockedMemberApi()
-            val balanceEntryApi = MockedBalanceEntryApi()
-            val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-            return RemoteGroupDataSource(groupApi, memberApi, balanceEntryApi, ioDispatcher)
         }
     }
 }

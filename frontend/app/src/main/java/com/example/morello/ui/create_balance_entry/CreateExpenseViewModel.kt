@@ -1,10 +1,11 @@
 package com.example.morello.ui.create_balance_entry
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDateTime
-import java.util.Date
+import javax.inject.Inject
 
 data class CreateExpenseUiState(
     val amount: Int,
@@ -14,7 +15,8 @@ data class CreateExpenseUiState(
     val dateTime: LocalDateTime,
 )
 
-class CreateExpenseViewModel : ViewModel() {
+@HiltViewModel
+class CreateExpenseViewModel @Inject constructor() : ViewModel() {
     private var _uiState = MutableStateFlow(
         CreateExpenseUiState(
             amount = 0,

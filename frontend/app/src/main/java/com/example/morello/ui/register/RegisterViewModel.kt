@@ -1,9 +1,11 @@
 package com.example.morello.ui.register
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
 
 data class RegisterUiState(
@@ -31,7 +33,8 @@ data class RegisterUiState(
     }
 }
 
-class RegisterViewModel : ViewModel() {
+@HiltViewModel
+class RegisterViewModel @Inject constructor() : ViewModel() {
     private var _uiState = MutableStateFlow(RegisterUiState.Empty)
     val uiState: StateFlow<RegisterUiState> = _uiState.asStateFlow()
 

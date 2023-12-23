@@ -1,23 +1,27 @@
 package com.example.morello.data_layer.data_sources.apis
 
-import com.example.morello.data_layer.data_sources.data_types.LoginRequest
-import com.example.morello.data_layer.data_sources.data_types.RegisterRequest
-import com.example.morello.data_layer.data_sources.data_types.User
-import retrofit2.Call
+import com.example.morello.data_layer.data_sources.apis.models.user_api.LoginRequest
+import com.example.morello.data_layer.data_sources.apis.models.user_api.LoginResponse
+import com.example.morello.data_layer.data_sources.apis.models.user_api.RefreshTokenRequest
+import com.example.morello.data_layer.data_sources.apis.models.user_api.RefreshTokenResponse
+import com.example.morello.data_layer.data_sources.apis.models.user_api.RegisterRequest
+import com.example.morello.data_layer.data_sources.apis.models.user_api.RegisterResponse
+import com.example.morello.data_layer.data_sources.apis.models.user_api.UserMeResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 
 interface UserApi {
-    @GET("users/login")
-    suspend fun login(@Body loginRequest: LoginRequest): Response<String>
+    @POST("token")
+    suspend fun login(@Body loginRequest: LoginRequest): Response<LoginResponse>
 
-    @GET("users/logout")
-    suspend fun logout(): Response<Nothing>
+    @POST("token/refresh")
+    suspend fun refreshToken(@Body refreshTokenRequest: RefreshTokenRequest): Response<RefreshTokenResponse>
 
-    @GET("users/register")
-    suspend fun register(@Body registerRequest: RegisterRequest): Response<String>
+    @POST("users")
+    suspend fun register(@Body registerRequest: RegisterRequest): Response<RegisterResponse>
 
-    @GET("users/{userId}")
-    suspend fun fetchUserDetail(userId: Int): Response<User>
+    @GET("me")
+    suspend fun fetchUserDetail(): Response<UserMeResponse>
 }

@@ -5,20 +5,20 @@ import com.example.morello.data_layer.data_sources.apis.ModeratorApi
 import com.example.morello.data_layer.data_sources.apis.client.ErrorResponse
 import com.example.morello.data_layer.data_sources.data_types.CollectSession
 import com.example.morello.data_layer.data_sources.data_types.CollectSessionEntry
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class RemoteCollectSessionDataSource(
+class RemoteCollectSessionDataSource @Inject constructor(
     private val moderatorApi: ModeratorApi,
     private val collectSessionApi: CollectSessionApi,
-    private val ioDispatcher: CoroutineDispatcher,
 ) {
+    private val dispatcher = Dispatchers.IO
     suspend fun getCollectSessionEntries(
         groupId: Int,
         collectSessionId: Int
     ): List<CollectSessionEntry> {
-        return withContext(ioDispatcher) {
+        return withContext(dispatcher) {
             val res =
                 collectSessionApi.getCollectSessionEntriesBySessionId(groupId, collectSessionId)
             if (res.isSuccessful) {
@@ -35,7 +35,7 @@ class RemoteCollectSessionDataSource(
         sessionId: Int,
         entry: CollectSessionEntry
     ) {
-        withContext(ioDispatcher) {
+        withContext(dispatcher) {
             val res = collectSessionApi.updateCollectSessionEntry(
                 groupId,
                 sessionId,
@@ -49,7 +49,7 @@ class RemoteCollectSessionDataSource(
     }
 
     suspend fun getCollectSessions(groupId: Int): List<CollectSession> {
-        return withContext(ioDispatcher) {
+        return withContext(dispatcher) {
             val res = collectSessionApi.getCollectSessionsByGroupId(groupId)
             if (res.isSuccessful) {
                 return@withContext res.body()!!
@@ -60,7 +60,7 @@ class RemoteCollectSessionDataSource(
     }
 
     suspend fun deleteCollectSession(groupId: Int, collectSessionId: Int) {
-        withContext(ioDispatcher) {
+        withContext(dispatcher) {
             val res = collectSessionApi.deleteCollectSession(
                 groupId,
                 collectSessionId
@@ -72,7 +72,7 @@ class RemoteCollectSessionDataSource(
     }
 
     suspend fun updateCollectSession(groupId: Int, collectSession: CollectSession) {
-        withContext(ioDispatcher) {
+        withContext(dispatcher) {
             val res = collectSessionApi.updateCollectSession(
                 groupId,
                 collectSession.id,
@@ -85,7 +85,7 @@ class RemoteCollectSessionDataSource(
     }
 
     suspend fun createCollectSession(groupId: Int, collectSession: CollectSession) {
-        withContext(ioDispatcher) {
+        withContext(dispatcher) {
             val res = collectSessionApi.addCollectSessionToGroup(
                 groupId,
                 collectSession

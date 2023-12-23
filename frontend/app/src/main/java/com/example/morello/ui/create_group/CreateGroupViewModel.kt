@@ -2,11 +2,13 @@ package com.example.morello.ui.create_group
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.morello.data_layer.data_sources.data_types.Group
+import com.example.morello.data_layer.data_sources.data_types.NewGroup
 import com.example.morello.data_layer.repositories.GroupRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 data class CreateGroupUiState(
@@ -20,7 +22,8 @@ data class CreateGroupUiState(
     }
 }
 
-class CreateGroupViewModel(
+@HiltViewModel
+class CreateGroupViewModel @Inject constructor(
     private val groupRepository: GroupRepository,
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(CreateGroupUiState.Empty)
@@ -38,8 +41,7 @@ class CreateGroupViewModel(
         _uiState.value = _uiState.value.copy(isSubmitting = true)
         viewModelScope.launch {
             groupRepository.createNewGroup(
-                newGroup = Group(
-                    id = 0,
+                newGroup = NewGroup(
                     name = _uiState.value.groupName,
                     description = "",
                 ),

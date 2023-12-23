@@ -1,8 +1,9 @@
 package com.example.morello.data_layer.data_sources.apis.client
 
 import okhttp3.Interceptor
+import javax.inject.Inject
 
-object RequestInterceptor: Interceptor {
+class RequestInterceptor @Inject constructor() : Interceptor {
     override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
         val request = chain.request()
         println("Request: ${request.url()}")

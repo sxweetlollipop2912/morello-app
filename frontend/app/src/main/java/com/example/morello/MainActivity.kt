@@ -9,13 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -25,14 +23,14 @@ import com.example.morello.ui.create_balance_entry.CreateIncomeScreen
 import com.example.morello.ui.forgot_password.ForgotPasswordCodeValidationScreen
 import com.example.morello.ui.forgot_password.ForgotPasswordEmailScreen
 import com.example.morello.ui.login.LoginRoute
+import com.example.morello.ui.login.LoginViewModel
 import com.example.morello.ui.register.RegisterRoute
 import com.example.morello.ui.register.RegisterViewModel
 import com.example.morello.ui.theme.MorelloTheme
-import com.example.morello.ui.theme.login.LoginViewModel
-import java.time.LocalDate
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
-import java.util.Date
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,10 +44,10 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = "createBalanceEntry/income",
+                        startDestination = "login",
                     ) {
                         composable("login") {
-                            val viewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
+                            val viewModel: LoginViewModel by viewModels()
                             LoginRoute(
                                 viewModel = viewModel,
                                 switchToSignIn = {
@@ -110,7 +108,7 @@ class MainActivity : ComponentActivity() {
                                 name = name,
                                 description = "Nothing",
                                 dateTime = dateTime,
-                                onBalanceChanged = { amount = it },
+                                onAmountChanged = { amount = it },
                                 onNameChanged = { name = it },
                                 onDescriptionChanged = {},
                                 onDateTimeChanged = { dateTime = it },
@@ -142,21 +140,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MorelloTheme {
-        Greeting("Android")
     }
 }

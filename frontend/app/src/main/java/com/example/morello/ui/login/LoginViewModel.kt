@@ -1,21 +1,15 @@
-package com.example.morello.ui.theme.login
+package com.example.morello.ui.login
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.morello.data_layer.data_sources.RemoteUserDataSource
-import com.example.morello.data_layer.data_sources.SettingDataSource
 import com.example.morello.data_layer.repositories.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 enum class LoginState {
     Input,
@@ -44,7 +38,8 @@ data class LoginUiState(
     }
 }
 
-class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState.Empty)
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
@@ -94,20 +89,4 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
             }
         }
     }
-
-    // Define ViewModel factory in a companion object
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val savedStateHandle = createSavedStateHandle()
-                LoginViewModel(
-                    userRepository = UserRepository(
-                        remoteUserDataSource = RemoteUserDataSource.createMockedInstance(),
-                        settingDataSource = SettingDataSource(this[APPLICATION_KEY]!!)
-                    )
-                )
-            }
-        }
-    }
-
 }
