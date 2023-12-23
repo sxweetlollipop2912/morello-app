@@ -9,4 +9,6 @@ class Member(models.Model):
         Group, on_delete=models.CASCADE, related_name="members"
     )
     name = models.CharField(max_length=255, unique=True)
+    is_archived = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
