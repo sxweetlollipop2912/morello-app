@@ -8,12 +8,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.morello.ui.components.CreateBalanceEntryTopBar
+import com.example.morello.ui.components.FixedSignNumberEditField
 import com.example.morello.ui.components.SectionDividerWithText
 import java.time.Instant
 import java.time.LocalDateTime
@@ -82,26 +86,12 @@ fun CreateIncomeScreen(
             val titleTextStyle = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Bold,
             )
-            OutlinedTextField(
-                value = amount.toString(), onValueChange = {
-                    if (it.isEmpty()) {
-                        onBalanceChanged(0)
-                    } else {
-                        onBalanceChanged(it.toInt())
-                    }
-                },
-                prefix = {
-                    Button(onClick = {}, enabled = false) {
-                        Text(text = "VND")
-                    }
-                },
-                singleLine = true,
-                textStyle = MaterialTheme.typography.headlineLarge.copy(
-                    textAlign = TextAlign.End,
-                    color = MaterialTheme.colorScheme.tertiary,
-                ),
-                shape = MaterialTheme.shapes.medium,
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+            FixedSignNumberEditField(
+                value = amount.toUInt(),
+                negativeSign = false,
+                onValueChange = {
+                    onBalanceChanged(it.toInt())
+                }
             )
             Text(
                 text = "Balance after: $balanceAfter VND",
@@ -115,6 +105,7 @@ fun CreateIncomeScreen(
                 value = name,
                 onValueChange = onNameChanged,
                 shape = MaterialTheme.shapes.medium,
+                singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.padding(8.dp))
@@ -148,14 +139,18 @@ fun CreateIncomeScreen(
                     }
                 }
             }
-            SectionDividerWithText(text = "or")
-            Spacer(modifier = Modifier.padding(8.dp))
+            if (!isAddingSession) {
+                SectionDividerWithText(text = "or")
+            } else {
+                Divider(modifier = Modifier.padding(vertical = 8.dp))
+            }
             OpenSessionSection(
                 isAddingSession = isAddingSession,
                 paymentPerMember = 20,
                 startDateTime = LocalDateTime.now(),
                 endDateTime = LocalDateTime.now(),
                 onIsAddingSessionDisplayed = { isAddingSession = it },
+                onPaymentPerMemberChanged = {},
                 onStartDateTimeChanged = {},
                 onEndDateTimeChanged = {},
                 onCreate = {},
@@ -197,6 +192,7 @@ fun OpenSessionSection(
     paymentPerMember: Int,
     startDateTime: LocalDateTime,
     endDateTime: LocalDateTime,
+    onPaymentPerMemberChanged: (Int) -> Unit,
     onIsAddingSessionDisplayed: (Boolean) -> Unit,
     onStartDateTimeChanged: (LocalDateTime) -> Unit,
     onEndDateTimeChanged: (LocalDateTime) -> Unit,
@@ -267,7 +263,6 @@ fun OpenSessionSection(
             .fillMaxWidth()
             .animateContentSize()
     ) {
-
         if (!isAddingSession) {
             Button(
                 onClick = {
@@ -280,23 +275,39 @@ fun OpenSessionSection(
             }
         } else {
             Text(
-                text = "New collect session",
+                text = "Collect Session Details",
                 style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.primary),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
             )
-            Button(onClick = {}, enabled = false) {
-                Text(text = buildAnnotatedString {
-                    append("Payment per member: ")
-                    withStyle(
-                        style = SpanStyle(
-                            color = MaterialTheme.colorScheme.secondary,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    ) {
-                        append("$paymentPerMember VND")
-                    }
-                }, style = MaterialTheme.typography.labelSmall)
+            Spacer(modifier = Modifier.padding(4.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(
+                    text = "Payments"
+                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    OutlinedTextField(
+                        value = paymentPerMember.toString(),
+                        onValueChange = {
+                            onPaymentPerMemberChanged(it.toInt())
+                        },
+                        prefix = {
+                            Text(text = "VND", style = MaterialTheme.typography.labelSmall)
+                        },
+                        textStyle = TextStyle.Default.copy(
+                            textAlign = TextAlign.Right,
+                        ),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        shape = MaterialTheme.shapes.medium,
+                        modifier = Modifier.widthIn(100.dp, 120.dp)
+                    )
+                    Spacer(modifier = Modifier.padding(4.dp))
+                    Text(text = "/member")
+                }
             }
             Spacer(modifier = Modifier.padding(8.dp))
             Row(
@@ -352,7 +363,7 @@ fun OpenSessionSection(
                 shape = MaterialTheme.shapes.small,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Remove collect session")
+                Text(text = "Turn back to balance entry")
             }
         }
     }
