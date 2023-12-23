@@ -49,12 +49,12 @@ class GroupViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
             description=serializer.validated_data.get("description"),
             leader_user_id=request.user,
         )
-        serializer = GroupDetailSerializer(group)
+        serializer = GroupDetailSerializer(group, context={"request": request})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = GroupDetailSerializer(instance)
+        serializer = GroupDetailSerializer(instance, context={"request": request})
         return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):
@@ -62,7 +62,7 @@ class GroupViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
         serializer = GroupUpdateSerializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        serializer = GroupDetailSerializer(instance)
+        serializer = GroupDetailSerializer(instance, context={"request": request})
         return Response(serializer.data)
 
     def partial_update(self, request, *args, **kwargs):
@@ -70,5 +70,5 @@ class GroupViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
         serializer = GroupPartialUpdateSerializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        serializer = GroupDetailSerializer(instance)
+        serializer = GroupDetailSerializer(instance, context={"request": request})
         return Response(serializer.data)

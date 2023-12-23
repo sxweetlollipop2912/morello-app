@@ -7,4 +7,21 @@ from .models import (
 class BalanceEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = BalanceEntry
-        fields = ["id", "group_id", "amount", "description", "date", "session_id"]
+        fields = [
+            "id",
+            "name",
+            "amount",
+            "description",
+            "date",
+        ]
+
+
+class BalanceEntryCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BalanceEntry
+        fields = [
+            "name",
+            "amount",
+            "date",
+            "description",
+        ]
