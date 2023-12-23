@@ -3,6 +3,7 @@ package com.example.morello.ui.create_balance_entry
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.morello.data_layer.data_sources.CreateBalanceEntryException
 import com.example.morello.data_layer.data_sources.data_types.NewBalanceEntry
 import com.example.morello.data_layer.repositories.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -65,8 +66,6 @@ class CreateExpenseViewModel @Inject constructor(
     }
 
     fun submit(groupId: Int) {
-        Log.d("CreateExpenseViewModel", "submit: ")
-        Log.d("CreateExpenseViewModel", "UI state: ${_uiState.value}")
         _uiState.value = _uiState.value.copy(state = State.Submitting)
         viewModelScope.launch {
             try {
@@ -78,10 +77,9 @@ class CreateExpenseViewModel @Inject constructor(
                     )
                 })
                 _uiState.value = _uiState.value.copy(state = State.Success)
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(state = State.Error, error = e.message)
+            } catch (e: CreateBalanceEntryException) {
+                _uiState.value = _uiState.value.copy(state = State.Error, error = e.msg)
             }
-            Log.d("CreateExpenseViewModel", "UI state: ${_uiState.value}")
         }
     }
 }
