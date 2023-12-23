@@ -22,6 +22,8 @@ class CollectSession(models.Model):
         null=True,
         related_name="balance_entry",
     )
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     # enforce constraints for the balance_entry_id and is_open fields
     def save(self, *args, **kwargs):
@@ -42,6 +44,8 @@ class CollectEntry(models.Model):
         Member, on_delete=models.CASCADE, related_name="collect_entries"
     )
     status = models.BooleanField(default=False)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ("session_id", "member_id")

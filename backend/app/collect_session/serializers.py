@@ -34,6 +34,8 @@ class OpenCollectSessionOverviewSerializer(serializers.ModelSerializer):
             "member_count",
             "current_amount",
             "expected_amount",
+            "created_at",
+            "updated_at",
         ]
 
     def get_paid_count(self, obj):
