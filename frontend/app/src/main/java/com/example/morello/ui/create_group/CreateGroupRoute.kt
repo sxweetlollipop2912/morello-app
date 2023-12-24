@@ -15,7 +15,10 @@ fun CreateGroupRoute(
         uiState = uiState,
         onGroupNameChanged = viewModel::onGroupNameChanged,
         onMembersListChanged = viewModel::onMembersListChanged,
-        onSubmit = viewModel::onSubmit,
+        onSubmit = {
+            viewModel.onSubmit()
+            onBack()
+        },
         onBack = onBack,
     )
 }
