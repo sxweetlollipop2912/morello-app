@@ -48,16 +48,4 @@ class UserRepository @Inject constructor(
     suspend fun updateUserDetail(user: User) {
         TODO()
     }
-
-    suspend fun getManagedGroups(userId: Int): List<Group> {
-        return emptyList()
-    }
-
-    suspend fun getLeadedGroups(userId: Int): List<Group> {
-        return emptyList()
-    }
-
-    suspend fun getModeratedGroups(userId: Int): List<Group> {
-        return emptyList()
-    }
 }

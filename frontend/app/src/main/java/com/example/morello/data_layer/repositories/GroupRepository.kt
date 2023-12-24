@@ -1,5 +1,6 @@
 package com.example.morello.data_layer.repositories
 
+import android.util.Log
 import com.example.morello.data_layer.data_sources.RemoteGroupDataSource
 import com.example.morello.data_layer.data_sources.RemoteMemberDataSource
 import com.example.morello.data_layer.data_sources.SettingDataSource
@@ -31,11 +32,11 @@ class GroupRepository @Inject constructor(
     }
 
     suspend fun getManagedGroups(): List<Group> {
-        userRepository.isLoggedIn.collectLatest { loggedIn ->
-            if (!loggedIn) {
-                throw Exception("User not logged in")
-            }
-        }
+//        userRepository.isLoggedIn.collectLatest { loggedIn ->
+//            if (!loggedIn) {
+//                throw Exception("User not logged in")
+//            }
+//        }
         return remoteGroupDataSource.getManagedGroups()
     }
 
