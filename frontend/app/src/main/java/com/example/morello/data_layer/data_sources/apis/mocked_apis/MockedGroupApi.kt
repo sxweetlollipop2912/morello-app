@@ -10,8 +10,10 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class MockedGroupApi @Inject constructor() : GroupApi {
-    private val tempGroups = mutableListOf<Group>(
+    private val tempGroups = mutableListOf(
         Group(1, "group1", "description1", isLeader = true),
+        Group(2, "group2", "description2", isLeader = false),
+        Group(3, "group3", "description3", isLeader = true),
     )
 
     override suspend fun getManagedGroups(): Response<List<Group>> {
@@ -60,7 +62,6 @@ class MockedGroupApi @Inject constructor() : GroupApi {
             isLeader = true
         )
         tempGroups.add(newGroup)
-        Log.d("MockedGroupApi", tempGroups.toString())
         return Response.success(newGroup)
     }
 }

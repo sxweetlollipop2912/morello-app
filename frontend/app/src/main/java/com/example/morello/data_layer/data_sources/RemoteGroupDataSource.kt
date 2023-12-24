@@ -1,5 +1,6 @@
 package com.example.morello.data_layer.data_sources
 
+import android.util.Log
 import com.example.morello.data_layer.data_sources.apis.BalanceEntryApi
 import com.example.morello.data_layer.data_sources.apis.GroupApi
 import com.example.morello.data_layer.data_sources.apis.MemberApi
@@ -92,6 +93,7 @@ class RemoteGroupDataSource @Inject constructor(
     suspend fun getManagedGroups(): List<Group> {
         return withContext(dispatcher) {
             val res = groupApi.getManagedGroups()
+            Log.d("RemoteGroupDataSource", res.toString())
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
