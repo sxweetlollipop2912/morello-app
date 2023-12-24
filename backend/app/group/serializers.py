@@ -3,7 +3,7 @@ from .models import (
     Group,
 )
 from collect_session.models import CollectSession
-from collect_session.serializers import OpenCollectSessionOverviewSerializer
+from collect_session.serializers import CollectSessionListSerializer
 from balance.serializers import BalanceEntrySerializer
 
 
@@ -26,6 +26,11 @@ class GroupCreateSerializer(serializers.ModelSerializer):
             "name": {"required": True},
             "description": {"required": True},
         }
+
+    def create(self, validated_data):
+        # Add the leader_user_id from the context to the validated_data
+        validated_data["leader_user_id"] = self.context["request"].user
+        return super().create(validated_data)
 
 
 class GroupDetailSerializer(serializers.ModelSerializer):
@@ -54,9 +59,7 @@ class GroupDetailSerializer(serializers.ModelSerializer):
         recent_open_sessions = CollectSession.objects.filter(
             group_id=obj, is_open=True
         ).order_by("-start")[:open_session_count]
-        return OpenCollectSessionOverviewSerializer(
-            recent_open_sessions, many=True
-        ).data
+        return CollectSessionListSerializer(recent_open_sessions, many=True).data
 
     def get_recent_balance_entries(self, obj):
         balance_entry_count = self.context["request"].query_params.get(

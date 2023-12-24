@@ -26,7 +26,7 @@ None
         "member_count": <int>,
         "paid_count": <int>,
         "amount_per_member": <float>,
-        "current_am
+        "current_amount": <float>,
     },
 ]
 ```

@@ -41,12 +41,14 @@ class MemberViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
             name=serializer.validated_data.get("name"),
             group_id=group_id,
         )
-        serializer = MemberDetailSerializer(member)
+        serializer = MemberDetailSerializer(member, context={"member_id": member.id})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = MemberDetailSerializer(instance)
+        serializer = MemberDetailSerializer(
+            instance, context={"member_id": instance.id}
+        )
         return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):

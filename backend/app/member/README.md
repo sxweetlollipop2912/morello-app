@@ -74,11 +74,12 @@ None
         {
             "id": <int>,
             "name": <string>,
+            "description": <string>,
             "start": <datetime>,
             "due": <datetime>,
             "is_open": <bool>,
-            "paid": <bool>,
-            "due_amount": <float>,
+            "status": <bool>,
+            "payment_permember": <int>,
         },
         {
             "id": <int>,
