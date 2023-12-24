@@ -19,7 +19,8 @@ class BalanceViewSet(GroupPermissionMixin, viewsets.ViewSet):
             or 0
         )
 
-        # Calculate the currently collected amount of all CollectEntry objects with a status of True for all open sessions in the group
+        # Calculate the currently collected amount of all CollectEntry objects
+        # with a status of True for all open sessions in the group
         open_collect_session_current = (
             CollectEntry.objects.filter(
                 status=True, session_id__is_open=True, session_id__group_id=group_pk

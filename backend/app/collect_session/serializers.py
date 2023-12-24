@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import CollectSession, CollectEntry
 from member.models import Member
+from django.db.models import F
 
 
 class CollectSessionListSerializer(serializers.ModelSerializer):

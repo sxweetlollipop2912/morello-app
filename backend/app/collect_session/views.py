@@ -32,6 +32,13 @@ class CollectSessionViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
         )
         return Response(serializer.data)
 
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = CollectSessionDetailSerializer(
+            instance, context={"request": request}
+        )
+        return Response(serializer.data)
+
     def create(self, request, *args, **kwargs):
         serializer = CollectSessionCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -46,13 +53,6 @@ class CollectSessionViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
         serializer = CollectSessionUpdateSerializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        serializer = CollectSessionDetailSerializer(
-            instance, context={"request": request}
-        )
-        return Response(serializer.data)
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
         serializer = CollectSessionDetailSerializer(
             instance, context={"request": request}
         )
@@ -86,20 +86,7 @@ class CollectSessionViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
-        serializer_class=CollectSessionOpenCloseSerializer,
-        url_path="open",
-    )
-    def open(self, request, *args, **kwargs):
-        session = self.get_object()
-        session.open()
-        return Response(
-            {"success": "Collect session opened"}, status=status.HTTP_200_OK
-        )
-
-    @action(
-        detail=True,
-        methods=["post"],
-        url_path="members/(?P<member_id>\d+)/status",
+        url_path="members/(?P<member_id>\d+)/status",  # noqa
         serializer_class=CollectEntryUpdateSerializer,
     )
     def update_member_status(self, request, member_id=None, *args, **kwargs):

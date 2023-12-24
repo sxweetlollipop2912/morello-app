@@ -1,6 +1,3 @@
-from .models import (
-    Group,
-)
 from rest_framework.permissions import IsAuthenticated, SAFE_METHODS
 from .permissions import IsGroupAdminOrModerator, IsGroupAdmin
 

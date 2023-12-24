@@ -9,7 +9,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 
 
-CREATE_USER_URL = reverse("user:user-list")
+USER_URL = reverse("user_me")
 
 
 class PublicUserApiTests(TestCase):
@@ -37,7 +37,7 @@ class PublicUserApiTests(TestCase):
             "password": "testpass123",
             "name": "New User",
         }
-        res = self.client.post(CREATE_USER_URL, payload)
+        res = self.client.post(USER_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
@@ -48,8 +48,9 @@ class PublicUserApiTests(TestCase):
             "password": "testpass123",
         }
         get_user_model().objects.create_user(**payload)
-
-        res = self.client.post(CREATE_USER_URL, payload)
+        # force authenticate
+        self.client.force_authenticate(self.normal_user)
+        res = self.client.post(USER_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertNotIn("access", res.data)
         self.assertNotIn("refresh", res.data)
@@ -60,7 +61,7 @@ class PublicUserApiTests(TestCase):
             "email": "test@example.com",
             "password": "pw",
         }
-        res = self.client.post(CREATE_USER_URL, payload)
+        res = self.client.post(USER_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -89,13 +90,13 @@ class PublicUserApiTests(TestCase):
 
     def test_list_users_unauthorized(self):
         """Test that authentication is required for retrieving users."""
-        res = self.client.get(CREATE_USER_URL)
+        res = self.client.get(USER_URL)
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_list_users_admin(self):
         """Test that admin users can retrieve users."""
         self.client.force_authenticate(self.admin_user)
-        res = self.client.get(CREATE_USER_URL)
+        res = self.client.get(USER_URL)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_list_users_authenticated(self):
@@ -118,7 +119,7 @@ class PublicUserApiTests(TestCase):
 
         # get users
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + token)
-        res = self.client.get(CREATE_USER_URL)
+        res = self.client.get(USER_URL)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 2)

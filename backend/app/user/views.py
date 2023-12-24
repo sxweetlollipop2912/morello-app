@@ -11,14 +11,8 @@ from user.serializers import (
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.http import Http404
-
-# GET /users/: List all users. This corresponds to the list() method in the viewset. # noqa
-# POST /users/: Create a new user. This corresponds to the create() method in the viewset. # noqa
-# GET /users/{id}/: Retrieve a specific user by their ID. This corresponds to the retrieve() method in the viewset. # noqa
-# PUT /users/{id}/: Update a specific user by their ID. This corresponds to the update() method in the viewset. # noqa
-# PATCH /users/{id}/: Partially update a specific user by their ID. This corresponds to the partial_update() method in the viewset. # noqa
-# DELETE /users/{id}/: Delete a specific user by their ID. This corresponds to the destroy() method in the viewset. # noqa
-# See: https://www.django-rest-framework.org/api-guide/viewsets/#modelviewset
+from rest_framework import status
+from rest_framework.views import APIView
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -59,3 +53,14 @@ class UserViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         self.check_instance_id(instance)
         return super().destroy(request, *args, **kwargs)
+
+
+class UserCreateViewSet(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = UserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
