@@ -12,6 +12,9 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface GroupApi {
+    @GET("groups/")
+    suspend fun getManagedGroups(): Response<List<Group>>
+
     @GET("groups/{id}")
     suspend fun getGroupById(@Path("id") id: Int): Response<Group>
 
