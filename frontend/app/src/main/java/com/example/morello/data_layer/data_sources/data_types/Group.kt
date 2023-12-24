@@ -6,4 +6,5 @@ data class Group(
     @JsonProperty("id") val id: Int,
     @JsonProperty("name") val name: String,
     @JsonProperty("description") val description: String,
+    @JsonProperty("leader") val isLeader: Boolean,
 )
