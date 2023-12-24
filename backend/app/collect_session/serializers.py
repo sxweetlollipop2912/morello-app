@@ -114,7 +114,19 @@ class CollectSessionUpdateSerializer(serializers.ModelSerializer):
         fields = ["name", "description", "start", "due"]
 
 
-class CollectSessionCloseSerializer(serializers.ModelSerializer):
+class CollectSessionPartialUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CollectSession
+        fields = ["name", "description", "start", "due"]
+        extra_kwargs = {
+            "name": {"required": False},
+            "description": {"required": False},
+            "start": {"required": False},
+            "due": {"required": False},
+        }
+
+
+class CollectSessionOpenCloseSerializer(serializers.ModelSerializer):
     class Meta:
         model = CollectSession
         fields = []
