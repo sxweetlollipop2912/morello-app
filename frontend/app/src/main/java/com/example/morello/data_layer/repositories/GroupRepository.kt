@@ -2,6 +2,7 @@ package com.example.morello.data_layer.repositories
 
 import com.example.morello.data_layer.data_sources.RemoteGroupDataSource
 import com.example.morello.data_layer.data_sources.RemoteMemberDataSource
+import com.example.morello.data_layer.data_sources.SettingDataSource
 import com.example.morello.data_layer.data_sources.data_types.BalanceEntry
 import com.example.morello.data_layer.data_sources.data_types.CollectSession
 import com.example.morello.data_layer.data_sources.data_types.Group
@@ -12,11 +13,13 @@ import com.example.morello.data_layer.data_sources.data_types.NewMember
 import com.example.morello.data_layer.data_sources.data_types.UpdatedBalanceEntry
 import com.example.morello.data_layer.data_sources.data_types.User
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 class GroupRepository @Inject constructor(
     private val remoteGroupDataSource: RemoteGroupDataSource,
     private val remoteMemberDataSource: RemoteMemberDataSource,
+    private val userRepository: UserRepository,
 ) {
     fun getLeader(groupId: Int): Flow<User> = TODO()
     suspend fun deleteGroup(groupId: Int): Nothing = TODO()
@@ -25,6 +28,15 @@ class GroupRepository @Inject constructor(
         members.forEach {
             remoteMemberDataSource.addMemberToGroup(groupResponse.id, it)
         }
+    }
+
+    suspend fun getManagedGroups(): List<Group> {
+        userRepository.isLoggedIn.collectLatest { loggedIn ->
+            if (!loggedIn) {
+                throw Exception("User not logged in")
+            }
+        }
+        return remoteGroupDataSource.getManagedGroups()
     }
 
     suspend fun updateGroup(updatedGroup: Group): Nothing = TODO()

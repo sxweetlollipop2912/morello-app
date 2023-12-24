@@ -2,6 +2,7 @@ package com.example.morello.data_layer.repositories
 
 import com.example.morello.data_layer.data_sources.RemoteUserDataSource
 import com.example.morello.data_layer.data_sources.SettingDataSource
+import com.example.morello.data_layer.data_sources.data_types.Group
 import com.example.morello.data_layer.data_sources.data_types.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -48,6 +49,15 @@ class UserRepository @Inject constructor(
         TODO()
     }
 
-    fun getLeadedGroups(userId: Int): Flow<List<Int>> = TODO()
-    fun getModeratedGroups(userId: Int): Flow<List<Int>> = TODO()
+    suspend fun getManagedGroups(userId: Int): List<Group> {
+        return emptyList()
+    }
+
+    suspend fun getLeadedGroups(userId: Int): List<Group> {
+        return emptyList()
+    }
+
+    suspend fun getModeratedGroups(userId: Int): List<Group> {
+        return emptyList()
+    }
 }
