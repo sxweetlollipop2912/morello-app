@@ -89,6 +89,17 @@ class RemoteGroupDataSource @Inject constructor(
         }
     }
 
+    suspend fun getManagedGroups(): List<Group> {
+        return withContext(dispatcher) {
+            val res = groupApi.getManagedGroups()
+            if (res.isSuccessful) {
+                return@withContext res.body()!!
+            } else {
+                throw Exception("Error getting managed groups")
+            }
+        }
+    }
+
     suspend fun getModerators(groupId: Int): List<User> = TODO()
     suspend fun getModeratorCorrespondingToMember(groupId: Int, memberId: Int): User = TODO()
     suspend fun addModerator(groupId: Int, moderatorId: Int): Nothing = TODO()
