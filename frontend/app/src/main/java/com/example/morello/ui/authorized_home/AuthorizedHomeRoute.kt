@@ -11,6 +11,7 @@ import com.example.morello.data_layer.data_sources.data_types.NewGroup
 fun AuthorizedHomeRoute(
     viewModel: AuthorizedHomeViewModel,
     onCreateNewGroup: () -> Unit,
+    navigateToGroup: (groupId: Int) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     LaunchedEffect(Unit) {
@@ -18,8 +19,9 @@ fun AuthorizedHomeRoute(
     }
     AuthorizedHomeScreen(
         uiState = uiState,
-        onGroupSelect = {},
+        onGroupSelect = navigateToGroup,
         onProfileIconClicked = {},
         onCreateNewGroup = onCreateNewGroup,
+        onReloadGroups = viewModel::reload,
     )
 }

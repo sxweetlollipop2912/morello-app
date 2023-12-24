@@ -47,12 +47,10 @@ class AuthorizedHomeViewModel @Inject constructor(
     private var _uiState = MutableStateFlow(AuthorizedHomeUiState.Empty)
     val uiState = _uiState.asStateFlow()
 
-    init {
-        reload()
+    init { reload()
     }
 
     fun reload() {
-        Log.d("AuthorizedHomeViewModel", "reload")
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(state = State.Loading)
             try {

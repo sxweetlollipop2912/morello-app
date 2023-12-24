@@ -2,17 +2,21 @@ package com.example.morello.ui.authorized_home
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -50,6 +54,7 @@ fun AuthorizedHomeScreen(
     onCreateNewGroup: () -> Unit,
     onProfileIconClicked: () -> Unit,
     onGroupSelect: (groupId: Int) -> Unit,
+    onReloadGroups: () -> Unit,
 ) {
     val (user, groups, state) = uiState
     val username = user.name
@@ -180,8 +185,14 @@ fun AuthorizedHomeScreen(
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
+                    IconButton(onClick = onReloadGroups) {
+                        Icon(imageVector = Icons.Default.Refresh, contentDescription = "Reload")
+                    }
                 }
-                Column {
+                val scrollState = rememberScrollState()
+                Column(
+                    modifier = Modifier.verticalScroll(scrollState)
+                ) {
                     groups.forEach { group ->
                         GroupListEntry(
                             name = group.name,
