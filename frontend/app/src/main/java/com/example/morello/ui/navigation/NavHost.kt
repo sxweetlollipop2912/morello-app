@@ -1,9 +1,12 @@
 package com.example.morello.ui.navigation
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -17,8 +20,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.example.morello.MorelloApp
 import com.example.morello.data_layer.data_sources.data_types.Group
 import com.example.morello.ui.authorized_home.AuthorizedHomeRoute
@@ -41,15 +45,23 @@ import dagger.hilt.android.internal.lifecycle.HiltViewModelFactory
 import dagger.hilt.android.internal.lifecycle.HiltViewModelMap
 
 fun NavGraphBuilder.ownerGroupHomeGraph(
-    groupId: Int,
     viewModelProvider: ViewModelProvider,
     navController: NavHostController,
 ) {
     navigation(
+        route = "ownerGroupHome/{groupId}",
         startDestination = "groupOwnerHome",
-        route = "home",
+        arguments = listOf(
+            navArgument("groupId") {
+                type = NavType.IntType
+            }
+        )
     ) {
         composable("groupOwnerHome") {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry("ownerGroupHome/{groupId}")
+            }
+            val groupId = parentEntry.arguments?.getInt("groupId")!!
             OwnerGroupRoute(
                 groupId = groupId,
                 viewModel = viewModelProvider[OwnerGroupViewModel::class.java],
@@ -66,7 +78,13 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
                     navController.popBackStack()
                 })
         }
-        composable("createBalanceEntry/expense") {
+        composable(
+            "createBalanceEntry/expense",
+        ) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry("ownerGroupHome/{groupId}")
+            }
+            val groupId = parentEntry.arguments?.getInt("groupId")!!
             CreateExpenseRoute(
                 groupId = groupId,
                 viewModel = viewModelProvider[CreateExpenseViewModel::class.java],
@@ -76,9 +94,48 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
             )
         }
         composable("createBalanceEntry/income") {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry("ownerGroupHome/{groupId}")
+            }
+            val groupId = parentEntry.arguments?.getInt("groupId")!!
             CreateExpenseRoute(
                 groupId = groupId,
                 viewModel = viewModelProvider[CreateExpenseViewModel::class.java],
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+    }
+}
+
+fun NavGraphBuilder.authorizedHomeGraph(
+    viewModelProvider: ViewModelProvider,
+    navController: NavHostController,
+) {
+    navigation(
+        startDestination = "home",
+        route = "authorizedHome",
+    ) {
+        ownerGroupHomeGraph(
+            viewModelProvider = viewModelProvider,
+            navController = navController,
+        )
+        composable("home") {
+            val viewModel = viewModelProvider[AuthorizedHomeViewModel::class.java]
+            AuthorizedHomeRoute(
+                viewModel = viewModel,
+                onCreateNewGroup = {
+                    navController.navigate("createGroup")
+                },
+                navigateToGroup = { groupId ->
+                    navController.navigate("ownerGroupHome/$groupId")
+                }
+            )
+        }
+        composable("createGroup") {
+            CreateGroupRoute(
+                viewModel = viewModelProvider[CreateGroupViewModel::class.java],
                 onBack = {
                     navController.popBackStack()
                 }
@@ -100,12 +157,10 @@ fun MorelloNavHost(
         startDestination = startDestination,
         modifier = modifier,
     ) {
-        composable("test") {
-            val viewModel = viewModelProvider[AuthorizedHomeViewModel::class.java]
-            AuthorizedHomeRoute(viewModel = viewModel, onCreateNewGroup = {
-                navController.navigate("createGroup")
-            })
-        }
+        authorizedHomeGraph(
+            viewModelProvider = viewModelProvider,
+            navController = navController,
+        )
         composable("createGroup") {
             CreateGroupRoute(
                 viewModel = viewModelProvider[CreateGroupViewModel::class.java],
@@ -161,10 +216,5 @@ fun MorelloNavHost(
                 email = "ltp@gmail.com",
                 onBack = { /*TODO*/ })
         }
-        ownerGroupHomeGraph(
-            groupId = 1,
-            viewModelProvider = viewModelProvider,
-            navController = navController,
-        )
     }
 }
