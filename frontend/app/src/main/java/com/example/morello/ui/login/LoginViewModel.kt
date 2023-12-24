@@ -78,7 +78,6 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
             _uiState.value = _uiState.value.copy(loginState = LoginState.Loading)
             try {
                 userRepository.login(_uiState.value.email, _uiState.value.password)
-                Log.d("LoginViewModel", "Logged in")
                 _uiState.value = _uiState.value.copy(
                     loginState = LoginState.Success,
                     error = null
