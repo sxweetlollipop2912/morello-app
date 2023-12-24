@@ -11,8 +11,10 @@ from .serializers import (
 from rest_framework import viewsets, status
 from group.mixins import GroupPermissionMixin
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
 
 
+@extend_schema(tags=["Member endpoints"])
 class MemberViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         group_id = self.kwargs["group_pk"]

@@ -5,10 +5,12 @@ from collect_session.models import CollectEntry
 from django.db.models import Sum, F
 from group.mixins import GroupPermissionMixin
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
 
 # Create your views here.
 
 
+@extend_schema(tags=["Balance endpoints"])
 class BalanceViewSet(GroupPermissionMixin, viewsets.ViewSet):
     def list(self, request, group_pk=None):
         # Calculate the total amount of all BalanceEntry objects for the given group
@@ -50,6 +52,7 @@ class BalanceViewSet(GroupPermissionMixin, viewsets.ViewSet):
         )
 
 
+@extend_schema(tags=["Balance Entry endpoints"])
 class BalanceEntryViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
     serializer_class = BalanceEntrySerializer
 

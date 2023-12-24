@@ -17,10 +17,12 @@ from rest_framework.response import Response
 
 from .mixins import GroupPermissionMixin
 from django.db.models import Q
+from drf_spectacular.utils import extend_schema
 
 # Create your views here.
 
 
+@extend_schema(tags=["Group endpoints"])
 class GroupViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.

@@ -13,8 +13,10 @@ from django.shortcuts import get_object_or_404
 from django.http import Http404
 from rest_framework import status
 from rest_framework.views import APIView
+from drf_spectacular.utils import extend_schema
 
 
+@extend_schema(tags=["User endpoints"])
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -55,6 +57,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
 
+@extend_schema(tags=["User endpoints"])
 class UserCreateViewSet(APIView):
     permission_classes = [permissions.AllowAny]
 

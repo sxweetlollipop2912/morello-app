@@ -3,10 +3,12 @@ from group.mixins import GroupPermissionMixin
 
 from .models import Moderator
 from .serializers import ModeratorSerializer
+from drf_spectacular.utils import extend_schema
 
 # Create your views here.
 
 
+@extend_schema(tags=["Moderator endpoints"])
 class ModeratorViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
     serializer_class = ModeratorSerializer
 

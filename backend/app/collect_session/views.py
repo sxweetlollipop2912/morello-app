@@ -14,10 +14,12 @@ from .serializers import (
     CollectEntryUpdateSerializer,
 )
 from group.mixins import GroupPermissionMixin
+from drf_spectacular.utils import extend_schema
 
 # Create your views here.
 
 
+@extend_schema(tags=["Collect Session endpoints"])
 class CollectSessionViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
     serializer_class = CollectSessionDetailSerializer
 
