@@ -20,9 +20,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.morello.MorelloApp
+import com.example.morello.data_layer.data_sources.data_types.Group
+import com.example.morello.ui.authorized_home.AuthorizedHomeRoute
+import com.example.morello.ui.authorized_home.AuthorizedHomeScreen
+import com.example.morello.ui.authorized_home.AuthorizedHomeViewModel
 import com.example.morello.ui.create_balance_entry.CreateExpenseRoute
 import com.example.morello.ui.create_balance_entry.CreateExpenseScreen
 import com.example.morello.ui.create_balance_entry.CreateExpenseViewModel
+import com.example.morello.ui.create_group.CreateGroupRoute
+import com.example.morello.ui.create_group.CreateGroupViewModel
 import com.example.morello.ui.forgot_password.ForgotPasswordCodeValidationScreen
 import com.example.morello.ui.forgot_password.ForgotPasswordEmailScreen
 import com.example.morello.ui.login.LoginRoute
@@ -94,6 +100,20 @@ fun MorelloNavHost(
         startDestination = startDestination,
         modifier = modifier,
     ) {
+        composable("test") {
+            val viewModel = viewModelProvider[AuthorizedHomeViewModel::class.java]
+            AuthorizedHomeRoute(viewModel = viewModel, onCreateNewGroup = {
+                navController.navigate("createGroup")
+            })
+        }
+        composable("createGroup") {
+            CreateGroupRoute(
+                viewModel = viewModelProvider[CreateGroupViewModel::class.java],
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
         composable("login") {
             LoginRoute(
                 viewModel = viewModelProvider[LoginViewModel::class.java],
