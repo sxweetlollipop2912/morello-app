@@ -39,6 +39,10 @@ class CreateGroupViewModel @Inject constructor(
     private var _uiState = MutableStateFlow(CreateGroupUiState.Empty)
     val uiState = _uiState.asStateFlow()
 
+    fun reload() {
+        _uiState.value = CreateGroupUiState.Empty
+    }
+
     fun onGroupNameChanged(groupName: String) {
         _uiState.value = _uiState.value.copy(groupName = groupName)
     }
