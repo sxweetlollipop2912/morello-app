@@ -1,5 +1,6 @@
 package com.example.morello.ui.create_balance_entry
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -48,12 +50,32 @@ fun CreateExpenseScreen(
     onDateTimeChanged: (LocalDateTime) -> Unit,
     onCreate: () -> Unit,
     onBack: () -> Unit,
+    onConfirmGoBack: () -> Unit,
+    onCancelGoBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var datePickerDisplayed by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     val (amount, balanceAfter, name, description, dateTime, state, error) = uiState
+    BackHandler(onBack = onBack)
+    if (state == State.TryToGoBack) {
+        AlertDialog(
+            onDismissRequest = { onBack() },
+            title = { Text(text = "Discard changes?") },
+            text = { Text(text = "Are you sure you want to discard changes?") },
+            confirmButton = {
+                Button(onClick = { onConfirmGoBack() }) {
+                    Text(text = "Discard")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { onCancelGoBack() }) {
+                    Text(text = "Cancel")
+                }
+            }
+        )
+    }
     Scaffold(
         topBar = {
             CreateBalanceEntryTopBar(

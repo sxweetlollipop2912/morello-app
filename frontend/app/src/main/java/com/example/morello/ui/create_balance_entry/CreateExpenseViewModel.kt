@@ -1,6 +1,5 @@
 package com.example.morello.ui.create_balance_entry
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.morello.data_layer.data_sources.CreateBalanceEntryException
@@ -18,6 +17,8 @@ enum class State {
     Submitting,
     Success,
     Error,
+    TryToGoBack,
+    ConfirmGoBack,
 }
 
 data class CreateExpenseUiState(
@@ -28,7 +29,17 @@ data class CreateExpenseUiState(
     val dateTime: LocalDateTime,
     val state: State = State.Idle,
     val error: String? = null,
-)
+) {
+    companion object {
+        val Empty = CreateExpenseUiState(
+            amount = 0,
+            balanceAfter = 0,
+            name = "",
+            description = "",
+            dateTime = LocalDateTime.now(),
+        )
+    }
+}
 
 @HiltViewModel
 class CreateExpenseViewModel @Inject constructor(
@@ -44,6 +55,56 @@ class CreateExpenseViewModel @Inject constructor(
         )
     )
     val uiState = _uiState.asStateFlow()
+    private var _emptyState = _uiState.value
+
+    fun reload() {
+        _uiState.value = CreateExpenseUiState(
+            amount = 0,
+            balanceAfter = 0,
+            name = "",
+            description = "",
+            dateTime = LocalDateTime.now(),
+        )
+        _emptyState = _uiState.value
+    }
+
+    private fun isEmpty(): Boolean {
+        val (
+            amount,
+            balanceAfter,
+            name,
+            description,
+        ) = _uiState.value
+        return amount == 0 && name == "" && description == ""
+    }
+
+    fun tryToGoBack() {
+        if (!isEmpty()) {
+            _uiState.value = _uiState.value.copy(state = State.TryToGoBack)
+        } else {
+            _uiState.value = _uiState.value.copy(state = State.ConfirmGoBack)
+        }
+    }
+
+    fun confirmGoBack() {
+        if (_uiState.value.state == State.TryToGoBack) {
+            _uiState.value = _uiState.value.copy(state = State.ConfirmGoBack)
+        } else {
+            throw IllegalStateException(
+                "confirm_go_back() called when state is not TryToGoBack"
+            )
+        }
+    }
+
+    fun cancelGoBack() {
+        if (_uiState.value.state == State.TryToGoBack) {
+            _uiState.value = _uiState.value.copy(state = State.Idle)
+        } else {
+            throw IllegalStateException(
+                "cancel_go_back() called when state is not ConfirmGoBack"
+            )
+        }
+    }
 
     fun updateAmount(amount: Int) {
         _uiState.value = _uiState.value.copy(amount = amount)
