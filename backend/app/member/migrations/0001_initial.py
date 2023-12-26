@@ -5,21 +5,35 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('group', '0003_remove_collectentry_member_id_and_more'),
+        ("group", "0003_remove_collectentry_member_id_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Member',
+            name="Member",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255, unique=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('group_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='members', to='group.group')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255, unique=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "group_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="members",
+                        to="group.group",
+                    ),
+                ),
             ],
         ),
     ]

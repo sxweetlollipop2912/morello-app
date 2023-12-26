@@ -21,23 +21,17 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
-        'admin/',
-        admin.site.urls),
-    path(
-        'api/schema/',
-        SpectacularAPIView.as_view(),
-        name='schema'),
-    path(
-        'api/docs/',
-        SpectacularSwaggerView.as_view(
-            url_name='schema'),
-        name='docs',
+        "api/docs/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="docs",
     ),
-    path('api/', include('user.urls')),
-    path('api/', include('group.urls')),
-    path('api/', include('moderator.urls')),
-    path('api/', include('member.urls')),
-    path('api/', include('balance.urls')),
-    path('api/', include('collect_session.urls')),
+    path("api/", include("user.urls")),
+    path("api/", include("group.urls")),
+    path("api/", include("moderator.urls")),
+    path("api/", include("member.urls")),
+    path("api/", include("balance.urls")),
+    path("api/", include("collect_session.urls")),
 ]

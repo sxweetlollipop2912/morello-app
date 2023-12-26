@@ -117,9 +117,11 @@ None
             "start": <datetime>,
             "due": <datetime>,
             "is_open": <bool>,
+            "member_count": <int>,
             "paid_count": <int>,
             "current_amount": <float>,
-            "expected_amount": <float>, // from Balance
+            "expected_amount": <float>,
+            "amount_per_member": <float>,
         },
         {
             "id": <ID>,
@@ -127,15 +129,18 @@ None
             "start": <datetime>,
             "due": <datetime>,
             "is_open": <bool>,
+            "member_count": <int>,
             "paid_count": <int>,
             "current_amount": <float>,
-            "expected_amount": <float>, // from Balance
+            "expected_amount": <float>,
+            "amount_per_member": <float>,
         },
     ],
     "recent_balance_entries": [ // contains at most <balance_entry_count> balance entries
         {
             "id": <ID>,
-            "amount": <float>,
+            "current_amount": <float>,
+            "expected_amount": <float>,
             "description": <string>,
             "created_at": <datetime>,
             "session": {
@@ -143,13 +148,15 @@ None
                 "start": <datetime>,
                 "due": <datetime>,
                 "is_open": <bool>,
+                "member_count": <int>,
                 "paid_count": <int>,
-                "current_amount": <float>,
+                "amount_per_member": <float>,
             },
         },
         {
             "id": <ID>,
-            "amount": <float>,
+            "current_amount": <float>,
+            "expected_amount": <float>,
             "description": <string>,
             "created_at": <datetime>,
             @optional "session": NULL,

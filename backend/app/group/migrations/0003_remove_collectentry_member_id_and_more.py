@@ -4,34 +4,33 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('group', '0002_delete_moderator'),
+        ("group", "0002_delete_moderator"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='collectentry',
-            name='member_id',
+            model_name="collectentry",
+            name="member_id",
         ),
         migrations.RemoveField(
-            model_name='collectentry',
-            name='session_id',
+            model_name="collectentry",
+            name="session_id",
         ),
         migrations.RemoveField(
-            model_name='member',
-            name='group_id',
+            model_name="member",
+            name="group_id",
         ),
         migrations.DeleteModel(
-            name='BalanceEntry',
+            name="BalanceEntry",
         ),
         migrations.DeleteModel(
-            name='CollectEntry',
+            name="CollectEntry",
         ),
         migrations.DeleteModel(
-            name='CollectSession',
+            name="CollectSession",
         ),
         migrations.DeleteModel(
-            name='Member',
+            name="Member",
         ),
     ]

@@ -6,8 +6,8 @@ from .views import (
 )
 
 router = routers.SimpleRouter()
-router.register(r'groups', GroupViewSet, basename='groups')
+router.register(r"groups", GroupViewSet, basename="groups")
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
 ]

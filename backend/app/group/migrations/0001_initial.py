@@ -6,7 +6,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,62 +14,167 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='CollectSession',
+            name="CollectSession",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('start', models.DateTimeField()),
-                ('due', models.DateTimeField()),
-                ('description', models.CharField(max_length=255)),
-                ('is_open', models.BooleanField(default=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("start", models.DateTimeField()),
+                ("due", models.DateTimeField()),
+                ("description", models.CharField(max_length=255)),
+                ("is_open", models.BooleanField(default=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Group',
+            name="Group",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('description', models.CharField(max_length=255)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('leader_user_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='led_groups', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("description", models.CharField(max_length=255)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "leader_user_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="led_groups",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Moderator',
+            name="Moderator",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('group_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='moderators', to='group.group')),
-                ('user_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='moderated_groups', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "group_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="moderators",
+                        to="group.group",
+                    ),
+                ),
+                (
+                    "user_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="moderated_groups",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Member',
+            name="Member",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255, unique=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('group_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='members', to='group.group')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255, unique=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "group_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="members",
+                        to="group.group",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='CollectEntry',
+            name="CollectEntry",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.BooleanField(default=False)),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('member_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='collect_entries', to='group.member')),
-                ('session_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='collect_entries', to='group.collectsession')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("status", models.BooleanField(default=False)),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=10)),
+                (
+                    "member_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="collect_entries",
+                        to="group.member",
+                    ),
+                ),
+                (
+                    "session_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="collect_entries",
+                        to="group.collectsession",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='BalanceEntry',
+            name="BalanceEntry",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('description', models.CharField(max_length=255)),
-                ('date', models.DateTimeField()),
-                ('group_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='balance_entries', to='group.group')),
-                ('session_id', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='balance_entries', to='group.collectsession')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=10)),
+                ("description", models.CharField(max_length=255)),
+                ("date", models.DateTimeField()),
+                (
+                    "group_id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="balance_entries",
+                        to="group.group",
+                    ),
+                ),
+                (
+                    "session_id",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="balance_entries",
+                        to="group.collectsession",
+                    ),
+                ),
             ],
         ),
     ]
