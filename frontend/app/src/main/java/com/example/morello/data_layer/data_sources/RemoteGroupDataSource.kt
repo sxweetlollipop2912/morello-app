@@ -5,15 +5,23 @@ import com.example.morello.data_layer.data_sources.apis.BalanceEntryApi
 import com.example.morello.data_layer.data_sources.apis.GroupApi
 import com.example.morello.data_layer.data_sources.apis.MemberApi
 import com.example.morello.data_layer.data_sources.apis.client.ErrorResponse
-import com.example.morello.data_layer.data_sources.data_types.BalanceEntry
-import com.example.morello.data_layer.data_sources.data_types.CollectSession
-import com.example.morello.data_layer.data_sources.data_types.Group
-import com.example.morello.data_layer.data_sources.data_types.Member
-import com.example.morello.data_layer.data_sources.data_types.NewBalanceEntry
-import com.example.morello.data_layer.data_sources.data_types.NewGroup
-import com.example.morello.data_layer.data_sources.data_types.NewMember
-import com.example.morello.data_layer.data_sources.data_types.UpdatedBalanceEntry
-import com.example.morello.data_layer.data_sources.data_types.User
+import com.example.morello.data_layer.data_sources.data_types.balance.BalanceEntry
+import com.example.morello.data_layer.data_sources.data_types.collect_sessions.CollectSession
+import com.example.morello.data_layer.data_sources.data_types.groups.Group
+import com.example.morello.data_layer.data_sources.data_types.members.Member
+import com.example.morello.data_layer.data_sources.data_types.balance.NewBalanceEntryRequest
+import com.example.morello.data_layer.data_sources.data_types.balance.NewBalanceEntryResponse
+import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupRequest
+import com.example.morello.data_layer.data_sources.data_types.members.NewMemberRequest
+import com.example.morello.data_layer.data_sources.data_types.balance.UpdateBalanceEntryRequest
+import com.example.morello.data_layer.data_sources.data_types.balance.UpdateBalanceEntryResponse
+import com.example.morello.data_layer.data_sources.data_types.groups.GroupDetails
+import com.example.morello.data_layer.data_sources.data_types.groups.Leader
+import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupResponse
+import com.example.morello.data_layer.data_sources.data_types.groups.UpdateGroupRequest
+import com.example.morello.data_layer.data_sources.data_types.groups.UpdateGroupResponse
+import com.example.morello.data_layer.data_sources.data_types.members.NewMemberResponse
+import com.example.morello.data_layer.data_sources.data_types.user.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -35,7 +43,7 @@ class RemoteGroupDataSource @Inject constructor(
 ) {
     private val dispatcher = Dispatchers.IO
 
-    suspend fun getGroupById(id: Int): Group {
+    suspend fun getGroupById(id: Int): GroupDetails {
         return withContext(dispatcher) {
             val res = groupApi.getGroupById(id)
             if (res.isSuccessful) {
@@ -46,7 +54,7 @@ class RemoteGroupDataSource @Inject constructor(
         }
     }
 
-    suspend fun getLeader(groupId: Int): User {
+    suspend fun getLeader(groupId: Int): Leader {
         return withContext(dispatcher) {
             val res = groupApi.getLeaderByGroupId(groupId)
             if (res.isSuccessful) {
@@ -68,9 +76,9 @@ class RemoteGroupDataSource @Inject constructor(
         }
     }
 
-    suspend fun createNewGroup(newGroup: NewGroup): Group {
+    suspend fun createNewGroup(newGroupRequest: NewGroupRequest): NewGroupResponse {
         return withContext(dispatcher) {
-            val res = groupApi.createGroup(newGroup)
+            val res = groupApi.createGroup(newGroupRequest)
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
@@ -79,9 +87,9 @@ class RemoteGroupDataSource @Inject constructor(
         }
     }
 
-    suspend fun updateGroup(updatedGroup: Group): Group {
+    suspend fun updateGroup(id: Int, updateGroupRequest: UpdateGroupRequest): UpdateGroupResponse {
         return withContext(dispatcher) {
-            val res = groupApi.updateGroupById(updatedGroup.id, updatedGroup)
+            val res = groupApi.updateGroupById(id, updateGroupRequest)
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
@@ -116,27 +124,31 @@ class RemoteGroupDataSource @Inject constructor(
                 return@withContext res.body()!!
             } else {
                 val err = ErrorResponse.fromResponseBody(res.errorBody())
-                throw Exception("Error getting members: ${err}}")
+                throw Exception("Error getting members: $err")
             }
         }
     }
 
-    suspend fun removeMember(groupId: Int, memberId: Int) {
-        withContext(dispatcher) {
+    suspend fun removeMember(groupId: Int, memberId: Int): Member {
+        return withContext(dispatcher) {
             val res = memberApi.deleteMemberFromGroup(groupId, memberId)
-            if (!res.isSuccessful) {
+            if (res.isSuccessful) {
+                return@withContext res.body()!!
+            } else {
                 val err = ErrorResponse.fromResponseBody(res.errorBody())
-                throw Exception("Error removing member: ${err}}")
+                throw Exception("Error removing member: $err")
             }
         }
     }
 
-    suspend fun addMember(groupId: Int, member: NewMember) {
-        withContext(dispatcher) {
+    suspend fun addMember(groupId: Int, member: NewMemberRequest): NewMemberResponse {
+        return withContext(dispatcher) {
             val res = memberApi.addMemberToGroup(groupId, member)
-            if (!res.isSuccessful) {
+            if (res.isSuccessful) {
+                return@withContext res.body()!!
+            } else {
                 val err = ErrorResponse.fromResponseBody(res.errorBody())
-                throw Exception("Error adding member: ${err}}")
+                throw Exception("Error adding member: $err")
             }
         }
     }
@@ -148,17 +160,19 @@ class RemoteGroupDataSource @Inject constructor(
                 return@withContext res.body()!!
             } else {
                 val err = ErrorResponse.fromResponseBody(res.errorBody())
-                throw GetBalanceEntryException("Error getting balance entries: ${err}}")
+                throw GetBalanceEntryException("Error getting balance entries: $err")
             }
         }
     }
 
-    suspend fun deleteBalanceEntry(groupId: Int, balanceEntryId: Int) {
-        withContext(dispatcher) {
+    suspend fun deleteBalanceEntry(groupId: Int, balanceEntryId: Int): BalanceEntry {
+        return withContext(dispatcher) {
             val res = balanceEntryApi.deleteBalanceEntryFromGroup(groupId, balanceEntryId)
-            if (!res.isSuccessful) {
+            if (res.isSuccessful) {
+                return@withContext res.body()!!
+            } else {
                 val err = ErrorResponse.fromResponseBody(res.errorBody())
-                throw Exception("Error deleting balance entry: ${err}}")
+                throw DeleteBalanceEntryException("Error deleting balance entry: $err")
             }
         }
     }
@@ -167,23 +181,27 @@ class RemoteGroupDataSource @Inject constructor(
         groupId: Int,
         balanceEntryId: Int,
         balanceEntry: UpdateBalanceEntryRequest
-    ) {
-        withContext(dispatcher) {
+    ): UpdateBalanceEntryResponse {
+        return withContext(dispatcher) {
             val res =
                 balanceEntryApi.updateBalanceEntryInGroup(groupId, balanceEntryId, balanceEntry)
-            if (!res.isSuccessful) {
+            if (res.isSuccessful) {
+                return@withContext res.body()!!
+            } else {
                 val err = ErrorResponse.fromResponseBody(res.errorBody())
-                throw UpdateBalanceEntryException("Error updating balance entry: ${err}}")
+                throw UpdateBalanceEntryException("Error updating balance entry: $err")
             }
         }
     }
 
-    suspend fun createBalanceEntry(groupId: Int, balanceEntry: NewBalanceEntryRequest) {
-        withContext(dispatcher) {
+    suspend fun createBalanceEntry(groupId: Int, balanceEntry: NewBalanceEntryRequest): NewBalanceEntryResponse {
+        return withContext(dispatcher) {
             val res = balanceEntryApi.addBalanceEntryToGroup(groupId, balanceEntry)
-            if (!res.isSuccessful) {
+            if (res.isSuccessful) {
+                return@withContext res.body()!!
+            } else {
                 val err = ErrorResponse.fromResponseBody(res.errorBody())
-                throw CreateBalanceEntryException("Error creating balance entry: ${err}}")
+                throw CreateBalanceEntryException("Error creating balance entry: $err")
             }
         }
     }

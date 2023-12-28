@@ -1,20 +1,17 @@
 package com.example.morello.data_layer.repositories
 
-import android.util.Log
 import com.example.morello.data_layer.data_sources.RemoteGroupDataSource
 import com.example.morello.data_layer.data_sources.RemoteMemberDataSource
-import com.example.morello.data_layer.data_sources.SettingDataSource
-import com.example.morello.data_layer.data_sources.data_types.BalanceEntry
-import com.example.morello.data_layer.data_sources.data_types.CollectSession
-import com.example.morello.data_layer.data_sources.data_types.Group
-import com.example.morello.data_layer.data_sources.data_types.Member
-import com.example.morello.data_layer.data_sources.data_types.NewBalanceEntry
-import com.example.morello.data_layer.data_sources.data_types.NewGroup
-import com.example.morello.data_layer.data_sources.data_types.NewMember
-import com.example.morello.data_layer.data_sources.data_types.UpdatedBalanceEntry
-import com.example.morello.data_layer.data_sources.data_types.User
+import com.example.morello.data_layer.data_sources.data_types.balance.BalanceEntry
+import com.example.morello.data_layer.data_sources.data_types.collect_sessions.CollectSession
+import com.example.morello.data_layer.data_sources.data_types.groups.Group
+import com.example.morello.data_layer.data_sources.data_types.members.Member
+import com.example.morello.data_layer.data_sources.data_types.balance.NewBalanceEntryRequest
+import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupRequest
+import com.example.morello.data_layer.data_sources.data_types.members.NewMemberRequest
+import com.example.morello.data_layer.data_sources.data_types.balance.UpdateBalanceEntryRequest
+import com.example.morello.data_layer.data_sources.data_types.user.User
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 class GroupRepository @Inject constructor(
@@ -24,8 +21,8 @@ class GroupRepository @Inject constructor(
 ) {
     fun getLeader(groupId: Int): Flow<User> = TODO()
     suspend fun deleteGroup(groupId: Int): Nothing = TODO()
-    suspend fun createNewGroup(newGroup: NewGroup, members: List<NewMember>) {
-        val groupResponse = remoteGroupDataSource.createNewGroup(newGroup)
+    suspend fun createNewGroup(newGroupRequest: NewGroupRequest, members: List<NewMemberRequest>) {
+        val groupResponse = remoteGroupDataSource.createNewGroup(newGroupRequest)
         members.forEach {
             remoteMemberDataSource.addMemberToGroup(groupResponse.id, it)
         }

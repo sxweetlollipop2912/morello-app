@@ -1,28 +1,64 @@
 package com.example.morello.data_layer.data_sources.apis.mocked_apis
 
-import android.util.Log
 import com.example.morello.data_layer.data_sources.apis.GroupApi
-import com.example.morello.data_layer.data_sources.data_types.Group
-import com.example.morello.data_layer.data_sources.data_types.NewGroup
-import com.example.morello.data_layer.data_sources.data_types.User
+import com.example.morello.data_layer.data_sources.data_types.groups.Group
+import com.example.morello.data_layer.data_sources.data_types.groups.GroupBalance
+import com.example.morello.data_layer.data_sources.data_types.groups.GroupDetails
+import com.example.morello.data_layer.data_sources.data_types.groups.Leader
+import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupRequest
+import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupResponse
+import com.example.morello.data_layer.data_sources.data_types.groups.UpdateGroupRequest
+import com.example.morello.data_layer.data_sources.data_types.groups.UpdateGroupResponse
+import com.example.morello.data_layer.data_sources.data_types.user.User
 import okhttp3.ResponseBody
 import retrofit2.Response
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class MockedGroupApi @Inject constructor() : GroupApi {
     private val tempGroups = mutableListOf(
-        Group(1, "group1", "description1", isLeader = true),
-        Group(2, "group2", "description2", isLeader = false),
-        Group(3, "group3", "description3", isLeader = true),
+        GroupDetails(
+            id = 1,
+            name = "group1",
+            description = "description1",
+            memberCount = 0,
+            balance = GroupBalance(0f, 0f),
+            recentOpenSessions = emptyList(),
+            recentBalanceEntries = emptyList(),
+        ),
+        GroupDetails(
+            id = 2,
+            name = "group2",
+            description = "description2",
+            memberCount = 0,
+            balance = GroupBalance(0f, 0f),
+            recentOpenSessions = emptyList(),
+            recentBalanceEntries = emptyList(),
+        ),
+        GroupDetails(
+            id = 3,
+            name = "group3",
+            description = "description3",
+            memberCount = 0,
+            balance = GroupBalance(0f, 0f),
+            recentOpenSessions = emptyList(),
+            recentBalanceEntries = emptyList(),
+        ),
     )
 
     override suspend fun getManagedGroups(): Response<List<Group>> {
         return Response.success(
-            tempGroups.toList()
+            tempGroups.toList().map { group ->
+                Group(
+                    id = group.id,
+                    name = group.name,
+                    description = group.description,
+                    isLeader = true
+                ) }
         )
     }
 
-    override suspend fun getGroupById(id: Int): Response<Group> {
+    override suspend fun getGroupById(id: Int): Response<GroupDetails> {
         val ids = tempGroups.map { it.id }
         if (id !in ids)
             return Response.error(404, ResponseBody.create(null, "error"))
@@ -31,19 +67,20 @@ class MockedGroupApi @Inject constructor() : GroupApi {
         )
     }
 
-    override suspend fun getLeaderByGroupId(id: Int): Response<User> {
-        return Response.success(User(1, "user", "email"))
+    override suspend fun getLeaderByGroupId(id: Int): Response<Leader> {
+        return Response.success(Leader(1, "email", "name"))
     }
 
-    override suspend fun updateGroupById(id: Int, group: Group): Response<Group> {
+    override suspend fun updateGroupById(id: Int, group: UpdateGroupRequest): Response<UpdateGroupResponse> {
         if (group.name == "error")
             return Response.error(500, ResponseBody.create(null, "error"))
         return Response.success(
-            Group(
+            UpdateGroupResponse(
                 id = id,
                 name = group.name,
                 description = group.description,
-                isLeader = false
+                leaderUserId = 0,
+                createdAt = LocalDateTime.now(),
             )
         )
     }
@@ -52,16 +89,27 @@ class MockedGroupApi @Inject constructor() : GroupApi {
         return Response.success(Group(1, "group", "description", isLeader = false))
     }
 
-    override suspend fun createGroup(group: NewGroup): Response<Group> {
+    override suspend fun createGroup(group: NewGroupRequest): Response<NewGroupResponse> {
         if (group.name == "error")
             return Response.error(500, ResponseBody.create(null, "error"))
-        val newGroup = Group(
+        val newGroup = GroupDetails(
             id = tempGroups.size + 1,
             name = group.name,
             description = group.description,
-            isLeader = true
+            memberCount = 0,
+            balance = GroupBalance(0f, 0f),
+            recentOpenSessions = emptyList(),
+            recentBalanceEntries = emptyList(),
         )
         tempGroups.add(newGroup)
-        return Response.success(newGroup)
+        return Response.success(
+            NewGroupResponse(
+                id = newGroup.id,
+                name = newGroup.name,
+                description = newGroup.description,
+                leaderUserId = 1,
+                createdAt = LocalDateTime.now(),
+            )
+        )
     }
 }

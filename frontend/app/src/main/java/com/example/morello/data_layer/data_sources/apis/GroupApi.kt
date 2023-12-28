@@ -1,8 +1,13 @@
 package com.example.morello.data_layer.data_sources.apis
 
-import com.example.morello.data_layer.data_sources.data_types.Group
-import com.example.morello.data_layer.data_sources.data_types.NewGroup
-import com.example.morello.data_layer.data_sources.data_types.User
+import com.example.morello.data_layer.data_sources.data_types.groups.Group
+import com.example.morello.data_layer.data_sources.data_types.groups.GroupDetails
+import com.example.morello.data_layer.data_sources.data_types.groups.Leader
+import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupRequest
+import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupResponse
+import com.example.morello.data_layer.data_sources.data_types.groups.UpdateGroupRequest
+import com.example.morello.data_layer.data_sources.data_types.groups.UpdateGroupResponse
+import com.example.morello.data_layer.data_sources.data_types.user.User
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -16,17 +21,17 @@ interface GroupApi {
     suspend fun getManagedGroups(): Response<List<Group>>
 
     @GET("groups/{id}")
-    suspend fun getGroupById(@Path("id") id: Int): Response<Group>
+    suspend fun getGroupById(@Path("id") id: Int): Response<GroupDetails>
 
     @GET("groups/{id}/leader")
-    suspend fun getLeaderByGroupId(@Path("id") id: Int): Response<User>
+    suspend fun getLeaderByGroupId(@Path("id") id: Int): Response<Leader>
 
     @PUT("groups/{id}")
-    suspend fun updateGroupById(@Path("id") id: Int, @Body group: Group): Response<Group>
+    suspend fun updateGroupById(@Path("id") id: Int, @Body group: UpdateGroupRequest): Response<UpdateGroupResponse>
 
     @DELETE("groups/{id}")
     suspend fun deleteGroupById(@Path("id") id: Int): Response<Group>
 
     @POST("groups")
-    suspend fun createGroup(@Body group: NewGroup): Response<Group>
+    suspend fun createGroup(@Body group: NewGroupRequest): Response<NewGroupResponse>
 }
