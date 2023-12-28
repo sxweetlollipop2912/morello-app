@@ -1,5 +1,6 @@
 package com.example.morello.ui.create_group
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,9 +47,30 @@ fun CreateGroupScreen(
     onMembersListChanged: (List<String>) -> Unit,
     onSubmit: () -> Unit,
     onBack: () -> Unit,
+    onConfirmGoBack: () -> Unit,
+    onCancelGoBack: () -> Unit,
 ) {
     var isAddingMember by rememberSaveable { mutableStateOf(false) }
     var editingMemberName by rememberSaveable { mutableStateOf("") }
+
+    BackHandler(onBack = onBack)
+    if (uiState.state == State.TryToGoBack) {
+        AlertDialog(
+            onDismissRequest = { onBack() },
+            title = { Text(text = "Discard changes?") },
+            text = { Text(text = "Are you sure you want to discard changes?") },
+            confirmButton = {
+                Button(onClick = { onConfirmGoBack() }) {
+                    Text(text = "Discard")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { onCancelGoBack() }) {
+                    Text(text = "Cancel")
+                }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -119,6 +143,15 @@ fun CreateGroupScreen(
     if (isAddingMember) {
         AddMemberDialog(
             currentEditingMemberName = editingMemberName,
+            currentNameErrorMessage = { name ->
+                if (name.isEmpty()) {
+                    "Name cannot be empty"
+                } else if (uiState.membersList.contains(name)) {
+                    "Name already exists"
+                } else {
+                    ""
+                }
+            },
             onEditingMemberNameChanged = { editingMemberName = it },
             onDismissRequest = { isAddingMember = false },
             onAddMember = {
@@ -132,6 +165,7 @@ fun CreateGroupScreen(
 @Composable
 fun AddMemberDialog(
     currentEditingMemberName: String,
+    currentNameErrorMessage: (String) -> String,
     onEditingMemberNameChanged: (String) -> Unit,
     onDismissRequest: () -> Unit,
     onAddMember: () -> Unit,
@@ -152,6 +186,8 @@ fun AddMemberDialog(
             ) {
 
                 Text(text = "Add Member")
+
+                val errorMessage = currentNameErrorMessage(currentEditingMemberName)
                 TextField(
                     value = currentEditingMemberName,
                     onValueChange = {
@@ -163,11 +199,15 @@ fun AddMemberDialog(
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            onAddMember()
-                            onDismissRequest()
-                            onEditingMemberNameChanged("")
+                            if (errorMessage.isEmpty()) {
+                                onAddMember()
+                                onDismissRequest()
+                                onEditingMemberNameChanged("")
+                            }
                         }
                     ),
+                    isError = errorMessage.isNotEmpty(),
+                    supportingText = { Text(text = errorMessage) },
                     modifier = modifier.focusRequester(focusRequester),
                 )
             }

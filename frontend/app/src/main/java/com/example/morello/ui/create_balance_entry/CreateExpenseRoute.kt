@@ -15,16 +15,13 @@ fun CreateExpenseRoute(
     val uiState by viewModel.uiState.collectAsState()
     LaunchedEffect(uiState.state) {
         if (uiState.state == State.Success) {
-            viewModel.reload()
             onBack()
-        } else {
-            if (uiState.state == State.ConfirmGoBack) {
-                onBack()
-                viewModel.reload()
-            }
+            viewModel.reset()
+        } else if (uiState.state == State.ConfirmGoBack) {
+            onBack()
+            viewModel.reset()
         }
     }
-
     CreateExpenseScreen(
         uiState = uiState,
         onAmountChanged = viewModel::updateAmount,

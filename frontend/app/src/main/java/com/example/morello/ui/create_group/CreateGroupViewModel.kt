@@ -21,7 +21,7 @@ data class CreateGroupUiState(
 ) {
 
     companion object {
-        val Empty = CreateGroupUiState()
+        val new get() = CreateGroupUiState()
     }
 }
 
@@ -29,18 +29,20 @@ enum class State {
     Idle,
     Loading,
     Success,
-    Error
+    Error,
+    TryToGoBack,
+    ConfirmGoBack,
 }
 
 @HiltViewModel
 class CreateGroupViewModel @Inject constructor(
     private val groupRepository: GroupRepository,
 ) : ViewModel() {
-    private var _uiState = MutableStateFlow(CreateGroupUiState.Empty)
+    private var _uiState = MutableStateFlow(CreateGroupUiState.new)
     val uiState = _uiState.asStateFlow()
 
-    fun reload() {
-        _uiState.value = CreateGroupUiState.Empty
+    fun reset() {
+        _uiState.value = CreateGroupUiState.new
     }
 
     fun onGroupNameChanged(groupName: String) {
@@ -69,6 +71,44 @@ class CreateGroupViewModel @Inject constructor(
                 _uiState.value =
                     _uiState.value.copy(state = State.Error, submitError = e.message ?: "")
             }
+        }
+    }
+
+    fun isEmpty(): Boolean {
+        val (
+            groupName,
+            membersList,
+            _,
+            _,
+        ) = _uiState.value
+        return groupName.isEmpty() && membersList.isEmpty()
+    }
+
+    fun tryToGoBack() {
+        if (!isEmpty()) {
+            _uiState.value = _uiState.value.copy(state = State.TryToGoBack)
+        } else {
+            _uiState.value = _uiState.value.copy(state = State.ConfirmGoBack)
+        }
+    }
+
+    fun confirmGoBack() {
+        if (_uiState.value.state == State.TryToGoBack) {
+            _uiState.value = _uiState.value.copy(state = State.ConfirmGoBack)
+        } else {
+            throw IllegalStateException(
+                "confirm_go_back() called when state is not TryToGoBack"
+            )
+        }
+    }
+
+    fun cancelGoBack() {
+        if (_uiState.value.state == State.TryToGoBack) {
+            _uiState.value = _uiState.value.copy(state = State.Idle)
+        } else {
+            throw IllegalStateException(
+                "cancel_go_back() called when state is not ConfirmGoBack"
+            )
         }
     }
 }

@@ -14,8 +14,11 @@ fun CreateGroupRoute(
     val uiState by viewModel.uiState.collectAsState()
     LaunchedEffect(uiState.state) {
         if (uiState.state == State.Success) {
-            viewModel.reload()
             onBack()
+            viewModel.reset()
+        } else if (uiState.state == State.ConfirmGoBack) {
+            onBack()
+            viewModel.reset()
         }
     }
     CreateGroupScreen(
@@ -24,11 +27,15 @@ fun CreateGroupRoute(
         onMembersListChanged = viewModel::onMembersListChanged,
         onSubmit = {
             viewModel.onSubmit()
-            onBack()
         },
         onBack = {
-            viewModel.reload()
-            onBack()
+            viewModel.tryToGoBack()
+        },
+        onConfirmGoBack = {
+            viewModel.confirmGoBack()
+        },
+        onCancelGoBack = {
+            viewModel.cancelGoBack()
         }
     )
 }

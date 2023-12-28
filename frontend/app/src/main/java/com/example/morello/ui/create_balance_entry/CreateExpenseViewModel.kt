@@ -31,7 +31,7 @@ data class CreateExpenseUiState(
     val error: String? = null,
 ) {
     companion object {
-        val Empty = CreateExpenseUiState(
+        val new = CreateExpenseUiState(
             amount = 0,
             balanceAfter = 0,
             name = "",
@@ -46,26 +46,12 @@ class CreateExpenseViewModel @Inject constructor(
     private val groupRepository: GroupRepository,
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(
-        CreateExpenseUiState(
-            amount = 0,
-            balanceAfter = 0,
-            name = "",
-            description = "",
-            dateTime = LocalDateTime.now(),
-        )
+        CreateExpenseUiState.new
     )
     val uiState = _uiState.asStateFlow()
-    private var _emptyState = _uiState.value
 
-    fun reload() {
-        _uiState.value = CreateExpenseUiState(
-            amount = 0,
-            balanceAfter = 0,
-            name = "",
-            description = "",
-            dateTime = LocalDateTime.now(),
-        )
-        _emptyState = _uiState.value
+    fun reset() {
+        _uiState.value = CreateExpenseUiState.new
     }
 
     private fun isEmpty(): Boolean {
