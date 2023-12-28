@@ -1,35 +1,28 @@
 package com.example.morello.ui.navigation
 
-import android.app.Activity
-import android.util.Log
+import CreateGroupRoute
+import CreateIncomeRoute
+import ForgotPasswordCodeRoute
+import ForgotPasswordRoute
+import GroupOwnerHomeRoute
+import HomeRoute
+import LoginRoute
+import OwnerGroupHomeRoute
+import RegisterRoute
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
-import androidx.navigation.navArgument
-import com.example.morello.MorelloApp
-import com.example.morello.data_layer.data_sources.data_types.Group
 import com.example.morello.ui.authorized_home.AuthorizedHomeRoute
-import com.example.morello.ui.authorized_home.AuthorizedHomeScreen
 import com.example.morello.ui.authorized_home.AuthorizedHomeViewModel
 import com.example.morello.ui.create_balance_entry.CreateExpenseRoute
-import com.example.morello.ui.create_balance_entry.CreateExpenseScreen
 import com.example.morello.ui.create_balance_entry.CreateExpenseViewModel
 import com.example.morello.ui.create_group.CreateGroupRoute
 import com.example.morello.ui.create_group.CreateGroupViewModel
@@ -41,50 +34,46 @@ import com.example.morello.ui.owner_group.OwnerGroupRoute
 import com.example.morello.ui.owner_group.OwnerGroupViewModel
 import com.example.morello.ui.register.RegisterRoute
 import com.example.morello.ui.register.RegisterViewModel
-import dagger.hilt.android.internal.lifecycle.HiltViewModelFactory
-import dagger.hilt.android.internal.lifecycle.HiltViewModelMap
 
 fun NavGraphBuilder.ownerGroupHomeGraph(
     viewModelProvider: ViewModelProvider,
     navController: NavHostController,
 ) {
+    val graphRoute = OwnerGroupHomeRoute
+
     navigation(
-        route = "ownerGroupHome/{groupId}",
-        startDestination = "groupOwnerHome",
-        arguments = listOf(
-            navArgument("groupId") {
-                type = NavType.IntType
-            }
-        )
+        route = graphRoute.routeWithArgs,
+        startDestination = GroupOwnerHomeRoute.routeWithArgs,
+        arguments = graphRoute.args
     ) {
-        composable("groupOwnerHome") {
+        composable(GroupOwnerHomeRoute.routeWithArgs) {
             val parentEntry = remember(it) {
-                navController.getBackStackEntry("ownerGroupHome/{groupId}")
+                navController.getBackStackEntry(graphRoute.routeWithArgs)
             }
-            val groupId = parentEntry.arguments?.getInt("groupId")!!
+            val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
             OwnerGroupRoute(
                 groupId = groupId,
                 viewModel = viewModelProvider[OwnerGroupViewModel::class.java],
                 onAddNewIncomeEntry = {
-                    navController.navigate("createBalanceEntry/income")
+                    navController.navigate(CreateIncomeRoute.routeWithArgs)
                 },
                 onAddNewExpenseEntry = {
-                    navController.navigate("createBalanceEntry/expense")
+                    navController.navigate(CreateExpenseRoute.base)
                 },
                 onAddNewMember = {
-                    navController.navigate("addMember")
+                    navController.navigate(AddMemberRoute.base)
                 },
                 onBack = {
                     navController.popBackStack()
                 })
         }
         composable(
-            "createBalanceEntry/expense",
+            CreateExpenseRoute.routeWithArgs
         ) {
             val parentEntry = remember(it) {
-                navController.getBackStackEntry("ownerGroupHome/{groupId}")
+                navController.getBackStackEntry(graphRoute.routeWithArgs)
             }
-            val groupId = parentEntry.arguments?.getInt("groupId")!!
+                val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
             CreateExpenseRoute(
                 groupId = groupId,
                 viewModel = viewModelProvider[CreateExpenseViewModel::class.java],
@@ -93,11 +82,11 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
                 }
             )
         }
-        composable("createBalanceEntry/income") {
+        composable(CreateIncomeRoute.routeWithArgs) {
             val parentEntry = remember(it) {
-                navController.getBackStackEntry("ownerGroupHome/{groupId}")
+                navController.getBackStackEntry(graphRoute.routeWithArgs)
             }
-            val groupId = parentEntry.arguments?.getInt("groupId")!!
+            val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
             CreateExpenseRoute(
                 groupId = groupId,
                 viewModel = viewModelProvider[CreateExpenseViewModel::class.java],
@@ -114,26 +103,26 @@ fun NavGraphBuilder.authorizedHomeGraph(
     navController: NavHostController,
 ) {
     navigation(
-        startDestination = "home",
-        route = "authorizedHome",
+        startDestination = HomeRoute.routeWithArgs,
+        route = AuthorizedHomeRoute.routeWithArgs
     ) {
         ownerGroupHomeGraph(
             viewModelProvider = viewModelProvider,
             navController = navController,
         )
-        composable("home") {
+        composable(HomeRoute.routeWithArgs) {
             val viewModel = viewModelProvider[AuthorizedHomeViewModel::class.java]
             AuthorizedHomeRoute(
                 viewModel = viewModel,
                 onCreateNewGroup = {
-                    navController.navigate("createGroup")
+                    navController.navigate(CreateGroupRoute.base)
                 },
                 navigateToGroup = { groupId ->
-                    navController.navigate("ownerGroupHome/$groupId")
+                    navController.navigate("${OwnerGroupHomeRoute.base}/$groupId")
                 }
             )
         }
-        composable("createGroup") {
+        composable(CreateGroupRoute.routeWithArgs) {
             CreateGroupRoute(
                 viewModel = viewModelProvider[CreateGroupViewModel::class.java],
                 onBack = {
@@ -161,7 +150,7 @@ fun MorelloNavHost(
             viewModelProvider = viewModelProvider,
             navController = navController,
         )
-        composable("createGroup") {
+        composable(CreateGroupRoute.routeWithArgs) {
             CreateGroupRoute(
                 viewModel = viewModelProvider[CreateGroupViewModel::class.java],
                 onBack = {
@@ -169,49 +158,49 @@ fun MorelloNavHost(
                 }
             )
         }
-        composable("login") {
+        composable(LoginRoute.routeWithArgs) {
             LoginRoute(
                 viewModel = viewModelProvider[LoginViewModel::class.java],
                 switchToSignIn = {
-                    navController.navigate("register")
+                    navController.navigate(RegisterRoute.base)
                 },
                 switchToForgotPassword = {
-                    navController.navigate("forgotPassword")
+                    navController.navigate(ForgotPasswordRoute.base)
                 },
                 onGoogleLoginRequest = {
-                    navController.navigate("login")
+                    navController.navigate(LoginRoute.base)
                 },
                 onFacebookLoginRequest = {
-                    navController.navigate("login")
+                    navController.navigate(LoginRoute.base)
                 },
                 onLoginSuccess = {
-                    navController.navigate("home")
+                    navController.navigate(HomeRoute.base)
                 },
                 modifier = Modifier.padding(10.dp),
             )
         }
-        composable("register") {
+        composable(RegisterRoute.routeWithArgs) {
             RegisterRoute(
                 viewModel = viewModelProvider[RegisterViewModel::class.java],
                 switchToLogin = {
-                    navController.navigate("login")
+                    navController.navigate(LoginRoute.base)
                 },
                 modifier = Modifier.padding(10.dp),
             )
         }
-        composable("forgotPassword") {
+        composable(ForgotPasswordRoute.routeWithArgs) {
             ForgotPasswordEmailScreen(
                 email = "",
                 onEmailChanged = {},
                 onEmailSent = {
-                    navController.navigate("forgotPassword/code")
+                    navController.navigate(ForgotPasswordCodeRoute.base)
                 },
                 onLoginClicked = { /*TODO*/ },
                 onBack = { },
                 modifier = Modifier.padding(10.dp),
             )
         }
-        composable("forgotPassword/code") {
+        composable(ForgotPasswordCodeRoute.routeWithArgs) {
             ForgotPasswordCodeValidationScreen(
                 email = "ltp@gmail.com",
                 onBack = { /*TODO*/ })
