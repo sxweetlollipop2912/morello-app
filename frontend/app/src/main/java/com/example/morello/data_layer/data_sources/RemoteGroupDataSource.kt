@@ -166,7 +166,7 @@ class RemoteGroupDataSource @Inject constructor(
     suspend fun updateBalanceEntry(
         groupId: Int,
         balanceEntryId: Int,
-        balanceEntry: UpdatedBalanceEntry
+        balanceEntry: UpdateBalanceEntryRequest
     ) {
         withContext(dispatcher) {
             val res =
@@ -178,7 +178,7 @@ class RemoteGroupDataSource @Inject constructor(
         }
     }
 
-    suspend fun createBalanceEntry(groupId: Int, balanceEntry: NewBalanceEntry) {
+    suspend fun createBalanceEntry(groupId: Int, balanceEntry: NewBalanceEntryRequest) {
         withContext(dispatcher) {
             val res = balanceEntryApi.addBalanceEntryToGroup(groupId, balanceEntry)
             if (!res.isSuccessful) {

@@ -61,12 +61,12 @@ class GroupRepository @Inject constructor(
     suspend fun updateBalanceEntry(
         groupId: Int,
         balanceEntryId: Int,
-        balanceEntry: UpdatedBalanceEntry
+        balanceEntry: UpdateBalanceEntryRequest
     ) {
         remoteGroupDataSource.updateBalanceEntry(groupId, balanceEntryId, balanceEntry)
     }
 
-    suspend fun createBalanceEntry(groupId: Int, balanceEntry: NewBalanceEntry) {
+    suspend fun createBalanceEntry(groupId: Int, balanceEntry: NewBalanceEntryRequest) {
         remoteGroupDataSource.createBalanceEntry(groupId, balanceEntry)
     }
 }

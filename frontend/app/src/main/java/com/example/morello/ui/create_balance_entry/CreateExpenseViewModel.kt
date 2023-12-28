@@ -117,10 +117,11 @@ class CreateExpenseViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val rs = groupRepository.createBalanceEntry(groupId, _uiState.value.let {
-                    NewBalanceEntry(
+                    NewBalanceEntryRequest(
                         name = it.name,
                         description = it.description,
-                        expectedAmount = it.amount,
+                        amount = it.amount,
+                        createdAt = LocalDateTime.now()
                     )
                 })
                 _uiState.value = _uiState.value.copy(state = State.Success)
