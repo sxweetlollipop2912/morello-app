@@ -35,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.morello.data_layer.data_sources.data_types.formatted
 
 data object OwnerGroupScreen {
     data class CollectSessionInfo(
@@ -142,8 +143,8 @@ fun OwnerGroupScreen(
                 .verticalScroll(scrollState)
         ) {
             Text(text = "Group Balance")
-            Text(text = "$groupBalance", style = MaterialTheme.typography.displayMedium)
-            Text(text = "After Collecting: $afterCollectingBalance")
+            Text(text = groupBalance.formatted(), style = MaterialTheme.typography.displayMedium)
+            Text(text = "After Collecting: ${afterCollectingBalance.formatted()}")
             CollectSessionsCard(
                 onSeeAll = onSeeAllCollectSessionClicked,
                 collectSessions = subCollections, modifier = Modifier

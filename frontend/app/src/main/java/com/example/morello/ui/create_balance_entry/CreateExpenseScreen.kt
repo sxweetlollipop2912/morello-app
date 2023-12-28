@@ -32,6 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.morello.data_layer.data_sources.data_types.Currency
+import com.example.morello.data_layer.data_sources.data_types.formatted
 import com.example.morello.ui.components.CreateBalanceEntryTopBar
 import com.example.morello.ui.components.FixedSignNumberEditField
 import java.time.Instant
@@ -44,7 +46,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun CreateExpenseScreen(
     uiState: CreateExpenseUiState,
-    onAmountChanged: (Int) -> Unit,
+    onAmountChanged: (Currency) -> Unit,
     onNameChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onDateTimeChanged: (LocalDateTime) -> Unit,
@@ -116,15 +118,15 @@ fun CreateExpenseScreen(
                 Spacer(modifier = Modifier.padding(8.dp))
             }
             FixedSignNumberEditField(
-                value = amount.toUInt(),
+                value = amount,
                 negativeSign = true,
                 onValueChange = {
-                    onAmountChanged(it.toInt())
+                    onAmountChanged(it)
                 },
                 modifier = Modifier.fillMaxWidth()
             )
             Text(
-                text = "Balance after: $balanceAfter VND",
+                text = "Balance after: ${balanceAfter.formatted()} VND",
                 textAlign = TextAlign.End,
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.fillMaxWidth()

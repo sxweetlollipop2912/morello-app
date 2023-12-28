@@ -1,6 +1,7 @@
 package com.example.morello.ui.owner_group
 
 import androidx.lifecycle.ViewModel
+import com.example.morello.data_layer.data_sources.data_types.Currency
 import com.example.morello.data_layer.repositories.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,8 +9,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 data class OwnerGroupUiState(
-    val groupBalance: Int,
-    val afterCollectingBalance: Int,
+    val groupBalance: Currency,
+    val afterCollectingBalance: Currency,
     val subCollections: List<OwnerGroupScreen.CollectSessionInfo>,
     val subTransactions: List<OwnerGroupScreen.TransactionInfo>,
     val subMembers: List<OwnerGroupScreen.MemberInfo>,
@@ -17,8 +18,8 @@ data class OwnerGroupUiState(
 ) {
     companion object {
         val Empty = OwnerGroupUiState(
-            groupBalance = 0,
-            afterCollectingBalance = 0,
+            groupBalance = 0f,
+            afterCollectingBalance = 0f,
             subCollections = emptyList(),
             subTransactions = emptyList(),
             subMembers = emptyList(),

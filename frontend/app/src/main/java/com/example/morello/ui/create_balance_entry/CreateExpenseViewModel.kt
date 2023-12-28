@@ -3,7 +3,8 @@ package com.example.morello.ui.create_balance_entry
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.morello.data_layer.data_sources.CreateBalanceEntryException
-import com.example.morello.data_layer.data_sources.data_types.NewBalanceEntry
+import com.example.morello.data_layer.data_sources.data_types.Currency
+import com.example.morello.data_layer.data_sources.data_types.balance.NewBalanceEntryRequest
 import com.example.morello.data_layer.repositories.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,8 +23,8 @@ enum class State {
 }
 
 data class CreateExpenseUiState(
-    val amount: Int,
-    val balanceAfter: Int,
+    val amount: Currency,
+    val balanceAfter: Currency,
     val name: String,
     val description: String,
     val dateTime: LocalDateTime,
@@ -32,8 +33,8 @@ data class CreateExpenseUiState(
 ) {
     companion object {
         val new = CreateExpenseUiState(
-            amount = 0,
-            balanceAfter = 0,
+            amount = 0f,
+            balanceAfter = 0f,
             name = "",
             description = "",
             dateTime = LocalDateTime.now(),
@@ -61,7 +62,7 @@ class CreateExpenseViewModel @Inject constructor(
             name,
             description,
         ) = _uiState.value
-        return amount == 0 && name == "" && description == ""
+        return amount == 0f && name == "" && description == ""
     }
 
     fun tryToGoBack() {
@@ -92,11 +93,11 @@ class CreateExpenseViewModel @Inject constructor(
         }
     }
 
-    fun updateAmount(amount: Int) {
+    fun updateAmount(amount: Currency) {
         _uiState.value = _uiState.value.copy(amount = amount)
     }
 
-    fun updateBalanceAfter(balanceAfter: Int) {
+    fun updateBalanceAfter(balanceAfter: Currency) {
         _uiState.value = _uiState.value.copy(balanceAfter = balanceAfter)
     }
 

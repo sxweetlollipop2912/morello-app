@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.morello.data_layer.data_sources.data_types.Currency
 import com.example.morello.ui.components.CreateBalanceEntryTopBar
 import com.example.morello.ui.components.FixedSignNumberEditField
 import com.example.morello.ui.components.SectionDividerWithText
@@ -47,12 +48,12 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateIncomeScreen(
-    amount: Int,
-    balanceAfter: Int,
+    amount: Currency,
+    balanceAfter: Currency,
     name: String,
     description: String,
     dateTime: LocalDateTime,
-    onBalanceChanged: (Int) -> Unit,
+    onBalanceChanged: (Currency) -> Unit,
     onNameChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     onDateTimeChanged: (LocalDateTime) -> Unit,
@@ -83,10 +84,10 @@ fun CreateIncomeScreen(
                 fontWeight = FontWeight.Bold,
             )
             FixedSignNumberEditField(
-                value = amount.toUInt(),
+                value = amount,
                 negativeSign = false,
                 onValueChange = {
-                    onBalanceChanged(it.toInt())
+                    onBalanceChanged(it)
                 }
             )
             Text(

@@ -18,24 +18,27 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection.Ltr
+import com.example.morello.data_layer.data_sources.data_types.Currency
+import com.example.morello.data_layer.data_sources.data_types.formatted
+import com.example.morello.data_layer.data_sources.data_types.formattedStrToCurrency
 
 @Composable
 fun FixedSignNumberEditField(
-    value: UInt,
+    value: Currency,
     negativeSign: Boolean,
-    onValueChange: (UInt) -> Unit,
+    onValueChange: (Currency) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val direction = LocalLayoutDirection.current
     val selection =
         if (direction == Ltr) {
-            TextRange(value.toString().length + if (negativeSign) 1 else 0)
+            TextRange(value.formatted().length + if (negativeSign) 1 else 0)
         } else
             TextRange.Zero
     val valueString = if (negativeSign) {
-        "-${value}"
+        "-${value.formatted()}"
     } else {
-        value.toString()
+        value.formatted()
     }
     val textFieldValue = TextFieldValue(text = valueString, selection = selection)
     val focusRequester = remember { FocusRequester() }
@@ -45,14 +48,10 @@ fun FixedSignNumberEditField(
     OutlinedTextField(
         value = textFieldValue,
         onValueChange = { newTfv: TextFieldValue ->
-            if (negativeSign) {
-                if (newTfv.text.startsWith("-")) {
-                    onValueChange(newTfv.text.substring(1).toUIntOrNull() ?: 0U)
-                } else {
-                    onValueChange(newTfv.text.toUIntOrNull() ?: 0U)
-                }
+            if (negativeSign && newTfv.text.startsWith("-")) {
+                onValueChange(formattedStrToCurrency(newTfv.text.substring(1)))
             } else {
-                onValueChange(newTfv.text.toUIntOrNull() ?: 0U)
+                onValueChange(formattedStrToCurrency(newTfv.text))
             }
         },
         prefix = {
