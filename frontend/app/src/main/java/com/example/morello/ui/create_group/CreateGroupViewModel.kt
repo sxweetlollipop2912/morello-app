@@ -3,8 +3,8 @@ package com.example.morello.ui.create_group
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.morello.data_layer.data_sources.CreateGroupException
-import com.example.morello.data_layer.data_sources.data_types.NewGroup
-import com.example.morello.data_layer.data_sources.data_types.NewMember
+import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupRequest
+import com.example.morello.data_layer.data_sources.data_types.members.NewMemberRequest
 import com.example.morello.data_layer.repositories.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -58,12 +58,12 @@ class CreateGroupViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 groupRepository.createNewGroup(
-                    newGroup = NewGroup(
+                    newGroupRequest = NewGroupRequest(
                         name = _uiState.value.groupName,
                         description = "",
                     ),
                     members = _uiState.value.membersList.map {
-                        NewMember(it)
+                        NewMemberRequest(it)
                     }
                 )
                 _uiState.value = _uiState.value.copy(state = State.Success)

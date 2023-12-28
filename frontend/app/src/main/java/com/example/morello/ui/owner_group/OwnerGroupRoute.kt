@@ -3,7 +3,6 @@ package com.example.morello.ui.owner_group
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.example.morello.data_layer.data_sources.data_types.NewBalanceEntry
 
 @Composable
 fun OwnerGroupRoute(

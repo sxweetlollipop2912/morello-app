@@ -1,7 +1,6 @@
 package com.example.morello.ui.authorized_home
 
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.morello.data_layer.data_sources.data_types.groups.Group
@@ -48,7 +47,8 @@ class AuthorizedHomeViewModel @Inject constructor(
     private var _uiState = MutableStateFlow(AuthorizedHomeUiState.Empty)
     val uiState = _uiState.asStateFlow()
 
-    init { reload()
+    init {
+        reload()
     }
 
     fun reload() {

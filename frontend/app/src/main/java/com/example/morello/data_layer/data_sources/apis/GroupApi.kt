@@ -7,7 +7,6 @@ import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupReq
 import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupResponse
 import com.example.morello.data_layer.data_sources.data_types.groups.UpdateGroupRequest
 import com.example.morello.data_layer.data_sources.data_types.groups.UpdateGroupResponse
-import com.example.morello.data_layer.data_sources.data_types.user.User
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

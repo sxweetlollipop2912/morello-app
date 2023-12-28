@@ -1,6 +1,5 @@
 package com.example.morello.ui.login
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.morello.data_layer.repositories.UserRepository
