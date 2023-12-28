@@ -77,7 +77,9 @@ fun CreateGroupScreen(
         }
     ) {
         Column(
-            Modifier.padding(it)
+            Modifier
+                .padding(it)
+                .padding(horizontal = 16.dp)
         ) {
             Text(text = "Group Name")
             TextField(

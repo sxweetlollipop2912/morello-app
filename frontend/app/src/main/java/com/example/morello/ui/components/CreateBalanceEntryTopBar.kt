@@ -52,6 +52,7 @@ fun CreateBalanceEntryTopBar(
             ) {
                 onCreate()
             }
-        }
+        },
+        modifier = modifier
     )
 }

@@ -82,6 +82,7 @@ fun CreateExpenseScreen(
                 title = "New expense",
                 onCreate = onCreate,
                 onBack = onBack,
+                modifier = Modifier.padding(end = 16.dp)
             )
         },
         modifier = modifier,
@@ -89,6 +90,7 @@ fun CreateExpenseScreen(
         Column(
             modifier = Modifier
                 .padding(padding)
+                .padding(horizontal = 16.dp)
                 .fillMaxWidth()
         ) {
             val titleTextStyle = MaterialTheme.typography.titleMedium.copy(
@@ -118,7 +120,9 @@ fun CreateExpenseScreen(
                 negativeSign = true,
                 onValueChange = {
                     onAmountChanged(it.toInt())
-                })
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
             Text(
                 text = "Balance after: $balanceAfter VND",
                 textAlign = TextAlign.End,

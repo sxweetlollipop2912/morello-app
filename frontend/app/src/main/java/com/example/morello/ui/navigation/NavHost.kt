@@ -55,7 +55,7 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
                 groupId = groupId,
                 viewModel = viewModelProvider[OwnerGroupViewModel::class.java],
                 onAddNewIncomeEntry = {
-                    navController.navigate(CreateIncomeRoute.routeWithArgs)
+                    navController.navigate(CreateIncomeRoute.base)
                 },
                 onAddNewExpenseEntry = {
                     navController.navigate(CreateExpenseRoute.base)
@@ -87,6 +87,7 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
                 navController.getBackStackEntry(graphRoute.routeWithArgs)
             }
             val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
+            // TODO: Replace with CreateIncomeRoute
             CreateExpenseRoute(
                 groupId = groupId,
                 viewModel = viewModelProvider[CreateExpenseViewModel::class.java],
