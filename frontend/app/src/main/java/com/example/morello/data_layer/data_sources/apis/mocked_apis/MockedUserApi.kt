@@ -1,17 +1,18 @@
 package com.example.morello.data_layer.data_sources.apis.mocked_apis
 
 import com.example.morello.data_layer.data_sources.apis.UserApi
-import com.example.morello.data_layer.data_sources.apis.models.user_api.LoginRequest
-import com.example.morello.data_layer.data_sources.apis.models.user_api.LoginResponse
-import com.example.morello.data_layer.data_sources.apis.models.user_api.RefreshTokenRequest
-import com.example.morello.data_layer.data_sources.apis.models.user_api.RefreshTokenResponse
-import com.example.morello.data_layer.data_sources.apis.models.user_api.RegisterRequest
-import com.example.morello.data_layer.data_sources.apis.models.user_api.RegisterResponse
-import com.example.morello.data_layer.data_sources.apis.models.user_api.UserMeResponse
+import com.example.morello.data_layer.data_sources.data_types.user.LoginRequest
+import com.example.morello.data_layer.data_sources.data_types.user.LoginResponse
+import com.example.morello.data_layer.data_sources.data_types.user.RefreshTokenRequest
+import com.example.morello.data_layer.data_sources.data_types.user.RefreshTokenResponse
+import com.example.morello.data_layer.data_sources.data_types.user.RegisterRequest
+import com.example.morello.data_layer.data_sources.data_types.user.RegisterResponse
+import com.example.morello.data_layer.data_sources.data_types.user.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import retrofit2.Response
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class MockedUserApi @Inject constructor() : UserApi {
@@ -40,20 +41,21 @@ class MockedUserApi @Inject constructor() : UserApi {
                 id = 1,
                 name = registerRequest.name,
                 email = registerRequest.email,
+                createdAt = LocalDateTime.now(),
             )
         )
     }
 
-    override suspend fun fetchUserDetail(): Response<UserMeResponse> {
+    override suspend fun fetchUserDetail(): Response<User> {
         withContext(Dispatchers.IO) {
             Thread.sleep(1000)
         }
         return Response.success(
-            UserMeResponse(
+            User(
                 id = 1,
                 name = "username",
                 email = "user@gmail.com",
-                createdAt = "2021-01-01T00:00:00.000Z",
+                createdAt = LocalDateTime.now(),
             )
         )
     }

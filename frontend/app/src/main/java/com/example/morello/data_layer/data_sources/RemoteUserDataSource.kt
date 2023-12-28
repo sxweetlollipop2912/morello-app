@@ -3,11 +3,11 @@ package com.example.morello.data_layer.data_sources
 import android.util.Log
 import com.example.morello.data_layer.data_sources.apis.BalanceEntryApi
 import com.example.morello.data_layer.data_sources.apis.UserApi
-import com.example.morello.data_layer.data_sources.apis.models.user_api.LoginRequest
-import com.example.morello.data_layer.data_sources.apis.models.user_api.LoginResponse
-import com.example.morello.data_layer.data_sources.apis.models.user_api.RegisterRequest
-import com.example.morello.data_layer.data_sources.apis.models.user_api.RegisterResponse
-import com.example.morello.data_layer.data_sources.apis.models.user_api.UserMeResponse
+import com.example.morello.data_layer.data_sources.data_types.user.LoginRequest
+import com.example.morello.data_layer.data_sources.data_types.user.LoginResponse
+import com.example.morello.data_layer.data_sources.data_types.user.RegisterRequest
+import com.example.morello.data_layer.data_sources.data_types.user.RegisterResponse
+import com.example.morello.data_layer.data_sources.data_types.user.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -41,7 +41,7 @@ class RemoteUserDataSource @Inject constructor(
         }
     }
 
-    suspend fun fetchUserDetail(): UserMeResponse {
+    suspend fun fetchUserDetail(): User {
         return withContext(dispatcher) {
             val res = userApi.fetchUserDetail()
             if (res.isSuccessful) {

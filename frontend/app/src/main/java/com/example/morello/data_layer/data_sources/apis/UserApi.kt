@@ -1,12 +1,12 @@
 package com.example.morello.data_layer.data_sources.apis
 
-import com.example.morello.data_layer.data_sources.apis.models.user_api.LoginRequest
-import com.example.morello.data_layer.data_sources.apis.models.user_api.LoginResponse
-import com.example.morello.data_layer.data_sources.apis.models.user_api.RefreshTokenRequest
-import com.example.morello.data_layer.data_sources.apis.models.user_api.RefreshTokenResponse
-import com.example.morello.data_layer.data_sources.apis.models.user_api.RegisterRequest
-import com.example.morello.data_layer.data_sources.apis.models.user_api.RegisterResponse
-import com.example.morello.data_layer.data_sources.apis.models.user_api.UserMeResponse
+import com.example.morello.data_layer.data_sources.data_types.user.LoginRequest
+import com.example.morello.data_layer.data_sources.data_types.user.LoginResponse
+import com.example.morello.data_layer.data_sources.data_types.user.RefreshTokenRequest
+import com.example.morello.data_layer.data_sources.data_types.user.RefreshTokenResponse
+import com.example.morello.data_layer.data_sources.data_types.user.RegisterRequest
+import com.example.morello.data_layer.data_sources.data_types.user.RegisterResponse
+import com.example.morello.data_layer.data_sources.data_types.user.User
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -23,5 +23,5 @@ interface UserApi {
     suspend fun register(@Body registerRequest: RegisterRequest): Response<RegisterResponse>
 
     @GET("me")
-    suspend fun fetchUserDetail(): Response<UserMeResponse>
+    suspend fun fetchUserDetail(): Response<User>
 }
