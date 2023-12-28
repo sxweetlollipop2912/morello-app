@@ -1,4 +1,4 @@
-package com.example.morello.data_layer.data_sources.data_types
+package com.example.morello.data_layer.data_sources.data_types.collect_sessions
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

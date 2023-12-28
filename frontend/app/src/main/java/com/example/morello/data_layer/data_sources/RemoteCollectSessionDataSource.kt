@@ -3,8 +3,8 @@ package com.example.morello.data_layer.data_sources
 import com.example.morello.data_layer.data_sources.apis.CollectSessionApi
 import com.example.morello.data_layer.data_sources.apis.ModeratorApi
 import com.example.morello.data_layer.data_sources.apis.client.ErrorResponse
-import com.example.morello.data_layer.data_sources.data_types.CollectSession
-import com.example.morello.data_layer.data_sources.data_types.CollectSessionEntry
+import com.example.morello.data_layer.data_sources.data_types.collect_sessions.CollectSession
+import com.example.morello.data_layer.data_sources.data_types.collect_sessions.CollectSessionEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
