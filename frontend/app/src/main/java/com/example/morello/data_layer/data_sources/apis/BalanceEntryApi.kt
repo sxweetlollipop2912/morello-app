@@ -14,23 +14,23 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface BalanceEntryApi {
-    @GET("groups/{id}/entries")
+    @GET("groups/{id}/entries/")
     suspend fun getBalanceEntriesByGroupId(@Path("id") id: Int): Response<List<BalanceEntry>>
 
-    @PUT("groups/{id}/entries/{entryId}")
+    @PUT("groups/{id}/entries/{entryId}/")
     suspend fun updateBalanceEntryInGroup(
         @Path("id") id: Int,
         @Path("entryId") entryId: Int,
         @Body entry: UpdateBalanceEntryRequest,
     ): Response<UpdateBalanceEntryResponse>
 
-    @POST("groups/{id}/entries")
+    @POST("groups/{id}/entries/")
     suspend fun addBalanceEntryToGroup(
         @Path("id") id: Int,
         @Body entry: NewBalanceEntryRequest,
     ): Response<NewBalanceEntryResponse>
 
-    @DELETE("groups/{id}/entries/{entryId}")
+    @DELETE("groups/{id}/entries/{entryId}/")
     suspend fun deleteBalanceEntryFromGroup(
         @Path("id") id: Int,
         @Path("entryId") entryId: Int

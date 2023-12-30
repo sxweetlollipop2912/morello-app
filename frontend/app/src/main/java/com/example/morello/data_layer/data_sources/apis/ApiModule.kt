@@ -1,31 +1,33 @@
 package com.example.morello.data_layer.data_sources.apis
 
-import com.example.morello.data_layer.data_sources.apis.mocked_apis.MockedBalanceEntryApi
-import com.example.morello.data_layer.data_sources.apis.mocked_apis.MockedGroupApi
-import com.example.morello.data_layer.data_sources.apis.mocked_apis.MockedMemberApi
-import com.example.morello.data_layer.data_sources.apis.mocked_apis.MockedUserApi
-import dagger.Binds
+import com.example.morello.data_layer.data_sources.apis.client.AuthRetrofitClient
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
+import retrofit2.Retrofit
 
 @Module
 @InstallIn(ViewModelComponent::class)
-abstract class ApiModule {
-    @Binds
+class ApiModule {
+    @Provides
     @ViewModelScoped
-    abstract fun bindUserApi(userApiImpl: MockedUserApi): UserApi
+    fun bindUserApi(@AuthRetrofitClient retrofit: Retrofit): UserApi =
+        retrofit.create(UserApi::class.java)
 
-    @Binds
+    @Provides
     @ViewModelScoped
-    abstract fun bindBalanceEntryApi(balanceEntryApiImpl: MockedBalanceEntryApi): BalanceEntryApi
+    fun bindBalanceEntryApi(@AuthRetrofitClient retrofit: Retrofit): BalanceEntryApi =
+        retrofit.create(BalanceEntryApi::class.java)
 
-    @Binds
+    @Provides
     @ViewModelScoped
-    abstract fun bindGroupApi(groupApiImpl: MockedGroupApi): GroupApi
+    fun bindGroupApi(@AuthRetrofitClient retrofit: Retrofit): GroupApi =
+        retrofit.create(GroupApi::class.java)
 
-    @Binds
+    @Provides
     @ViewModelScoped
-    abstract fun bindMemberApi(memberApiImpl: MockedMemberApi): MemberApi
+    fun bindMemberApi(@AuthRetrofitClient retrofit: Retrofit): MemberApi =
+        retrofit.create(MemberApi::class.java)
 }

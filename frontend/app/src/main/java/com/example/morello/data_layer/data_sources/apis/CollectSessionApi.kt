@@ -11,29 +11,29 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface CollectSessionApi {
-    @GET("groups/{id}/sessions")
+    @GET("groups/{id}/sessions/")
     suspend fun getCollectSessionsByGroupId(@Path("id") id: Int): Response<List<CollectSession>>
 
-    @POST("groups/{id}/sessions")
+    @POST("groups/{id}/sessions/")
     suspend fun addCollectSessionToGroup(
         @Path("id") id: Int,
         @Body collectSession: CollectSession
     ): Response<CollectSession>
 
-    @GET("groups/{groupId}/sessions/{sessionId}/entries")
+    @GET("groups/{groupId}/sessions/{sessionId}/entries/")
     suspend fun getCollectSessionEntriesBySessionId(
         @Path("groupId") groupId: Int,
         @Path("sessionId") sessionId: Int,
     ): Response<List<CollectSessionEntry>>
 
-    @POST("groups/{groupId}/sessions/{sessionId}/entries")
+    @POST("groups/{groupId}/sessions/{sessionId}/entries/")
     suspend fun addCollectSessionEntry(
         @Path("groupId") groupId: Int,
         @Path("sessionId") sessionId: Int,
         @Body collectSessionEntry: CollectSessionEntry,
     ): Response<CollectSessionEntry>
 
-    @PUT("groups/{groupId}/sessions/{sessionId}/entries/{entryId}")
+    @PUT("groups/{groupId}/sessions/{sessionId}/entries/{entryId}/")
     suspend fun updateCollectSessionEntry(
         @Path("groupId") groupId: Int,
         @Path("sessionId") sessionId: Int,
@@ -41,14 +41,14 @@ interface CollectSessionApi {
         @Body collectSessionEntry: CollectSessionEntry,
     ): Response<CollectSession>
 
-    @PUT("groups/{groupId}/sessions/{sessionId}")
+    @PUT("groups/{groupId}/sessions/{sessionId}/")
     suspend fun updateCollectSession(
         @Path("groupId") groupId: Int,
         @Path("sessionId") sessionId: Int,
         @Body collectSession: CollectSession,
     ): Response<CollectSession>
 
-    @DELETE("groups/{groupId}/sessions/{sessionId}")
+    @DELETE("groups/{groupId}/sessions/{sessionId}/")
     suspend fun deleteCollectSession(
         @Path("groupId") groupId: Int,
         @Path("sessionId") sessionId: Int

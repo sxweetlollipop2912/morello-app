@@ -13,15 +13,15 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface UserApi {
-    @POST("token")
+    @POST("token/")
     suspend fun login(@Body loginRequest: LoginRequest): Response<LoginResponse>
 
-    @POST("token/refresh")
+    @POST("token/refresh/")
     suspend fun refreshToken(@Body refreshTokenRequest: RefreshTokenRequest): Response<RefreshTokenResponse>
 
-    @POST("users")
+    @POST("users/")
     suspend fun register(@Body registerRequest: RegisterRequest): Response<RegisterResponse>
 
-    @GET("me")
+    @GET("me/")
     suspend fun fetchUserDetail(): Response<User>
 }

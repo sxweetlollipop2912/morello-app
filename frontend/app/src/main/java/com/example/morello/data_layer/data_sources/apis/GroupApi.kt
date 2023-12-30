@@ -19,18 +19,18 @@ interface GroupApi {
     @GET("groups/")
     suspend fun getManagedGroups(): Response<List<Group>>
 
-    @GET("groups/{id}")
+    @GET("groups/{id}/")
     suspend fun getGroupById(@Path("id") id: Int): Response<GroupDetails>
 
-    @GET("groups/{id}/leader")
+    @GET("groups/{id}/leader/")
     suspend fun getLeaderByGroupId(@Path("id") id: Int): Response<Leader>
 
-    @PUT("groups/{id}")
+    @PUT("groups/{id}/")
     suspend fun updateGroupById(@Path("id") id: Int, @Body group: UpdateGroupRequest): Response<UpdateGroupResponse>
 
-    @DELETE("groups/{id}")
+    @DELETE("groups/{id}/")
     suspend fun deleteGroupById(@Path("id") id: Int): Response<Group>
 
-    @POST("groups")
+    @POST("groups/")
     suspend fun createGroup(@Body group: NewGroupRequest): Response<NewGroupResponse>
 }

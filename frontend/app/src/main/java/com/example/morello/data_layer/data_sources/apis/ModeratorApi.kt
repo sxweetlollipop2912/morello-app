@@ -9,13 +9,13 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ModeratorApi {
-    @GET("groups/{id}/moderators")
+    @GET("groups/{id}/moderators/")
     suspend fun getModeratorsByGroupId(@Path("id") id: Int): Response<List<User>>
 
-    @POST("groups/{id}/moderators")
+    @POST("groups/{id}/moderators/")
     suspend fun addModeratorToGroup(@Body moderator: User): Response<User>
 
-    @DELETE("groups/{id}/moderators/{moderatorId}")
+    @DELETE("groups/{id}/moderators/{moderatorId}/")
     suspend fun deleteModeratorFromGroup(
         @Path("id") groupId: Int,
         @Path("moderatorId") moderatorId: Int
