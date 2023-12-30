@@ -19,7 +19,7 @@ fun AuthorizedHomeRoute(
     AuthorizedHomeScreen(
         uiState = uiState,
         onGroupSelect = navigateToGroup,
-        onProfileIconClicked = {},
+        onProfileClicked = {},
         onCreateNewGroup = onCreateNewGroup,
         onReloadGroups = viewModel::reload,
     )
