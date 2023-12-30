@@ -18,10 +18,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
@@ -145,7 +145,7 @@ fun AuthorizedHomeScreen(
                             )
                             Spacer(modifier = Modifier.size(8.dp))
                             Icon(
-                                imageVector = Icons.Default.ArrowForward,
+                                imageVector = Icons.AutoMirrored.Default.ArrowForward,
                                 contentDescription = "Switch to non-admin mode",
                                 tint = MaterialTheme.colorScheme.primary,
                             )
@@ -169,7 +169,7 @@ fun AuthorizedHomeScreen(
                             )
                             Spacer(modifier = Modifier.size(8.dp))
                             Icon(
-                                imageVector = Icons.Default.Logout,
+                                imageVector = Icons.AutoMirrored.Default.Logout,
                                 contentDescription = "Log out",
                                 tint = MaterialTheme.colorScheme.error,
                             )

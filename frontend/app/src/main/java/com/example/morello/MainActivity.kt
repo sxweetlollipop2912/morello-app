@@ -1,5 +1,6 @@
 package com.example.morello
 
+import AuthorizedHomeRoute
 import LoginRoute
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -29,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     val viewModelProvider = ViewModelProvider(this)
                     MorelloNavHost(
                         navController = navController,
-                        startDestination = LoginRoute.routeWithArgs,
+                        startDestination = AuthorizedHomeRoute.routeWithArgs,
                         viewModelProvider = viewModelProvider,
                     )
                 }
