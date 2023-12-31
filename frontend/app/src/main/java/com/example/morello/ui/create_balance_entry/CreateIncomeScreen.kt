@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.rememberScrollableState
@@ -48,6 +50,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
@@ -149,7 +153,10 @@ fun CreateIncomeScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.padding(8.dp))
-            AnimatedVisibility(visible = (uiState.mode == Mode.CreateNewEntry)) {
+            AnimatedVisibility(
+                visible = (uiState.mode == Mode.CreateNewEntry),
+                exit = shrinkVertically() + fadeOut(),
+            ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
@@ -178,30 +185,47 @@ fun CreateIncomeScreen(
                         }
                     }
                     SectionDividerWithText(text = "or")
+                    Button(
+                        onClick = {
+                            onSwitchToOpenCollectSession()
+                        },
+                        shape = MaterialTheme.shapes.small,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = "Open collect session")
+                    }
                 }
             }
-            AnimatedVisibility(visible = uiState.mode == Mode.CreateNewSession) {
-                Divider(modifier = Modifier.padding(vertical = 8.dp))
-            }
-            OpenSessionSection(
-                isAddingSession = uiState.mode == Mode.CreateNewSession,
-                paymentPerMember = uiState.createNewSessionData.amountPerMember,
-                startDateTime = uiState.createNewSessionData.startDate,
-                endDateTime = uiState.createNewSessionData.endDate,
-                memberList = uiState.createNewSessionData.memberList,
-                onMemberUpdated = onMemberUpdated,
-                onIsAddingSessionDisplayed = {
-                    if (it) {
-                        onSwitchToOpenCollectSession()
-                    } else {
-                        onSwitchToCreateNewEntry()
+            AnimatedVisibility(
+                visible = uiState.mode == Mode.CreateNewSession,
+                exit = fadeOut()
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Divider(modifier = Modifier.padding(vertical = 8.dp))
+                    OpenSessionSection(
+                        paymentPerMember = uiState.createNewSessionData.amountPerMember,
+                        startDateTime = uiState.createNewSessionData.startDate,
+                        endDateTime = uiState.createNewSessionData.endDate,
+                        memberList = uiState.createNewSessionData.memberList,
+                        onMemberUpdated = onMemberUpdated,
+                        onPaymentPerMemberChanged = onPaymentPerMemberChanged,
+                        onStartDateTimeChanged = onStartDateTimeChanged,
+                        onEndDateTimeChanged = onEndDateTimeChanged,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedButton(
+                        onClick = {
+                            onSwitchToCreateNewEntry()
+                        },
+                        shape = MaterialTheme.shapes.small,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = "Turn back to balance entry")
                     }
-                },
-                onPaymentPerMemberChanged = onPaymentPerMemberChanged,
-                onStartDateTimeChanged = onStartDateTimeChanged,
-                onEndDateTimeChanged = onEndDateTimeChanged,
-                modifier = Modifier.fillMaxWidth()
-            )
+                }
+            }
             if (datePickerDisplayed) {
                 DatePickerDialog(
                     onDismissRequest = { datePickerDisplayed = false },
@@ -234,13 +258,11 @@ fun CreateIncomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OpenSessionSection(
-    isAddingSession: Boolean,
     paymentPerMember: Currency,
     startDateTime: LocalDateTime,
     endDateTime: LocalDateTime,
     memberList: List<Pair<String, Boolean>>,
     onPaymentPerMemberChanged: (Currency) -> Unit,
-    onIsAddingSessionDisplayed: (Boolean) -> Unit,
     onStartDateTimeChanged: (LocalDateTime) -> Unit,
     onEndDateTimeChanged: (LocalDateTime) -> Unit,
     onMemberUpdated: (Int, Boolean) -> Unit,
@@ -312,175 +334,153 @@ fun OpenSessionSection(
             .then(modifier)
             .animateContentSize()
     ) {
-        if (!isAddingSession) {
-            Button(
-                onClick = {
-                    onIsAddingSessionDisplayed(true)
-                },
-                shape = MaterialTheme.shapes.small,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = "Open collect session")
-            }
-        } else {
+        Text(
+            text = "Collect Session Details",
+            style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.primary),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.padding(4.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
             Text(
-                text = "Collect Session Details",
-                style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.primary),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth(),
+                text = "Payments"
             )
-            Spacer(modifier = Modifier.padding(4.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text(
-                    text = "Payments"
-                )
-                Spacer(modifier = Modifier.padding(8.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    FixedSignNumberEditField(
-                        value = paymentPerMember,
-                        negativeSign = false,
-                        autoFocus = false,
-                        prefix = {
-                            Text(text = "VND", style = MaterialTheme.typography.labelSmall)
-                        },
-                        suffix = {
-                            Text(text = "/member", style = MaterialTheme.typography.labelSmall)
+            Spacer(modifier = Modifier.padding(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                FixedSignNumberEditField(
+                    value = paymentPerMember,
+                    negativeSign = false,
+                    autoFocus = false,
+                    prefix = {
+                        Text(text = "VND", style = MaterialTheme.typography.labelSmall)
+                    },
+                    suffix = {
+                        Text(text = "/member", style = MaterialTheme.typography.labelSmall)
 
-                        },
-                        textStyle = TextStyle.Default.copy(
-                            textAlign = TextAlign.Right,
-                        ),
-                        onValueChange = onPaymentPerMemberChanged,
+                    },
+                    textStyle = TextStyle.Default.copy(
+                        textAlign = TextAlign.Right,
+                    ),
+                    onValueChange = onPaymentPerMemberChanged,
+                )
+            }
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Start at", style = titleTextStyle)
+            OutlinedButton(
+                onClick = { startDatePickerDisplayed = true },
+                shape = MaterialTheme.shapes.small,
+            ) {
+                Row(
+                    modifier = Modifier.padding(PaddingValues(vertical = 4.dp))
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.DateRange,
+                        contentDescription = "Date Picker"
                     )
+                    Spacer(modifier = Modifier.padding(4.dp))
+                    Text(text = startDateTime.format(dateFormatter))
                 }
             }
-            Spacer(modifier = Modifier.padding(8.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Last until", style = titleTextStyle)
+            OutlinedButton(
+                onClick = { endDatePickerDisplayed = true },
+                shape = MaterialTheme.shapes.small,
             ) {
-                Text(text = "Start at", style = titleTextStyle)
-                OutlinedButton(
-                    onClick = { startDatePickerDisplayed = true },
-                    shape = MaterialTheme.shapes.small,
+                Row(
+                    modifier = Modifier.padding(PaddingValues(vertical = 4.dp))
                 ) {
+                    Icon(
+                        imageVector = Icons.Default.DateRange,
+                        contentDescription = "Date Picker"
+                    )
+                    Spacer(modifier = Modifier.padding(4.dp))
+                    Text(text = endDateTime.format(dateFormatter))
+                }
+            }
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
+        SectionDividerWithText(text = "Members")
+        OutlinedCard(
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .heightIn(min = 100.dp, max = 500.dp)
+                    .verticalScroll(memberListScrollState)
+            ) {
+                memberList.forEachIndexed { index, member ->
                     Row(
-                        modifier = Modifier.padding(PaddingValues(vertical = 4.dp))
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.DateRange,
-                            contentDescription = "Date Picker"
-                        )
-                        Spacer(modifier = Modifier.padding(4.dp))
-                        Text(text = startDateTime.format(dateFormatter))
-                    }
-                }
-            }
-            Spacer(modifier = Modifier.padding(8.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = "Last until", style = titleTextStyle)
-                OutlinedButton(
-                    onClick = { endDatePickerDisplayed = true },
-                    shape = MaterialTheme.shapes.small,
-                ) {
-                    Row(
-                        modifier = Modifier.padding(PaddingValues(vertical = 4.dp))
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.DateRange,
-                            contentDescription = "Date Picker"
-                        )
-                        Spacer(modifier = Modifier.padding(4.dp))
-                        Text(text = endDateTime.format(dateFormatter))
-                    }
-                }
-            }
-            Spacer(modifier = Modifier.padding(8.dp))
-            SectionDividerWithText(text = "Members")
-            OutlinedCard(
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth()
-                        .heightIn(min = 100.dp, max = 500.dp)
-                        .verticalScroll(memberListScrollState)
-                ) {
-                    memberList.forEachIndexed { index, member ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .clickable {
-                                    onMemberUpdated(index, !member.second)
-                                }
-                                .fillMaxWidth()
-                                .drawBehind {
-                                    // draw dotted border
-                                    val strokeWidth = 1.dp.toPx()
-                                    val dashPathEffect =
-                                        androidx.compose.ui.graphics.PathEffect.dashPathEffect(
-                                            intervals = floatArrayOf(10f, 10f),
-                                            phase = 0f
-                                        )
-                                    drawLine(
-                                        color = Color.DarkGray,
-                                        start = Offset(x = 0f, y = size.height - strokeWidth),
-                                        end = Offset(x = size.width, y = size.height - strokeWidth),
-                                        strokeWidth = strokeWidth,
-                                        pathEffect = PathEffect.dashPathEffect(
-                                            intervals = floatArrayOf(
-                                                10f,
-                                                20f
-                                            )
-                                        ),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .clickable {
+                                onMemberUpdated(index, !member.second)
+                            }
+                            .fillMaxWidth()
+                            .drawBehind {
+                                // draw dotted border
+                                val strokeWidth = 1.dp.toPx()
+                                val dashPathEffect =
+                                    androidx.compose.ui.graphics.PathEffect.dashPathEffect(
+                                        intervals = floatArrayOf(10f, 10f),
+                                        phase = 0f
                                     )
-                                }
-                                .padding(8.dp)
-                        ) {
-                            val textStyle = if (member.second) {
-                                MaterialTheme.typography.titleLarge.copy(
-                                    color = MaterialTheme.colorScheme.primary,
-                                )
-                            } else {
-                                MaterialTheme.typography.titleLarge.copy(
-                                    color = MaterialTheme.colorScheme.tertiary,
+                                drawLine(
+                                    color = Color.DarkGray,
+                                    start = Offset(x = 0f, y = size.height - strokeWidth),
+                                    end = Offset(x = size.width, y = size.height - strokeWidth),
+                                    strokeWidth = strokeWidth,
+                                    pathEffect = PathEffect.dashPathEffect(
+                                        intervals = floatArrayOf(
+                                            10f,
+                                            20f
+                                        )
+                                    ),
                                 )
                             }
-                            val decoration = if (member.second) {
-                                TextDecoration.None
-                            } else {
-                                TextDecoration.LineThrough
-                            }
-                            Text(
-                                text = member.first,
-                                style = textStyle,
-                                textDecoration = decoration
+                            .padding(8.dp)
+                    ) {
+                        val textStyle = if (member.second) {
+                            MaterialTheme.typography.titleLarge.copy(
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                        } else {
+                            MaterialTheme.typography.titleLarge.copy(
+                                color = MaterialTheme.colorScheme.tertiary,
                             )
                         }
+                        val decoration = if (member.second) {
+                            TextDecoration.None
+                        } else {
+                            TextDecoration.LineThrough
+                        }
+                        Text(
+                            text = member.first,
+                            style = textStyle,
+                            textDecoration = decoration
+                        )
                     }
                 }
             }
-            Spacer(modifier = Modifier.padding(8.dp))
-            OutlinedButton(
-                onClick = {
-                    onIsAddingSessionDisplayed(false)
-                },
-                shape = MaterialTheme.shapes.small,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = "Turn back to balance entry")
-            }
-
         }
+        Spacer(modifier = Modifier.padding(8.dp))
     }
 }
