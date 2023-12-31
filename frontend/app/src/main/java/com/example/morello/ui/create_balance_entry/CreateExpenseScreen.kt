@@ -92,7 +92,6 @@ fun CreateExpenseScreen(
         Column(
             modifier = Modifier
                 .padding(padding)
-                .padding(horizontal = 16.dp)
                 .fillMaxWidth()
         ) {
             val titleTextStyle = MaterialTheme.typography.titleMedium.copy(

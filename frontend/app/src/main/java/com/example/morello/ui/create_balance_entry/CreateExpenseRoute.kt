@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 
 
 @Composable
@@ -11,6 +12,7 @@ fun CreateExpenseRoute(
     groupId: Int,
     viewModel: CreateExpenseViewModel,
     onBack: () -> Unit,
+    modifier: Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     LaunchedEffect(uiState.state) {
@@ -39,6 +41,7 @@ fun CreateExpenseRoute(
         },
         onCancelGoBack = {
             viewModel.cancelGoBack()
-        }
+        },
+        modifier = modifier,
     )
 }
