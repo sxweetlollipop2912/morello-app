@@ -6,24 +6,21 @@ import androidx.compose.runtime.getValue
 
 @Composable
 fun OwnerGroupRoute(
-    groupId: Int,
     viewModel: OwnerGroupViewModel,
-    onAddNewIncomeEntry: () -> Unit,
-    onAddNewExpenseEntry: () -> Unit,
-    onAddNewMember: () -> Unit,
+    onToNewIncomeEntry: () -> Unit,
+    onToNewExpenseEntry: () -> Unit,
+    onToBalanceEntryList: () -> Unit,
+    onToCollectSessionList: () -> Unit,
     onBack: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     OwnerGroupScreen(
         uiState = uiState,
-        onAddNewExpenseEntry = onAddNewExpenseEntry,
-        onAddNewMember = onAddNewMember,
-        onSeeAllMemberClicked = {},
-        onSeeAllModeratorClicked = {},
-        onSeeAllTransactionClicked = {},
-        onSeeAllCollectSessionClicked = {},
-        onAddNewIncomeEntry = onAddNewIncomeEntry,
-        onAddNewModerator = {},
+        onRefreshUiState = viewModel::refreshUiState,
+        onAddNewExpenseEntry = onToNewExpenseEntry,
+        onAddNewIncomeEntry = onToNewIncomeEntry,
+        onSeeAllBalanceEntryClicked = onToBalanceEntryList,
+        onSeeAllCollectSessionClicked = onToCollectSessionList,
         onBack = onBack,
     )
 }

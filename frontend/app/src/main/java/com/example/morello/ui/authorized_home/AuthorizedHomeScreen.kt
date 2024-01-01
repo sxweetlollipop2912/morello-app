@@ -220,9 +220,9 @@ fun AuthorizedHomeScreen(
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = onCreateNewGroup,
+                    shape = RoundedCornerShape(50.dp),
                     modifier = Modifier
                         .padding(bottom = 16.dp)
-                        .clip(RoundedCornerShape(50))
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
