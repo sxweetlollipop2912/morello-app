@@ -14,7 +14,7 @@ fun CreateExpenseRoute(
     onBack: () -> Unit,
     modifier: Modifier,
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState = viewModel.uiState
     LaunchedEffect(uiState.state) {
         if (uiState.state == State.Success) {
             onBack()

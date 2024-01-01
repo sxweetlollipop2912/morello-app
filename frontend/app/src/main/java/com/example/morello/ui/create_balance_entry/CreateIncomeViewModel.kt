@@ -1,11 +1,11 @@
 package com.example.morello.ui.create_balance_entry
 
-import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.morello.data_layer.data_sources.data_types.Currency
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -84,39 +84,36 @@ data class CreateIncomeUiState(
 
 @HiltViewModel
 class CreateIncomeViewModel @Inject constructor() : ViewModel() {
-    private var _uiState = MutableStateFlow(
-        CreateIncomeUiState.newWithoutCollectSession
-    )
-
-    val uiState = _uiState.asStateFlow()
+    var uiState by mutableStateOf(CreateIncomeUiState.newWithoutCollectSession)
+        private set
 
     fun switchToCreateNewSession() {
-        _uiState.value = _uiState.value.copy(
+        uiState = uiState.copy(
             mode = Mode.CreateNewSession,
         )
     }
 
     fun switchToCreateNewEntry() {
-        _uiState.value = _uiState.value.copy(
+        uiState = uiState.copy(
             mode = Mode.CreateNewEntry,
         )
     }
 
     fun chosenMembers(): List<String> {
-        return _uiState.value.createNewSessionData.memberList
+        return uiState.createNewSessionData.memberList
             .filter { it.second }
             .map { it.first }
     }
 
     private fun chosenMemberCount(): Int {
-        return _uiState.value.createNewSessionData.memberList.count { it.second }
+        return uiState.createNewSessionData.memberList.count { it.second }
     }
 
     fun updateAmountPerMember(amount: Currency) {
         val newAmount = chosenMemberCount() * amount
-        _uiState.value = _uiState.value.copy(
+        uiState = uiState.copy(
             amount = newAmount,
-            createNewSessionData = _uiState.value.createNewSessionData.copy(
+            createNewSessionData = uiState.createNewSessionData.copy(
                 amountPerMember = amount,
             )
         )
@@ -125,29 +122,29 @@ class CreateIncomeViewModel @Inject constructor() : ViewModel() {
 
     fun updateAmount(amount: Currency) {
         val newAmountPerMember: Currency = calculateAmountPerMember(amount)
-        _uiState.value = _uiState.value.copy(
+        uiState = uiState.copy(
             amount = amount,
-            createNewSessionData = _uiState.value.createNewSessionData.copy(
+            createNewSessionData = uiState.createNewSessionData.copy(
                 amountPerMember = newAmountPerMember,
             )
         )
     }
 
     fun updateName(name: String) {
-        _uiState.value = _uiState.value.copy(name = StringOrError(name, isError = false))
+        uiState = uiState.copy(name = StringOrError(name, isError = false))
     }
 
     private fun calculateAmountPerMember(): Currency {
-        val memberCount = _uiState.value.createNewSessionData.memberList.count { it.second }
+        val memberCount = uiState.createNewSessionData.memberList.count { it.second }
         return if (memberCount == 0) {
             0f
         } else {
-            _uiState.value.amount / memberCount
+            uiState.amount / memberCount
         }
     }
 
     private fun calculateAmountPerMember(amount: Currency): Currency {
-        val memberCount = _uiState.value.createNewSessionData.memberList.count { it.second }
+        val memberCount = uiState.createNewSessionData.memberList.count { it.second }
         return if (memberCount == 0) {
             0f
         } else {
@@ -156,14 +153,14 @@ class CreateIncomeViewModel @Inject constructor() : ViewModel() {
     }
 
     fun updateChosenMember(index: Int, status: Boolean) {
-        if (index < 0 || index >= _uiState.value.createNewSessionData.memberList.size) {
+        if (index < 0 || index >= uiState.createNewSessionData.memberList.size) {
             throw IllegalArgumentException("index out of bound")
-        } else if (_uiState.value.createNewSessionData.memberList.isEmpty()) {
+        } else if (uiState.createNewSessionData.memberList.isEmpty()) {
             throw IllegalStateException("member list is empty")
-        } else if (_uiState.value.mode != Mode.CreateNewSession) {
+        } else if (uiState.mode != Mode.CreateNewSession) {
             throw IllegalStateException("mode is not CreateNewSession")
         }
-        val memberList = _uiState.value.createNewSessionData.memberList
+        val memberList = uiState.createNewSessionData.memberList
         val newMemberList = memberList.mapIndexed { i, it ->
             if (i == index) {
                 it.copy(second = status)
@@ -172,67 +169,66 @@ class CreateIncomeViewModel @Inject constructor() : ViewModel() {
             }
         }
         val newChosenMemberCount = newMemberList.count { it.second }
-        _uiState.value = _uiState.value.copy(
-            createNewSessionData = _uiState.value.createNewSessionData.copy(
-                amountPerMember = _uiState.value.amount / newChosenMemberCount,
+        uiState = uiState.copy(
+            createNewSessionData = uiState.createNewSessionData.copy(
+                amountPerMember = uiState.amount / newChosenMemberCount,
                 memberList = newMemberList,
             )
         )
     }
 
     fun updateDateTime(dateTime: LocalDateTime) {
-        _uiState.value = _uiState.value.copy(dateTime = dateTime)
+        uiState = uiState.copy(dateTime = dateTime)
     }
 
     fun updateDescription(description: String) {
-        _uiState.value = _uiState.value.copy(description = description)
+        uiState = uiState.copy(description = description)
     }
 
     fun reset() {
-        _uiState.value = CreateIncomeUiState.newWithoutCollectSession
+        uiState = CreateIncomeUiState.newWithoutCollectSession
     }
 
     private fun isEmpty(): Boolean {
-        val uiState = _uiState.value
+        val uiState = uiState
         return uiState.name.value.isEmpty() &&
                 uiState.description.isEmpty() &&
                 uiState.amount == 0f
     }
 
     fun tryToGoBack() {
-        if (!isEmpty()) {
-            _uiState.value = _uiState.value.copy(state = State.TryToGoBack)
+        uiState = if (!isEmpty()) {
+            uiState.copy(state = State.TryToGoBack)
         } else {
-            _uiState.value = _uiState.value.copy(state = State.ConfirmGoBack)
+            uiState.copy(state = State.ConfirmGoBack)
         }
     }
 
     fun updateStartDateTime(dateTime: LocalDateTime) {
-        Log.d("CreateIncomeViewModel", "updateStartDateTime: $dateTime")
-        if (_uiState.value.mode != Mode.CreateNewSession) {
+        if (uiState.mode != Mode.CreateNewSession) {
             throw IllegalStateException("mode is not CreateNewSession")
         }
-        _uiState.value = _uiState.value.copy(
-            createNewSessionData = _uiState.value.createNewSessionData.copy(
+        uiState = uiState.copy(
+            createNewSessionData = uiState.createNewSessionData.copy(
                 startDate = dateTime,
             )
         )
     }
 
     fun updateEndDateTime(dateTime: LocalDateTime) {
-        if (_uiState.value.mode != Mode.CreateNewSession) {
+        if (uiState.mode != Mode.CreateNewSession) {
             throw IllegalStateException("mode is not CreateNewSession")
         }
-        _uiState.value = _uiState.value.copy(
-            createNewSessionData = _uiState.value.createNewSessionData.copy(
+        uiState = uiState.copy(
+            createNewSessionData = uiState.createNewSessionData.copy(
                 endDate = dateTime,
             )
         )
     }
 
     fun submit(groupId: Int) {
-        if (_uiState.value.name.value.isEmpty()) {
-            _uiState.value = _uiState.value.copy(
+        if (uiState.name.value.isEmpty()) {
+            uiState = uiState.copy(
                 name = StringOrError(
                     value = "Name should not be empty",
                     isError = true,
@@ -242,7 +238,7 @@ class CreateIncomeViewModel @Inject constructor() : ViewModel() {
             )
             return
         }
-        if (_uiState.value.mode == Mode.CreateNewSession) {
+        if (uiState.mode == Mode.CreateNewSession) {
             submitCollectSession(groupId)
         } else {
             submitNewEntry(groupId)
@@ -252,15 +248,15 @@ class CreateIncomeViewModel @Inject constructor() : ViewModel() {
     private fun submitCollectSession(groupId: Int) {
         // TODO:  
     }
-    
+
     private fun submitNewEntry(groupId: Int) {
         // TODO:  
     }
-    
+
 
     fun confirmGoBack() {
-        if (_uiState.value.state == State.TryToGoBack) {
-            _uiState.value = _uiState.value.copy(state = State.ConfirmGoBack)
+        if (uiState.state == State.TryToGoBack) {
+            uiState = uiState.copy(state = State.ConfirmGoBack)
         } else {
             throw IllegalStateException(
                 "confirm_go_back() called when state is not TryToGoBack"
@@ -269,8 +265,8 @@ class CreateIncomeViewModel @Inject constructor() : ViewModel() {
     }
 
     fun cancelGoBack() {
-        if (_uiState.value.state == State.TryToGoBack) {
-            _uiState.value = _uiState.value.copy(state = State.Idle)
+        if (uiState.state == State.TryToGoBack) {
+            uiState = uiState.copy(state = State.Idle)
         } else {
             throw IllegalStateException(
                 "cancel_go_back() called when state is not ConfirmGoBack"

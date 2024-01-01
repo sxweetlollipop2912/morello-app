@@ -1,5 +1,9 @@
 package com.example.morello.ui.create_balance_entry
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.morello.data_layer.data_sources.CreateBalanceEntryException
@@ -46,13 +50,11 @@ data class CreateExpenseUiState(
 class CreateExpenseViewModel @Inject constructor(
     private val groupRepository: GroupRepository,
 ) : ViewModel() {
-    private var _uiState = MutableStateFlow(
-        CreateExpenseUiState.new
-    )
-    val uiState = _uiState.asStateFlow()
+    var uiState by mutableStateOf(CreateExpenseUiState.new)
+        private set
 
     fun reset() {
-        _uiState.value = CreateExpenseUiState.new
+        uiState = CreateExpenseUiState.new
     }
 
     private fun isEmpty(): Boolean {
@@ -61,21 +63,21 @@ class CreateExpenseViewModel @Inject constructor(
             balanceAfter,
             name,
             description,
-        ) = _uiState.value
+        ) = uiState
         return amount == 0f && name == "" && description == ""
     }
 
     fun tryToGoBack() {
-        if (!isEmpty()) {
-            _uiState.value = _uiState.value.copy(state = State.TryToGoBack)
+        uiState = if (!isEmpty()) {
+            uiState.copy(state = State.TryToGoBack)
         } else {
-            _uiState.value = _uiState.value.copy(state = State.ConfirmGoBack)
+            uiState.copy(state = State.ConfirmGoBack)
         }
     }
 
     fun confirmGoBack() {
-        if (_uiState.value.state == State.TryToGoBack) {
-            _uiState.value = _uiState.value.copy(state = State.ConfirmGoBack)
+        if (uiState.state == State.TryToGoBack) {
+            uiState = uiState.copy(state = State.ConfirmGoBack)
         } else {
             throw IllegalStateException(
                 "confirm_go_back() called when state is not TryToGoBack"
@@ -84,8 +86,8 @@ class CreateExpenseViewModel @Inject constructor(
     }
 
     fun cancelGoBack() {
-        if (_uiState.value.state == State.TryToGoBack) {
-            _uiState.value = _uiState.value.copy(state = State.Idle)
+        if (uiState.state == State.TryToGoBack) {
+            uiState = uiState.copy(state = State.Idle)
         } else {
             throw IllegalStateException(
                 "cancel_go_back() called when state is not ConfirmGoBack"
@@ -94,30 +96,30 @@ class CreateExpenseViewModel @Inject constructor(
     }
 
     fun updateAmount(amount: Currency) {
-        _uiState.value = _uiState.value.copy(amount = amount)
+        uiState = uiState.copy(amount = amount)
     }
 
     fun updateBalanceAfter(balanceAfter: Currency) {
-        _uiState.value = _uiState.value.copy(balanceAfter = balanceAfter)
+        uiState = uiState.copy(balanceAfter = balanceAfter)
     }
 
     fun updateName(name: String) {
-        _uiState.value = _uiState.value.copy(name = name)
+        uiState = uiState.copy(name = name)
     }
 
     fun updateDescription(description: String) {
-        _uiState.value = _uiState.value.copy(description = description)
+        uiState = uiState.copy(description = description)
     }
 
     fun updateDateTime(dateTime: LocalDateTime) {
-        _uiState.value = _uiState.value.copy(dateTime = dateTime)
+        uiState = uiState.copy(dateTime = dateTime)
     }
 
     fun submit(groupId: Int) {
-        _uiState.value = _uiState.value.copy(state = State.Submitting)
+        uiState = uiState.copy(state = State.Submitting)
         viewModelScope.launch {
-            try {
-                val rs = groupRepository.createBalanceEntry(groupId, _uiState.value.let {
+            uiState = try {
+                val rs = groupRepository.createBalanceEntry(groupId, uiState.let {
                     NewBalanceEntryRequest(
                         name = it.name,
                         description = it.description,
@@ -125,9 +127,9 @@ class CreateExpenseViewModel @Inject constructor(
                         createdAt = LocalDateTime.now()
                     )
                 })
-                _uiState.value = _uiState.value.copy(state = State.Success)
+                uiState.copy(state = State.Success)
             } catch (e: CreateBalanceEntryException) {
-                _uiState.value = _uiState.value.copy(state = State.Error, error = e.msg)
+                uiState.copy(state = State.Error, error = e.msg)
             }
         }
     }
