@@ -15,11 +15,14 @@ import javax.inject.Inject
 
 data object OwnerGroupData {
     data class GroupInfo(
+        val id: Int,
         val name: String,
         val currentBalance: Currency,
         val expectedBalance: Currency,
     )
+
     data class CollectSessionInfo(
+        val id: Int,
         val name: String,
         val description: String,
         val dueDate: LocalDateTime,
@@ -32,6 +35,7 @@ data object OwnerGroupData {
     )
 
     data class BalanceEntryInfo(
+        val id: Int,
         val name: String,
         val amount: Currency,
         val description: String,
@@ -47,6 +51,7 @@ data class OwnerGroupUiState(
     companion object {
         val empty = OwnerGroupUiState(
             group = OwnerGroupData.GroupInfo(
+                id = -1,
                 name = "",
                 currentBalance = 0f,
                 expectedBalance = 0f,
@@ -76,12 +81,14 @@ class OwnerGroupViewModel @Inject constructor(
             // TODO: This is mock data
             _uiState.value = OwnerGroupUiState(
                 group = OwnerGroupData.GroupInfo(
+                    id = groupId,
                     name = "$groupId",
-                    currentBalance = 100f,
-                    expectedBalance = 200f,
+                    currentBalance = 1000000f,
+                    expectedBalance = 2000000f,
                 ),
                 subCollections = listOf(
                     OwnerGroupData.CollectSessionInfo(
+                        id = 1,
                         name = "Session 1",
                         description = "Collect session description",
                         dueDate = LocalDateTime.now(),
@@ -89,10 +96,11 @@ class OwnerGroupViewModel @Inject constructor(
                         isOpen = true,
                         paidCount = 1,
                         memberCount = 2,
-                        currentAmount = 100f,
-                        expectedAmount = 200f,
+                        currentAmount = 100000f,
+                        expectedAmount = 200000f,
                     ),
                     OwnerGroupData.CollectSessionInfo(
+                        id = 2,
                         name = "Session 2",
                         description = "Collect session description",
                         dueDate = LocalDateTime.now(),
@@ -100,20 +108,22 @@ class OwnerGroupViewModel @Inject constructor(
                         isOpen = false,
                         paidCount = 1,
                         memberCount = 2,
-                        currentAmount = 100f,
-                        expectedAmount = 200f,
+                        currentAmount = -100000f,
+                        expectedAmount = -200000f,
                     ),
                 ),
                 subBalanceEntries = listOf(
                     OwnerGroupData.BalanceEntryInfo(
+                        id = 1,
                         name = "Entry 1",
-                        amount = 100f,
-                        description = "Balance entry description",
+                        amount = 10000f,
+                        description = "Balance entry very long description",
                         recordedAt = LocalDateTime.now(),
                     ),
                     OwnerGroupData.BalanceEntryInfo(
+                        id = 2,
                         name = "Entry 2",
-                        amount = -100f,
+                        amount = -100000f,
                         description = "Balance entry description",
                         recordedAt = LocalDateTime.now(),
                     ),

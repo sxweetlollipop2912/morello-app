@@ -1,8 +1,8 @@
 package com.example.morello.ui.owner_group
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun OwnerGroupRoute(
@@ -13,13 +13,15 @@ fun OwnerGroupRoute(
     onToCollectSessionList: () -> Unit,
     onBack: () -> Unit,
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     OwnerGroupScreen(
         uiState = uiState,
         onRefreshUiState = viewModel::refreshUiState,
         onAddNewExpenseEntry = onToNewExpenseEntry,
         onAddNewIncomeEntry = onToNewIncomeEntry,
+        onSeeBalanceEntryClicked = {},
         onSeeAllBalanceEntryClicked = onToBalanceEntryList,
+        onSeeCollectSessionClicked = {},
         onSeeAllCollectSessionClicked = onToCollectSessionList,
         onBack = onBack,
     )
