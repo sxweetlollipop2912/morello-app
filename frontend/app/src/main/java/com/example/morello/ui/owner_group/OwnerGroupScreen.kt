@@ -15,12 +15,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,55 +38,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.morello.data_layer.data_sources.data_types.formatted
 
-data object OwnerGroupScreen {
-    data class CollectSessionInfo(
-        val name: String,
-        val description: String,
-        val dueDays: Int,
-        val value: Int,
-        val pendingPayments: Int,
-    )
-
-    data class MemberInfo(
-        val name: String,
-        val pendingPayments: Int,
-    )
-
-    data class ModeratorInfo(
-        val name: String,
-    )
-
-    data class TransactionInfo(
-        val name: String,
-        val value: Int,
-        val date: String,
-    )
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OwnerGroupScreen(
     uiState: OwnerGroupUiState,
-    onSeeAllModeratorClicked: () -> Unit,
-    onSeeAllMemberClicked: () -> Unit,
-    onSeeAllTransactionClicked: () -> Unit,
+    onRefreshUiState: () -> Unit,
+    onSeeAllBalanceEntryClicked: () -> Unit,
     onSeeAllCollectSessionClicked: () -> Unit,
     onAddNewExpenseEntry: () -> Unit,
     onAddNewIncomeEntry: () -> Unit,
-    onAddNewMember: () -> Unit,
-    onAddNewModerator: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
     var fabExpanded by remember { mutableStateOf(false) }
     val (
-        groupBalance,
-        afterCollectingBalance,
+        group,
         subCollections,
-        subTransactions,
-        subMembers,
-        subModerators,
+        subBalanceEntries,
     ) = uiState
     Scaffold(
         modifier = modifier,
@@ -129,10 +99,10 @@ fun OwnerGroupScreen(
         },
         topBar = {
             TopAppBar(title = {
-                Text(text = "Group Name")
+                Text(text = group.name)
             }, navigationIcon = {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    Icon(Icons.Default.ArrowBackIosNew, contentDescription = "Back")
                 }
             })
         }
@@ -142,32 +112,19 @@ fun OwnerGroupScreen(
                 .padding(it)
                 .verticalScroll(scrollState)
         ) {
-            Text(text = "Group Balance")
-            Text(text = groupBalance.formatted(), style = MaterialTheme.typography.displayMedium)
-            Text(text = "After Collecting: ${afterCollectingBalance.formatted()}")
+            Text(text = "Group balance")
+            Text(text = group.currentBalance.formatted(), style = MaterialTheme.typography.displayMedium)
+            Text(text = "After collecting: ${group.expectedBalance.formatted()}")
             CollectSessionsCard(
                 onSeeAll = onSeeAllCollectSessionClicked,
                 collectSessions = subCollections, modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp)
             )
-            TransactionsCard(
-                onSeeAll = onSeeAllTransactionClicked,
-                transactions = subTransactions,
+            BalanceEntriesCard(
+                onSeeAll = onSeeAllBalanceEntryClicked,
+                balanceEntries = subBalanceEntries,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-            )
-            MembersCard(
-                onSeeAll = onSeeAllMemberClicked,
-                members = subMembers,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-            )
-            ModeratorsCard(
-                onSeeAll = onSeeAllModeratorClicked,
-                moderators = subModerators, modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp)
             )
@@ -185,7 +142,6 @@ fun <T> BaseCard(
     onSeeAll: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     Card(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
         modifier = modifier.clickable(onClick = onSeeAll),
@@ -212,12 +168,12 @@ fun <T> BaseCard(
 
 @Composable
 fun CollectSessionsCard(
-    collectSessions: List<OwnerGroupScreen.CollectSessionInfo>,
+    collectSessions: List<OwnerGroupData.CollectSessionInfo>,
     modifier: Modifier = Modifier,
     onSeeAll: () -> Unit,
 ) {
     BaseCard(
-        name = "Collect Sessions",
+        name = "Collect sessions",
         builder = { collectSessionInfo ->
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -229,17 +185,18 @@ fun CollectSessionsCard(
                 Column {
                     Text(text = collectSessionInfo.name)
                     Text(text = "Due in ${collectSessionInfo.dueDays} days")
-                    Text(text = "${collectSessionInfo.pendingPayments} pending payments")
+                    Text(text = "${collectSessionInfo.memberCount - collectSessionInfo.paidCount} pending payments")
                 }
-                val value = collectSessionInfo.value
-                val valueText = if (value > 0) {
-                    "+$value"
+                val currentAmount = collectSessionInfo.currentAmount
+                val expectedAmount = collectSessionInfo.expectedAmount
+                val valueText = if (expectedAmount > 0) {
+                    "+${currentAmount.formatted()}/${expectedAmount.formatted()}"
                 } else {
-                    "$value"
+                    "${currentAmount.formatted()}/${expectedAmount.formatted()}"
                 }
                 Text(text = valueText)
             }
-            Divider()
+            HorizontalDivider()
         },
         items = collectSessions,
         onSeeAll = onSeeAll,
@@ -248,15 +205,15 @@ fun CollectSessionsCard(
 }
 
 @Composable
-fun TransactionsCard(
-    transactions: List<OwnerGroupScreen.TransactionInfo>,
+fun BalanceEntriesCard(
+    balanceEntries: List<OwnerGroupData.BalanceEntryInfo>,
     onSeeAll: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     BaseCard(
-        name = "Transactions",
-        items = transactions,
-        builder = { transactionInfo ->
+        name = "Balance entries",
+        items = balanceEntries,
+        builder = { balanceEntry ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -265,80 +222,19 @@ fun TransactionsCard(
                     .padding(10.dp)
             ) {
                 Column {
-                    Text(text = transactionInfo.name)
-                    Text(text = transactionInfo.date)
+                    Text(text = balanceEntry.name)
+                    Text(text = balanceEntry.recordedAt.toString())
                 }
-                Text(text = "${transactionInfo.value}")
+                val valueText = if (balanceEntry.amount > 0) {
+                    "+${balanceEntry.amount.formatted()}"
+                } else {
+                    balanceEntry.amount.formatted()
+                }
+                Text(text = valueText)
             }
-            Divider()
+            HorizontalDivider()
         },
         onSeeAll = onSeeAll,
         modifier = modifier
-    )
-}
-
-@Composable
-fun MembersCard(
-    members: List<OwnerGroupScreen.MemberInfo>,
-    onSeeAll: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    BaseCard(
-        name = "Members",
-        builder = { memberInfo ->
-            val value = memberInfo.pendingPayments
-            val valueText = if (value > 0) {
-                "+$value"
-            } else {
-                "$value"
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-            ) {
-                Text(text = memberInfo.name)
-                Column(
-                    horizontalAlignment = Alignment.End,
-                ) {
-                    Text(text = "Pending")
-                    Text(text = valueText)
-                }
-            }
-            Divider()
-        },
-        items = members,
-        onSeeAll = onSeeAll,
-        modifier = modifier,
-    )
-}
-
-@Composable
-fun ModeratorsCard(
-    moderators: List<OwnerGroupScreen.ModeratorInfo>,
-    onSeeAll: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    BaseCard(
-        name = "Moderators",
-        builder = { moderatorInfo ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-            ) {
-                Column {
-                    Text(text = moderatorInfo.name)
-                }
-            }
-            Divider()
-        },
-        items = moderators,
-        onSeeAll = onSeeAll,
-        modifier = modifier,
     )
 }
