@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
 import com.example.morello.ui.navigation.MorelloNavHost
 import com.example.morello.ui.theme.MorelloTheme
@@ -26,11 +25,9 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    val viewModelProvider = ViewModelProvider(this)
                     MorelloNavHost(
                         navController = navController,
                         startDestination = LoginRoute.routeWithArgs,
-                        viewModelProvider = viewModelProvider,
                     )
                 }
             }
