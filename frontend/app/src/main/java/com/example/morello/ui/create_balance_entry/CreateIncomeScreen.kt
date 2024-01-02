@@ -26,6 +26,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -40,9 +41,12 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -102,8 +106,16 @@ fun CreateIncomeScreen(
     val datePickerState = rememberDatePickerState()
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     val scrollableState = rememberScrollState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(key1 = uiState.dateTimeError) {
+        if (uiState.dateTimeError != null)
+            snackbarHostState.showSnackbar("${uiState.dateTimeError}")
+    }
     BackHandler(onBack = onTryToGoBack)
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         topBar = {
             CreateBalanceEntryTopBar(
                 isLoading = uiState.state == State.Submitting,
@@ -148,10 +160,24 @@ fun CreateIncomeScreen(
             Text(text = "Name", style = titleTextStyle)
             OutlinedTextField(
                 value = name.value,
-                isError = name.isError,
+                isError = name.error != null,
+                supportingText = {
+                    if (name.error != null) {
+                        Text(text = name.error)
+                    }
+
+                },
                 onValueChange = onNameChanged,
                 shape = MaterialTheme.shapes.medium,
                 singleLine = true,
+                trailingIcon = {
+                    if (name.error != null) {
+                        Icon(
+                            imageVector = Icons.Default.Error,
+                            contentDescription = "Error",
+                        )
+                    }
+                },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.padding(8.dp))

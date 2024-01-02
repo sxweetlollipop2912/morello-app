@@ -51,7 +51,7 @@ enum class Mode {
 
 data class StringOrError(
     val value: String,
-    val isError: Boolean,
+    val error: String?
 )
 
 data class CreateIncomeUiState(
@@ -63,10 +63,11 @@ data class CreateIncomeUiState(
     val state: State = State.Idle,
     val mode: Mode,
     val error: String? = null,
+    val dateTimeError: String? = null,
 ) {
     companion object {
         val newWithCollectSession = CreateIncomeUiState(
-            name = StringOrError("", false),
+            name = StringOrError("", null),
             description = "",
             amount = 0f,
             dateTime = LocalDateTime.now(),
@@ -78,7 +79,7 @@ data class CreateIncomeUiState(
             mode = Mode.CreateNewSession,
         )
         val newWithoutCollectSession = CreateIncomeUiState(
-            name = StringOrError("", false),
+            name = StringOrError("", null),
             description = "",
             amount = 0f,
             dateTime = LocalDateTime.now(),
@@ -140,7 +141,7 @@ class CreateIncomeViewModel @Inject constructor(
     }
 
     fun updateName(name: String) {
-        uiState = uiState.copy(name = StringOrError(name, isError = false))
+        uiState = uiState.copy(name = uiState.name.copy(value = name))
     }
 
     private fun calculateAmountPerMember(): Currency {
@@ -217,32 +218,42 @@ class CreateIncomeViewModel @Inject constructor(
         if (uiState.mode != Mode.CreateNewSession) {
             throw IllegalStateException("mode is not CreateNewSession")
         }
-        uiState = uiState.copy(
-            createNewSessionData = uiState.createNewSessionData.copy(
-                startDate = dateTime,
+        uiState = if (dateTime.isAfter(uiState.createNewSessionData.endDate)) {
+            uiState.copy(
+                dateTimeError = "Start date cannot be after end date",
             )
-        )
+        } else {
+            uiState.copy(
+                createNewSessionData = uiState.createNewSessionData.copy(
+                    startDate = dateTime,
+                )
+            )
+        }
     }
 
     fun updateEndDateTime(dateTime: LocalDateTime) {
         if (uiState.mode != Mode.CreateNewSession) {
             throw IllegalStateException("mode is not CreateNewSession")
         }
-        uiState = uiState.copy(
-            createNewSessionData = uiState.createNewSessionData.copy(
-                endDate = dateTime,
+        uiState = if (dateTime.isBefore(uiState.createNewSessionData.startDate)) {
+            uiState.copy(
+                dateTimeError = "End date cannot be before start date",
             )
-        )
+        } else {
+            uiState.copy(
+                createNewSessionData = uiState.createNewSessionData.copy(
+                    endDate = dateTime,
+                )
+            )
+        }
     }
 
     fun submit(groupId: Int) {
         if (uiState.name.value.isEmpty()) {
             uiState = uiState.copy(
-                name = StringOrError(
-                    value = "Name should not be empty",
-                    isError = true,
+                name = uiState.name.copy(
+                    error = "Name should not be empty",
                 ),
-                error = "Name cannot be empty",
             )
             return
         }
