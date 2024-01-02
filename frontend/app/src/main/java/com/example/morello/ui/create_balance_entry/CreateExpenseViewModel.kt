@@ -28,7 +28,7 @@ enum class State {
 data class CreateExpenseUiState(
     val amount: Currency,
     val balanceAfter: Currency,
-    val name: String,
+    val name: StringOrError,
     val description: String,
     val dateTime: LocalDateTime,
     val state: State = State.Idle,
@@ -38,7 +38,7 @@ data class CreateExpenseUiState(
         val new = CreateExpenseUiState(
             amount = 0f,
             balanceAfter = 0f,
-            name = "",
+            name = StringOrError("", null),
             description = "",
             dateTime = LocalDateTime.now(),
         )
@@ -63,7 +63,7 @@ class CreateExpenseViewModel @Inject constructor(
             name,
             description,
         ) = uiState
-        return amount == 0f && name == "" && description == ""
+        return amount == 0f && name.value == "" && description == ""
     }
 
     fun tryToGoBack() {
@@ -103,7 +103,7 @@ class CreateExpenseViewModel @Inject constructor(
     }
 
     fun updateName(name: String) {
-        uiState = uiState.copy(name = name)
+        uiState = uiState.copy(name = uiState.name.copy(value = name))
     }
 
     fun updateDescription(description: String) {
@@ -115,12 +115,20 @@ class CreateExpenseViewModel @Inject constructor(
     }
 
     fun submit(groupId: Int) {
+        if (uiState.name.value.isEmpty()) {
+            uiState = uiState.copy(
+                name = uiState.name.copy(
+                    error = "Name should not be empty",
+                ),
+            )
+            return
+        }
         uiState = uiState.copy(state = State.Submitting)
         viewModelScope.launch {
             uiState = try {
                 val rs = groupRepository.createBalanceEntry(groupId, uiState.let {
                     NewBalanceEntryRequest(
-                        name = it.name,
+                        name = it.name.value,
                         description = it.description,
                         amount = it.amount,
                         createdAt = LocalDateTime.now()

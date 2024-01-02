@@ -27,6 +27,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Error
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -114,6 +115,23 @@ fun CreateIncomeScreen(
         }
     }
     BackHandler(onBack = onTryToGoBack)
+    if (uiState.state == State.TryToGoBack) {
+        AlertDialog(
+            onDismissRequest = { onCancelGoBack() },
+            title = { Text(text = "Discard changes?") },
+            text = { Text(text = "Are you sure you want to discard changes?") },
+            confirmButton = {
+                Button(onClick = { onConfirmGoBack() }) {
+                    Text(text = "Discard")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { onCancelGoBack() }) {
+                    Text(text = "Cancel")
+                }
+            }
+        )
+    }
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)

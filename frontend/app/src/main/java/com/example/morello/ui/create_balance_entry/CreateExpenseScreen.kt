@@ -63,7 +63,7 @@ fun CreateExpenseScreen(
     BackHandler(onBack = onBack)
     if (state == State.TryToGoBack) {
         AlertDialog(
-            onDismissRequest = { onBack() },
+            onDismissRequest = { onCancelGoBack() },
             title = { Text(text = "Discard changes?") },
             text = { Text(text = "Are you sure you want to discard changes?") },
             confirmButton = {
@@ -135,7 +135,18 @@ fun CreateExpenseScreen(
             Spacer(modifier = Modifier.padding(8.dp))
             Text(text = "Name", style = titleTextStyle)
             OutlinedTextField(
-                value = name,
+                value = name.value,
+                supportingText = {
+                    if (name.error != null) {
+                        Text(
+                            text = name.error,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        )
+                    }
+                },
+                isError = name.error != null,
                 onValueChange = onNameChanged,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.fillMaxWidth()
