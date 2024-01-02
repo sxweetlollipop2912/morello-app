@@ -2,6 +2,7 @@ package com.example.morello.data_layer.data_sources.apis
 
 import com.example.morello.data_layer.data_sources.data_types.collect_sessions.CollectSession
 import com.example.morello.data_layer.data_sources.data_types.collect_sessions.CollectSessionEntry
+import com.example.morello.data_layer.data_sources.data_types.collect_sessions.NewCollectSession
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -17,7 +18,7 @@ interface CollectSessionApi {
     @POST("groups/{id}/sessions/")
     suspend fun addCollectSessionToGroup(
         @Path("id") id: Int,
-        @Body collectSession: CollectSession
+        @Body collectSession: NewCollectSession
     ): Response<CollectSession>
 
     @GET("groups/{groupId}/sessions/{sessionId}/entries/")

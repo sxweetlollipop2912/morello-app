@@ -30,10 +30,26 @@ class CreateGroupException : Exception()
 class UpdateGroupException : Exception()
 class DeleteGroupException : Exception()
 class GetGroupException : Exception()
-class CreateBalanceEntryException(val msg: String) : Exception()
-class UpdateBalanceEntryException(val msg: String) : Exception()
-class DeleteBalanceEntryException(val msg: String) : Exception()
-class GetBalanceEntryException(val msg: String) : Exception()
+data class CreateBalanceEntryException(private val msg: String) : Exception() {
+    override val message: String
+        get() = msg
+}
+
+data class UpdateBalanceEntryException(private val msg: String) : Exception() {
+    override val message: String
+        get() = msg
+}
+
+data class DeleteBalanceEntryException(private val msg: String) : Exception() {
+    override val message: String
+        get() = msg
+
+}
+
+data class GetBalanceEntryException(private val msg: String) : Exception() {
+    override val message: String
+        get() = msg
+}
 
 
 class RemoteGroupDataSource @Inject constructor(
@@ -194,7 +210,10 @@ class RemoteGroupDataSource @Inject constructor(
         }
     }
 
-    suspend fun createBalanceEntry(groupId: Int, balanceEntry: NewBalanceEntryRequest): NewBalanceEntryResponse {
+    suspend fun createBalanceEntry(
+        groupId: Int,
+        balanceEntry: NewBalanceEntryRequest
+    ): NewBalanceEntryResponse {
         return withContext(dispatcher) {
             val res = balanceEntryApi.addBalanceEntryToGroup(groupId, balanceEntry)
             if (res.isSuccessful) {

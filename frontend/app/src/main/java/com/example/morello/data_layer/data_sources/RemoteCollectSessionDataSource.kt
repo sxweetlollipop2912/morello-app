@@ -5,6 +5,7 @@ import com.example.morello.data_layer.data_sources.apis.ModeratorApi
 import com.example.morello.data_layer.data_sources.apis.client.ErrorResponse
 import com.example.morello.data_layer.data_sources.data_types.collect_sessions.CollectSession
 import com.example.morello.data_layer.data_sources.data_types.collect_sessions.CollectSessionEntry
+import com.example.morello.data_layer.data_sources.data_types.collect_sessions.NewCollectSession
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -84,15 +85,15 @@ class RemoteCollectSessionDataSource @Inject constructor(
         }
     }
 
-    suspend fun createCollectSession(groupId: Int, collectSession: CollectSession) {
+    suspend fun createCollectSession(groupId: Int, collectSession: NewCollectSession) {
         withContext(dispatcher) {
-            val res = collectSessionApi.addCollectSessionToGroup(
-                groupId,
-                collectSession
-            )
-            if (!res.isSuccessful) {
-                throw Exception("Error creating collect session")
-            }
+//            val res = collectSessionApi.addCollectSessionToGroup(
+//                groupId,
+//                collectSession
+//            )
+//            if (!res.isSuccessful) {
+//                throw Exception("Error creating collect session")
+//            }
         }
     }
 }
