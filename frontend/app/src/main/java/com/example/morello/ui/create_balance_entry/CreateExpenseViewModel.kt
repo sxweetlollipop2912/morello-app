@@ -21,7 +21,6 @@ enum class State {
     Idle,
     Submitting,
     Success,
-    Error,
     TryToGoBack,
     ConfirmGoBack,
 }
@@ -129,7 +128,7 @@ class CreateExpenseViewModel @Inject constructor(
                 })
                 uiState.copy(state = State.Success)
             } catch (e: CreateBalanceEntryException) {
-                uiState.copy(state = State.Error, error = e.msg)
+                uiState.copy(state = State.Idle, error = e.message)
             }
         }
     }

@@ -81,6 +81,7 @@ fun CreateExpenseScreen(
     Scaffold(
         topBar = {
             CreateBalanceEntryTopBar(
+                isLoading = state == State.Submitting,
                 title = "New expense",
                 onCreate = onCreate,
                 onBack = onBack,
@@ -97,9 +98,9 @@ fun CreateExpenseScreen(
             val titleTextStyle = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Bold,
             )
-            if (state == State.Error) {
+            if (error != null) {
                 Text(
-                    text = error!!,
+                    text = error,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.error
                     ),
@@ -107,7 +108,8 @@ fun CreateExpenseScreen(
                     textAlign = TextAlign.Center,
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
-            } else if (state == State.Submitting) {
+            }
+            if (state == State.Submitting) {
                 Text(
                     text = "Submitting...",
                     style = MaterialTheme.typography.bodyMedium,

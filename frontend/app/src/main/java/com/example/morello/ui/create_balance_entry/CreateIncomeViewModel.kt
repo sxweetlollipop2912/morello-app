@@ -4,8 +4,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.morello.data_layer.data_sources.data_types.Currency
+import com.example.morello.data_layer.data_sources.data_types.balance.NewBalanceEntryRequest
+import com.example.morello.data_layer.data_sources.data_types.collect_sessions.NewCollectSession
+import com.example.morello.data_layer.repositories.CollectSessionRepository
+import com.example.morello.data_layer.repositories.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -83,7 +89,10 @@ data class CreateIncomeUiState(
 }
 
 @HiltViewModel
-class CreateIncomeViewModel @Inject constructor() : ViewModel() {
+class CreateIncomeViewModel @Inject constructor(
+    private val groupRepository: GroupRepository,
+    private val collectSessionRepository: CollectSessionRepository,
+) : ViewModel() {
     var uiState by mutableStateOf(CreateIncomeUiState.newWithoutCollectSession)
         private set
 
@@ -233,7 +242,6 @@ class CreateIncomeViewModel @Inject constructor() : ViewModel() {
                     value = "Name should not be empty",
                     isError = true,
                 ),
-                state = State.Error,
                 error = "Name cannot be empty",
             )
             return
@@ -246,11 +254,55 @@ class CreateIncomeViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun submitCollectSession(groupId: Int) {
-        // TODO:  
+        uiState = uiState.copy(state = State.Submitting)
+        viewModelScope.launch {
+            uiState = try {
+                collectSessionRepository.createCollectSession(
+                    groupId = groupId,
+                    collectSession = uiState.let {
+                        NewCollectSession(
+                            name = it.name.value,
+                            description = it.description,
+                            start = it.createNewSessionData.startDate.toString(),
+                            due = it.createNewSessionData.endDate.toString(),
+                            isOpen = true,
+                            paymentPerMember = it.createNewSessionData.amountPerMember,
+                        )
+                    },
+                )
+                uiState.copy(
+                    state = State.Success,
+                )
+            } catch (e: Exception) {
+                uiState.copy(
+                    error = e.message,
+                )
+            }
+        }
     }
 
     private fun submitNewEntry(groupId: Int) {
-        // TODO:  
+        uiState = uiState.copy(state = State.Submitting)
+        viewModelScope.launch {
+            try {
+                groupRepository.createBalanceEntry(
+                    groupId = groupId,
+                    balanceEntry = NewBalanceEntryRequest(
+                        name = uiState.name.value,
+                        description = uiState.description,
+                        amount = uiState.amount,
+                        createdAt = LocalDateTime.now(),
+                    )
+                )
+                uiState = uiState.copy(
+                    state = State.Success,
+                )
+            } catch (e: Exception) {
+                uiState = uiState.copy(
+                    error = e.message,
+                )
+            }
+        }
     }
 
 

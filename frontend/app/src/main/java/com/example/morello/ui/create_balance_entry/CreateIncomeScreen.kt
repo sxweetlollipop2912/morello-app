@@ -106,6 +106,7 @@ fun CreateIncomeScreen(
     Scaffold(
         topBar = {
             CreateBalanceEntryTopBar(
+                isLoading = uiState.state == State.Submitting,
                 title = "New income",
                 onCreate = onCreate,
                 onBack = onTryToGoBack,
@@ -122,6 +123,15 @@ fun CreateIncomeScreen(
             val titleTextStyle = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Bold,
             )
+            if (uiState.error != null) {
+                Text(
+                    text = uiState.error,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.error
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             FixedSignNumberEditField(
                 value = amount,
                 negativeSign = false,
