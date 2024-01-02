@@ -47,6 +47,7 @@ fun CreateIncomeRoute(
         onCancelGoBack = {
             viewModel.cancelGoBack()
         },
+        onDismissDateTimeError = viewModel::dismissDateTimeError,
         modifier = modifier,
     )
 }

@@ -93,6 +93,7 @@ fun CreateIncomeScreen(
     onTryToGoBack: () -> Unit,
     onConfirmGoBack: () -> Unit,
     onCancelGoBack: () -> Unit,
+    onDismissDateTimeError: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val (
@@ -108,8 +109,9 @@ fun CreateIncomeScreen(
     val scrollableState = rememberScrollState()
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(key1 = uiState.dateTimeError) {
-        if (uiState.dateTimeError != null)
+        if (uiState.dateTimeError != null) {
             snackbarHostState.showSnackbar("${uiState.dateTimeError}")
+        }
     }
     BackHandler(onBack = onTryToGoBack)
     Scaffold(

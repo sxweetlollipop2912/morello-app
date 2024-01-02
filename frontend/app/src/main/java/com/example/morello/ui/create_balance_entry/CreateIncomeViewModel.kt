@@ -103,6 +103,12 @@ class CreateIncomeViewModel @Inject constructor(
         )
     }
 
+    fun dismissDateTimeError() {
+        uiState = uiState.copy(
+            dateTimeError = null,
+        )
+    }
+
     fun switchToCreateNewEntry() {
         uiState = uiState.copy(
             mode = Mode.CreateNewEntry,
