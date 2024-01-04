@@ -43,6 +43,10 @@ data class CreateExpenseUiState(
             dateTime = LocalDateTime.now(),
         )
     }
+
+    fun considerAsNew(): Boolean {
+        return amount == 0f && name.value == "" && description == ""
+    }
 }
 
 @HiltViewModel
@@ -64,34 +68,6 @@ class CreateExpenseViewModel @Inject constructor(
             description,
         ) = uiState
         return amount == 0f && name.value == "" && description == ""
-    }
-
-    fun tryToGoBack() {
-        uiState = if (!isEmpty()) {
-            uiState.copy(state = State.TryToGoBack)
-        } else {
-            uiState.copy(state = State.ConfirmGoBack)
-        }
-    }
-
-    fun confirmGoBack() {
-        if (uiState.state == State.TryToGoBack) {
-            uiState = uiState.copy(state = State.ConfirmGoBack)
-        } else {
-            throw IllegalStateException(
-                "confirm_go_back() called when state is not TryToGoBack"
-            )
-        }
-    }
-
-    fun cancelGoBack() {
-        if (uiState.state == State.TryToGoBack) {
-            uiState = uiState.copy(state = State.Idle)
-        } else {
-            throw IllegalStateException(
-                "cancel_go_back() called when state is not ConfirmGoBack"
-            )
-        }
     }
 
     fun updateAmount(amount: Currency) {

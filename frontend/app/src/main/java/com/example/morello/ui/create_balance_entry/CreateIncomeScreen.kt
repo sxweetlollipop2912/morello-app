@@ -53,8 +53,10 @@ import androidx.compose.ui.unit.dp
 import com.example.morello.data_layer.data_sources.data_types.Currency
 import com.example.morello.ui.components.CreateBalanceEntryTopBar
 import com.example.morello.ui.components.FixedSignNumberEditField
+import com.example.morello.ui.components.FormBackHandler
 import com.example.morello.ui.components.SectionDividerWithText
 import com.example.morello.ui.components.StandaloneDatePickerDialogWithButton
+import com.example.morello.ui.components.rememberFormBackHandlerState
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -73,9 +75,7 @@ fun CreateIncomeScreen(
     onStartDateTimeChanged: (LocalDateTime) -> Unit,
     onEndDateTimeChanged: (LocalDateTime) -> Unit,
     onMemberUpdated: (Int, Boolean) -> Unit,
-    onTryToGoBack: () -> Unit,
     onConfirmGoBack: () -> Unit,
-    onCancelGoBack: () -> Unit,
     onDismissDateTimeError: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -104,24 +104,9 @@ fun CreateIncomeScreen(
             }
         }
     }
-    BackHandler(onBack = onTryToGoBack)
-    if (uiState.state == State.TryToGoBack) {
-        AlertDialog(
-            onDismissRequest = { onCancelGoBack() },
-            title = { Text(text = "Discard changes?") },
-            text = { Text(text = "Are you sure you want to discard changes?") },
-            confirmButton = {
-                Button(onClick = { onConfirmGoBack() }) {
-                    Text(text = "Discard")
-                }
-            },
-            dismissButton = {
-                Button(onClick = { onCancelGoBack() }) {
-                    Text(text = "Cancel")
-                }
-            }
-        )
-    }
+    val backHandlerState = rememberFormBackHandlerState()
+    FormBackHandler(backHandlerState, onConfirmGoBack)
+    BackHandler(onBack = { backHandlerState.goBack(!uiState.consideredEmpty()) })
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -131,7 +116,9 @@ fun CreateIncomeScreen(
                 isLoading = uiState.state == State.Submitting,
                 title = "New income",
                 onCreate = onCreate,
-                onBack = onTryToGoBack,
+                onBack = {
+                    backHandlerState.goBack(!uiState.consideredEmpty())
+                }
             )
         },
         modifier = modifier,
@@ -274,7 +261,7 @@ fun CreateIncomeScreen(
             }
             if (datePickerDisplayed) {
                 StandaloneDatePickerDialogWithButton(
-                    onDismissRequest = {datePickerDisplayed = false},
+                    onDismissRequest = { datePickerDisplayed = false },
                     onDateTimeChanged = onDateTimeChanged,
                     fallbackDateTime = dateTime,
                 )

@@ -19,9 +19,6 @@ fun CreateExpenseRoute(
         if (uiState.state == State.Success) {
             onBack()
             viewModel.reset()
-        } else if (uiState.state == State.ConfirmGoBack) {
-            onBack()
-            viewModel.reset()
         }
     }
     CreateExpenseScreen(
@@ -33,14 +30,9 @@ fun CreateExpenseRoute(
         onCreate = {
             viewModel.submit(groupId)
         },
-        onBack = {
-            viewModel.tryToGoBack()
-        },
         onConfirmGoBack = {
-            viewModel.confirmGoBack()
-        },
-        onCancelGoBack = {
-            viewModel.cancelGoBack()
+            onBack()
+            viewModel.reset()
         },
         modifier = modifier,
     )

@@ -18,9 +18,6 @@ fun CreateIncomeRoute(
         if (uiState.state == State.Success) {
             onBack()
             viewModel.reset()
-        } else if (uiState.state == State.ConfirmGoBack) {
-            onBack()
-            viewModel.reset()
         }
     }
     CreateIncomeScreen(
@@ -38,14 +35,9 @@ fun CreateIncomeRoute(
         onStartDateTimeChanged = viewModel::updateStartDateTime,
         onEndDateTimeChanged = viewModel::updateEndDateTime,
         onMemberUpdated = viewModel::updateChosenMember,
-        onTryToGoBack = {
-            viewModel.tryToGoBack()
-        },
         onConfirmGoBack = {
-            viewModel.confirmGoBack()
-        },
-        onCancelGoBack = {
-            viewModel.cancelGoBack()
+            onBack()
+            viewModel.reset()
         },
         onDismissDateTimeError = viewModel::dismissDateTimeError,
         modifier = modifier,
