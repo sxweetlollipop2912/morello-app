@@ -36,7 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.morello.data_layer.data_sources.data_types.formatted
+import com.example.morello.data_layer.data_types.formatted
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -2,15 +2,15 @@ package com.example.morello.data_layer.repositories
 
 import com.example.morello.data_layer.data_sources.RemoteGroupDataSource
 import com.example.morello.data_layer.data_sources.RemoteMemberDataSource
-import com.example.morello.data_layer.data_sources.data_types.balance.BalanceEntry
-import com.example.morello.data_layer.data_sources.data_types.balance.BalanceEntryCreate
-import com.example.morello.data_layer.data_sources.data_types.balance.BalanceEntryUpdate
-import com.example.morello.data_layer.data_sources.data_types.collect_sessions.CollectSession
-import com.example.morello.data_layer.data_sources.data_types.groups.Group
-import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupRequest
-import com.example.morello.data_layer.data_sources.data_types.members.Member
-import com.example.morello.data_layer.data_sources.data_types.members.NewMemberRequest
-import com.example.morello.data_layer.data_sources.data_types.user.User
+import com.example.morello.data_layer.data_types.BalanceEntry
+import com.example.morello.data_layer.data_types.BalanceEntryCreate
+import com.example.morello.data_layer.data_types.BalanceEntryUpdate
+import com.example.morello.data_layer.data_types.CollectSession
+import com.example.morello.data_layer.data_sources.data_types.group.Group
+import com.example.morello.data_layer.data_sources.data_types.group.NewGroupRequest
+import com.example.morello.data_layer.data_types.Member
+import com.example.morello.data_layer.data_sources.data_types.member.NewMemberRequest
+import com.example.morello.data_layer.data_types.User
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -22,9 +22,9 @@ class GroupRepository @Inject constructor(
     fun getLeader(groupId: Int): Flow<User> = TODO()
     suspend fun deleteGroup(groupId: Int): Nothing = TODO()
     suspend fun createNewGroup(newGroupRequest: NewGroupRequest, members: List<NewMemberRequest>) {
-        val groupResponse = remoteGroupDataSource.createNewGroup(newGroupRequest)
+        val groupResponse = remoteGroupDataSource.createGroup(newGroupRequest)
         members.forEach {
-            remoteMemberDataSource.addMemberToGroup(groupResponse.id, it)
+            remoteMemberDataSource.createMember(groupResponse.id, it)
         }
     }
 
