@@ -1,6 +1,6 @@
-package com.example.morello.data_layer.data_sources.apis
+package com.example.morello.data_layer.apis
 
-import com.example.morello.data_layer.data_sources.apis.client.AuthRetrofitClient
+import com.example.morello.data_layer.apis.client.AuthRetrofitClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,13 +13,13 @@ import retrofit2.Retrofit
 class ApiModule {
     @Provides
     @ViewModelScoped
-    fun bindUserApi(@AuthRetrofitClient retrofit: Retrofit): UserApi =
-        retrofit.create(UserApi::class.java)
+    fun bindBalanceApi(@AuthRetrofitClient retrofit: Retrofit): BalanceApi =
+        retrofit.create(BalanceApi::class.java)
 
     @Provides
     @ViewModelScoped
-    fun bindBalanceEntryApi(@AuthRetrofitClient retrofit: Retrofit): BalanceEntryApi =
-        retrofit.create(BalanceEntryApi::class.java)
+    fun bindCollectSessionApi(@AuthRetrofitClient retrofit: Retrofit): CollectSessionApi =
+        retrofit.create(CollectSessionApi::class.java)
 
     @Provides
     @ViewModelScoped
@@ -33,6 +33,11 @@ class ApiModule {
 
     @Provides
     @ViewModelScoped
-    fun bindBalanceApi(@AuthRetrofitClient retrofit: Retrofit): BalanceApi =
-        retrofit.create(BalanceApi::class.java)
+    fun bindModeratorApi(@AuthRetrofitClient retrofit: Retrofit): ModeratorApi =
+        retrofit.create(ModeratorApi::class.java)
+
+    @Provides
+    @ViewModelScoped
+    fun bindUserApi(@AuthRetrofitClient retrofit: Retrofit): UserApi =
+        retrofit.create(UserApi::class.java)
 }
