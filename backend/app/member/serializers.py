@@ -19,9 +19,13 @@ class MemberCreateSerializer(serializers.ModelSerializer):
         model = Member
         fields = ["name"]
 
+    def create(self, validated_data):
+        group_id = self.context["group_id"]
+        member = Member.objects.create(group_id_id=group_id, **validated_data)
+        return member
+
 
 class MemberDetailSerializer(serializers.ModelSerializer):
-    # TODO: Add balance and collect entries + due amount
     related_sessions = serializers.SerializerMethodField()
     due_amount = serializers.SerializerMethodField()
 
