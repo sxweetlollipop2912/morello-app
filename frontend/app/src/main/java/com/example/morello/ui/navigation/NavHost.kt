@@ -11,6 +11,7 @@ import HomeRoute
 import LoginRoute
 import OwnerGroupHomeRoute
 import RegisterRoute
+import SessionListRoute
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -24,13 +25,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.morello.ui.authorized_home.AuthorizedHomeRoute
 import com.example.morello.ui.create_balance_entry.CreateExpenseRoute
-import com.example.morello.ui.create_balance_entry.CreateExpenseViewModel
 import com.example.morello.ui.create_group.CreateGroupRoute
 import com.example.morello.ui.forgot_password.ForgotPasswordCodeValidationScreen
 import com.example.morello.ui.forgot_password.ForgotPasswordEmailScreen
 import com.example.morello.ui.login.LoginRoute
 import com.example.morello.ui.owner_group.OwnerGroupRoute
 import com.example.morello.ui.register.RegisterRoute
+import com.example.morello.ui.session_list.SessionListRoute
 
 fun NavGraphBuilder.ownerGroupHomeGraph(
     navController: NavHostController,
@@ -43,8 +44,11 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
         arguments = graphRoute.args
     ) {
         composable(GroupOwnerHomeRoute.routeWithArgs) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(graphRoute.routeWithArgs)
+            }
             OwnerGroupRoute(
-                viewModel = hiltViewModel(),
+                viewModel = hiltViewModel(parentEntry),
                 onToNewIncomeEntry = {
                     navController.navigate(CreateIncomeRoute.base)
                 },
@@ -52,7 +56,9 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
                     navController.navigate(CreateExpenseRoute.base)
                 },
                 onToBalanceEntryList = {},
-                onToCollectSessionList = {},
+                onToCollectSessionList = {
+                    navController.navigate(SessionListRoute.base)
+                },
                 onBack = {
                     navController.popBackStack()
                 })
@@ -66,7 +72,7 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
                 val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
             CreateExpenseRoute(
                 groupId = groupId,
-                viewModel = hiltViewModel(),
+                viewModel = hiltViewModel(parentEntry),
                 onBack = {
                     navController.popBackStack()
                 }
@@ -80,10 +86,25 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
             // TODO: Replace with CreateIncomeRoute
             CreateExpenseRoute(
                 groupId = groupId,
-                viewModel = hiltViewModel(),
+                viewModel = hiltViewModel(parentEntry),
                 onBack = {
                     navController.popBackStack()
                 }
+            )
+        }
+        composable(SessionListRoute.routeWithArgs) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(graphRoute.routeWithArgs)
+            }
+            SessionListRoute(
+                viewModel = hiltViewModel(parentEntry),
+                onSessionClicked = {},
+                onCreateNewSession = {
+                    navController.navigate(CreateIncomeRoute.base)
+                },
+                onBack = {
+                    navController.popBackStack()
+                },
             )
         }
     }
@@ -92,16 +113,21 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
 fun NavGraphBuilder.authorizedHomeGraph(
     navController: NavHostController,
 ) {
+    val graphRoute = AuthorizedHomeRoute
+
     navigation(
         startDestination = HomeRoute.routeWithArgs,
-        route = AuthorizedHomeRoute.routeWithArgs
+        route = graphRoute.routeWithArgs
     ) {
         ownerGroupHomeGraph(
             navController = navController,
         )
         composable(HomeRoute.routeWithArgs) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(graphRoute.routeWithArgs)
+            }
             AuthorizedHomeRoute(
-                viewModel = hiltViewModel(),
+                viewModel = hiltViewModel(parentEntry),
                 onCreateNewGroup = {
                     navController.navigate(CreateGroupRoute.base)
                 },
@@ -111,8 +137,11 @@ fun NavGraphBuilder.authorizedHomeGraph(
             )
         }
         composable(CreateGroupRoute.routeWithArgs) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(graphRoute.routeWithArgs)
+            }
             CreateGroupRoute(
-                viewModel = hiltViewModel(),
+                viewModel = hiltViewModel(parentEntry),
                 onBack = {
                     navController.popBackStack()
                 }
@@ -136,14 +165,6 @@ fun MorelloNavHost(
         authorizedHomeGraph(
             navController = navController,
         )
-        composable(CreateGroupRoute.routeWithArgs) {
-            CreateGroupRoute(
-                viewModel = hiltViewModel(),
-                onBack = {
-                    navController.popBackStack()
-                }
-            )
-        }
         composable(LoginRoute.routeWithArgs) {
             LoginRoute(
                 viewModel = hiltViewModel(),

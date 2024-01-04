@@ -1,6 +1,7 @@
 package com.example.morello.ui.owner_group
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
@@ -13,6 +14,9 @@ fun OwnerGroupRoute(
     onToCollectSessionList: () -> Unit,
     onBack: () -> Unit,
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.refreshUiState()
+    }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     OwnerGroupScreen(
         uiState = uiState,

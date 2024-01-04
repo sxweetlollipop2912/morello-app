@@ -260,15 +260,15 @@ fun AuthorizedHomeScreen(
                     ) {
                         if (!refreshState.isRefreshing) {
                             groups.forEach { group ->
-                                Spacer(modifier = Modifier.size(8.dp))
                                 GroupListEntry(
                                     name = group.name,
                                     description = group.description,
                                     type = if (group.isLeader) "Owner" else "Moderator",
                                     onClick = { onGroupSelect(group.id) },
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 8.dp, bottom = 16.dp)
                                 )
-                                Spacer(modifier = Modifier.size(16.dp))
                                 HorizontalDivider()
                             }
                             Spacer(modifier = Modifier.size(50.dp))
@@ -292,32 +292,35 @@ fun GroupListEntry(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = modifier
-            .clickable {
+    Box(
+        modifier = Modifier.clickable {
                 onClick()
             }
     ) {
-        Column {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = modifier
+        ) {
+            Column {
+                Text(
+                    text = name,
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    ),
+                )
+            }
             Text(
-                text = name,
-                style = MaterialTheme.typography.titleMedium,
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            Text(
-                text = description,
+                text = type,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 ),
             )
         }
-        Text(
-            text = type,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            ),
-        )
     }
 }
