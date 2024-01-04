@@ -1,4 +1,4 @@
-package com.example.morello.data_layer.data_sources.apis.client
+package com.example.morello.data_layer.apis.client
 
 import dagger.Module
 import dagger.Provides
