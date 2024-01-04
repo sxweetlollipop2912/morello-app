@@ -2,7 +2,7 @@ package com.example.morello.data_layer.data_sources.apis
 
 import com.example.morello.data_layer.data_sources.data_types.groups.Group
 import com.example.morello.data_layer.data_sources.data_types.groups.GroupDetails
-import com.example.morello.data_layer.data_sources.data_types.groups.Leader
+import com.example.morello.data_layer.data_sources.data_types.groups.User
 import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupRequest
 import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupResponse
 import com.example.morello.data_layer.data_sources.data_types.groups.UpdateGroupRequest
@@ -23,7 +23,7 @@ interface GroupApi {
     suspend fun getGroupById(@Path("id") id: Int): Response<GroupDetails>
 
     @GET("groups/{id}/leader/")
-    suspend fun getLeaderByGroupId(@Path("id") id: Int): Response<Leader>
+    suspend fun getLeaderByGroupId(@Path("id") id: Int): Response<User>
 
     @PUT("groups/{id}/")
     suspend fun updateGroupById(@Path("id") id: Int, @Body group: UpdateGroupRequest): Response<UpdateGroupResponse>

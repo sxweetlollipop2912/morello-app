@@ -3,8 +3,8 @@ package com.example.morello.data_layer.repositories
 import com.example.morello.data_layer.data_sources.RemoteGroupDataSource
 import com.example.morello.data_layer.data_sources.RemoteMemberDataSource
 import com.example.morello.data_layer.data_sources.data_types.balance.BalanceEntry
-import com.example.morello.data_layer.data_sources.data_types.balance.NewBalanceEntryRequest
-import com.example.morello.data_layer.data_sources.data_types.balance.UpdateBalanceEntryRequest
+import com.example.morello.data_layer.data_sources.data_types.balance.BalanceEntryCreate
+import com.example.morello.data_layer.data_sources.data_types.balance.BalanceEntryUpdate
 import com.example.morello.data_layer.data_sources.data_types.collect_sessions.CollectSession
 import com.example.morello.data_layer.data_sources.data_types.groups.Group
 import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupRequest
@@ -58,12 +58,12 @@ class GroupRepository @Inject constructor(
     suspend fun updateBalanceEntry(
         groupId: Int,
         balanceEntryId: Int,
-        balanceEntry: UpdateBalanceEntryRequest
+        balanceEntry: BalanceEntryUpdate
     ) {
         remoteGroupDataSource.updateBalanceEntry(groupId, balanceEntryId, balanceEntry)
     }
 
-    suspend fun createBalanceEntry(groupId: Int, balanceEntry: NewBalanceEntryRequest) {
+    suspend fun createBalanceEntry(groupId: Int, balanceEntry: BalanceEntryCreate) {
         remoteGroupDataSource.createBalanceEntry(groupId, balanceEntry)
     }
 }

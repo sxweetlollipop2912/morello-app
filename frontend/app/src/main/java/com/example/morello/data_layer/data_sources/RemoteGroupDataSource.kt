@@ -6,14 +6,14 @@ import com.example.morello.data_layer.data_sources.apis.GroupApi
 import com.example.morello.data_layer.data_sources.apis.MemberApi
 import com.example.morello.data_layer.data_sources.apis.client.ErrorResponse
 import com.example.morello.data_layer.data_sources.data_types.balance.BalanceEntry
-import com.example.morello.data_layer.data_sources.data_types.balance.NewBalanceEntryRequest
+import com.example.morello.data_layer.data_sources.data_types.balance.BalanceEntryCreate
 import com.example.morello.data_layer.data_sources.data_types.balance.NewBalanceEntryResponse
-import com.example.morello.data_layer.data_sources.data_types.balance.UpdateBalanceEntryRequest
-import com.example.morello.data_layer.data_sources.data_types.balance.UpdateBalanceEntryResponse
+import com.example.morello.data_layer.data_sources.data_types.balance.BalanceEntryUpdate
+import com.example.morello.data_layer.data_sources.data_types.balance.BalanceEntryDetail
 import com.example.morello.data_layer.data_sources.data_types.collect_sessions.CollectSession
 import com.example.morello.data_layer.data_sources.data_types.groups.Group
 import com.example.morello.data_layer.data_sources.data_types.groups.GroupDetails
-import com.example.morello.data_layer.data_sources.data_types.groups.Leader
+import com.example.morello.data_layer.data_sources.data_types.groups.User
 import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupRequest
 import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupResponse
 import com.example.morello.data_layer.data_sources.data_types.groups.UpdateGroupRequest
@@ -54,7 +54,7 @@ class RemoteGroupDataSource @Inject constructor(
         }
     }
 
-    suspend fun getLeader(groupId: Int): Leader {
+    suspend fun getLeader(groupId: Int): com.example.morello.data_layer.data_sources.data_types.user.User {
         return withContext(dispatcher) {
             val res = groupApi.getLeaderByGroupId(groupId)
             if (res.isSuccessful) {
@@ -180,8 +180,8 @@ class RemoteGroupDataSource @Inject constructor(
     suspend fun updateBalanceEntry(
         groupId: Int,
         balanceEntryId: Int,
-        balanceEntry: UpdateBalanceEntryRequest
-    ): UpdateBalanceEntryResponse {
+        balanceEntry: BalanceEntryUpdate
+    ): BalanceEntryDetail {
         return withContext(dispatcher) {
             val res =
                 balanceEntryApi.updateBalanceEntryInGroup(groupId, balanceEntryId, balanceEntry)
@@ -194,7 +194,7 @@ class RemoteGroupDataSource @Inject constructor(
         }
     }
 
-    suspend fun createBalanceEntry(groupId: Int, balanceEntry: NewBalanceEntryRequest): NewBalanceEntryResponse {
+    suspend fun createBalanceEntry(groupId: Int, balanceEntry: BalanceEntryCreate): NewBalanceEntryResponse {
         return withContext(dispatcher) {
             val res = balanceEntryApi.addBalanceEntryToGroup(groupId, balanceEntry)
             if (res.isSuccessful) {

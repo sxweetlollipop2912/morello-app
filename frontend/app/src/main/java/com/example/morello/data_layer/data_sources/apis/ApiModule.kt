@@ -30,4 +30,9 @@ class ApiModule {
     @ViewModelScoped
     fun bindMemberApi(@AuthRetrofitClient retrofit: Retrofit): MemberApi =
         retrofit.create(MemberApi::class.java)
+
+    @Provides
+    @ViewModelScoped
+    fun bindBalanceApi(@AuthRetrofitClient retrofit: Retrofit): BalanceApi =
+        retrofit.create(BalanceApi::class.java)
 }

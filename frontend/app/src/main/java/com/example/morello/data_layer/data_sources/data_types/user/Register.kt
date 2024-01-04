@@ -13,5 +13,4 @@ data class RegisterResponse(
     @JsonProperty("id") val id: Int,
     @JsonProperty("email") val email: String,
     @JsonProperty("name") val name: String,
-    @JsonProperty("created_at") val createdAt: LocalDateTime,
 )
