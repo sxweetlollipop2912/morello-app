@@ -1,12 +1,9 @@
-package com.example.morello.data_layer.data_sources.data_types.groups
+package com.example.morello.data_layer.data_types
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.example.morello.data_layer.data_sources.data_types.collect_sessions.CollectSession
-import com.example.morello.data_layer.data_sources.data_types.balance.BalanceEntry
-import com.example.morello.data_layer.data_sources.data_types.user.User
 import java.time.LocalDateTime
 
-data class GroupList(
+data class Group(
     @JsonProperty("id") val id: Int,
     @JsonProperty("name") val name: String,
     @JsonProperty("description") val description: String,

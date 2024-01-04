@@ -1,6 +1,5 @@
-package com.example.morello.data_layer.data_sources.data_types.balance
+package com.example.morello.data_layer.data_types
 
-import com.example.morello.data_layer.data_sources.data_types.Currency
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDateTime
 
