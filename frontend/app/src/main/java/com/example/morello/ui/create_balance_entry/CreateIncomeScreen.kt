@@ -44,6 +44,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
@@ -111,7 +112,15 @@ fun CreateIncomeScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(key1 = uiState.dateTimeError) {
         if (uiState.dateTimeError != null) {
-            snackbarHostState.showSnackbar("${uiState.dateTimeError}")
+            val snackbarResult = snackbarHostState.showSnackbar("${uiState.dateTimeError}")
+            when (snackbarResult) {
+                SnackbarResult.Dismissed -> {
+                    onDismissDateTimeError()
+                }
+                SnackbarResult.ActionPerformed -> {
+                    onDismissDateTimeError()
+                }
+            }
         }
     }
     BackHandler(onBack = onTryToGoBack)
@@ -339,10 +348,6 @@ fun OpenSessionSection(
             confirmButton = {
                 Button(onClick = {
                     if (startDatePickerState.selectedDateMillis == null) {
-                        Log.d(
-                            "CreateIncomeScreen",
-                            "OpenSessionSection: startDatePickerState.selectedDateMillis == null"
-                        )
                         onStartDateTimeChanged(LocalDateTime.now())
                     } else {
                         onStartDateTimeChanged(
