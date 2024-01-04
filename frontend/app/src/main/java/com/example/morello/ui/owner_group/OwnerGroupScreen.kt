@@ -170,7 +170,9 @@ fun OwnerGroupScreen(
                 )
                 Text(
                     text = group.currentBalance.formattedWithSymbol(),
-                    style = MaterialTheme.typography.displayMedium
+                    style = MaterialTheme.typography.displayMedium.copy(
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 )
                 Text(
                     text = "After collecting: ${group.expectedBalance.formattedWithSymbol()}",
