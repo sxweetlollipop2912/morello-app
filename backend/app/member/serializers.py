@@ -27,7 +27,7 @@ class MemberCreateSerializer(serializers.ModelSerializer):
 
 class MemberDetailSerializer(serializers.ModelSerializer):
     related_sessions = serializers.SerializerMethodField()
-    due_amount = serializers.SerializerMethodField()
+    total_due_amount = serializers.SerializerMethodField()
 
     class Meta:
         model = Member
@@ -37,7 +37,7 @@ class MemberDetailSerializer(serializers.ModelSerializer):
             "is_archived",
             "created_at",
             "updated_at",
-            "due_amount",
+            "total_due_amount",
             "related_sessions",
         ]
 
@@ -50,11 +50,11 @@ class MemberDetailSerializer(serializers.ModelSerializer):
             related_sessions, many=True, context={"member_id": member_id}
         ).data
 
-    def get_due_amount(self, obj):
+    def get_total_due_amount(self, obj):
         return (
             CollectSession.objects.filter(
                 collect_entries__member_id=obj.id, collect_entries__status=False
-            ).aggregate(due_amount=Sum("payment_per_member"))["due_amount"]
+            ).aggregate(total_due_amount=Sum("payment_per_member"))["total_due_amount"]
             or 0
         )
 
