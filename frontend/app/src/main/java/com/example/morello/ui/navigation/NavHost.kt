@@ -31,6 +31,7 @@ import com.example.morello.ui.forgot_password.ForgotPasswordEmailScreen
 import com.example.morello.ui.login.LoginRoute
 import com.example.morello.ui.owner_group.OwnerGroupRoute
 import com.example.morello.ui.register.RegisterRoute
+import com.example.morello.ui.session_list.BalanceEntryListRoute
 import com.example.morello.ui.session_list.SessionListRoute
 
 fun NavGraphBuilder.ownerGroupHomeGraph(
@@ -102,6 +103,19 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
                 onCreateNewSession = {
                     navController.navigate(CreateIncomeRoute.base)
                 },
+                onBack = {
+                    navController.popBackStack()
+                },
+            )
+        }
+        composable(BalanceEntryListRoute.routeWithArgs) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(graphRoute.routeWithArgs)
+            }
+            BalanceEntryListRoute(
+                viewModel = hiltViewModel(parentEntry),
+                onBalanceEntryClicked = {},
+                onCreateNewBalanceEntry = {},
                 onBack = {
                     navController.popBackStack()
                 },

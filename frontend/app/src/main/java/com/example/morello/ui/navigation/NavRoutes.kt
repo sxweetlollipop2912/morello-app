@@ -84,3 +84,8 @@ object SessionListRoute : NavRoute {
     override val base
         get() = "sessions"
 }
+
+object BalanceEntryListRoute : NavRoute {
+    override val base
+        get() = "balanceEntries"
+}
