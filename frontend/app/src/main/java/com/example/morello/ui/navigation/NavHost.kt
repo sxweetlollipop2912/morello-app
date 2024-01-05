@@ -49,14 +49,14 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
             }
             OwnerGroupRoute(
                 viewModel = hiltViewModel(parentEntry),
-                onToNewIncomeEntry = {
+                onNewIncomeEntry = {
                     navController.navigate(CreateIncomeRoute.base)
                 },
-                onToNewExpenseEntry = {
+                onNewExpenseEntry = {
                     navController.navigate(CreateExpenseRoute.base)
                 },
-                onToBalanceEntryList = {},
-                onToCollectSessionList = {
+                onBalanceEntryList = {},
+                onCollectSessionList = {
                     navController.navigate(SessionListRoute.base)
                 },
                 onBack = {

@@ -5,7 +5,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.morello.data_layer.data_types.CollectSession
-import com.example.morello.data_layer.data_types.Currency
 import com.example.morello.data_layer.repositories.CollectSessionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,11 +50,10 @@ class SessionListViewModel @Inject constructor(
         val filteredSessions = sessions.filter {
             it.name.contains(uiState.searchQuery, ignoreCase = true)
         }
-        // TODO: mock data only so date is all wrong
         uiState.copy(
-            overdueSessions = filteredSessions,
-            ongoingSessions = filteredSessions,
-            closedSessions = filteredSessions,
+            overdueSessions = filteredSessions.filter { it.isOpen && it.dueDays <= 0 },
+            ongoingSessions = filteredSessions.filter { it.isOpen && it.dueDays > 0 },
+            closedSessions = filteredSessions.filter { !it.isOpen },
         )
     }.stateIn(
         viewModelScope,

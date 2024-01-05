@@ -38,8 +38,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.morello.data_layer.data_sources.data_types.formattedNoTime
-import com.example.morello.data_layer.data_sources.data_types.formattedWithSymbol
+import com.example.morello.data_layer.data_types.formattedNoTime
+import com.example.morello.data_layer.data_types.formattedWithSymbol
 import com.example.morello.ui.components.BaseCard
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

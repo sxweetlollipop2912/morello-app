@@ -8,10 +8,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @Composable
 fun OwnerGroupRoute(
     viewModel: OwnerGroupViewModel,
-    onToNewIncomeEntry: () -> Unit,
-    onToNewExpenseEntry: () -> Unit,
-    onToBalanceEntryList: () -> Unit,
-    onToCollectSessionList: () -> Unit,
+    onNewIncomeEntry: () -> Unit,
+    onNewExpenseEntry: () -> Unit,
+    onBalanceEntryList: () -> Unit,
+    onCollectSessionList: () -> Unit,
     onBack: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
@@ -21,12 +21,12 @@ fun OwnerGroupRoute(
     OwnerGroupScreen(
         uiState = uiState,
         onRefreshUiState = viewModel::refreshUiState,
-        onAddNewExpenseEntry = onToNewExpenseEntry,
-        onAddNewIncomeEntry = onToNewIncomeEntry,
+        onAddNewExpenseEntry = onNewExpenseEntry,
+        onAddNewIncomeEntry = onNewIncomeEntry,
         onSeeBalanceEntryClicked = {},
-        onSeeAllBalanceEntryClicked = onToBalanceEntryList,
+        onSeeAllBalanceEntryClicked = onBalanceEntryList,
         onSeeCollectSessionClicked = {},
-        onSeeAllCollectSessionClicked = onToCollectSessionList,
+        onSeeAllCollectSessionClicked = onCollectSessionList,
         onBack = onBack,
     )
 }
