@@ -53,8 +53,8 @@ data class OwnerGroupUiState(
             group = OwnerGroupData.GroupInfo(
                 id = -1,
                 name = "",
-                currentBalance = 0f,
-                expectedBalance = 0f,
+                currentBalance = 0,
+                expectedBalance = 0,
             ),
             subCollections = emptyList(),
             subBalanceEntries = emptyList(),
@@ -83,8 +83,8 @@ class OwnerGroupViewModel @Inject constructor(
                 group = OwnerGroupData.GroupInfo(
                     id = groupId,
                     name = "$groupId",
-                    currentBalance = 1000000f,
-                    expectedBalance = 2000000f,
+                    currentBalance = 1000000,
+                    expectedBalance = 2000000,
                 ),
                 subCollections = listOf(
                     OwnerGroupData.CollectSessionInfo(
@@ -96,8 +96,8 @@ class OwnerGroupViewModel @Inject constructor(
                         isOpen = true,
                         paidCount = 1,
                         memberCount = 2,
-                        currentAmount = 100000f,
-                        expectedAmount = 200000f,
+                        currentAmount = 100000,
+                        expectedAmount = 200000,
                     ),
                     OwnerGroupData.CollectSessionInfo(
                         id = 2,
@@ -108,22 +108,22 @@ class OwnerGroupViewModel @Inject constructor(
                         isOpen = false,
                         paidCount = 1,
                         memberCount = 2,
-                        currentAmount = -100000f,
-                        expectedAmount = -200000f,
+                        currentAmount = -100000,
+                        expectedAmount = -200000,
                     ),
                 ),
                 subBalanceEntries = listOf(
                     OwnerGroupData.BalanceEntryInfo(
                         id = 1,
                         name = "Entry 1",
-                        amount = 10000f,
+                        amount = 10000,
                         description = "Balance entry very long description",
                         recordedAt = LocalDateTime.now(),
                     ),
                     OwnerGroupData.BalanceEntryInfo(
                         id = 2,
                         name = "Entry 2",
-                        amount = -100000f,
+                        amount = -100000,
                         description = "Balance entry description",
                         recordedAt = LocalDateTime.now(),
                     ),

@@ -2,9 +2,6 @@ package com.example.morello.ui.create_group
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.morello.data_layer.data_sources.CreateGroupException
-import com.example.morello.data_layer.data_sources.data_types.group.NewGroupRequest
-import com.example.morello.data_layer.data_sources.data_types.member.NewMemberRequest
 import com.example.morello.data_layer.repositories.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,17 +54,17 @@ class CreateGroupViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(state = State.Loading)
         viewModelScope.launch {
             try {
-                groupRepository.createNewGroup(
-                    newGroupRequest = NewGroupRequest(
-                        name = _uiState.value.groupName,
-                        description = "",
-                    ),
-                    members = _uiState.value.membersList.map {
-                        NewMemberRequest(it)
-                    }
-                )
+//                groupRepository.createNewGroup(
+//                    newGroupRequest = NewGroupRequest(
+//                        name = _uiState.value.groupName,
+//                        description = "",
+//                    ),
+//                    members = _uiState.value.membersList.map {
+//                        NewMemberRequest(it)
+//                    }
+//                )
                 _uiState.value = _uiState.value.copy(state = State.Success)
-            } catch (e: CreateGroupException) {
+            } catch (e: Exception) {
                 _uiState.value =
                     _uiState.value.copy(state = State.Error, submitError = e.message ?: "")
             }

@@ -14,13 +14,13 @@ fun AuthorizedHomeRoute(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
-        viewModel.reload()
+        viewModel.refreshUiState()
     }
     AuthorizedHomeScreen(
         uiState = uiState,
         onGroupSelect = navigateToGroup,
         onProfileClicked = {},
         onCreateNewGroup = onCreateNewGroup,
-        onReloadGroups = viewModel::reload,
+        onReloadGroups = viewModel::refreshUiState,
     )
 }

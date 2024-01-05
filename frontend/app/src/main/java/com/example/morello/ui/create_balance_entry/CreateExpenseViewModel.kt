@@ -2,9 +2,7 @@ package com.example.morello.ui.create_balance_entry
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.morello.data_layer.data_sources.CreateBalanceEntryException
 import com.example.morello.data_layer.data_types.Currency
-import com.example.morello.data_layer.data_types.BalanceEntryCreate
 import com.example.morello.data_layer.repositories.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,8 +31,8 @@ data class CreateExpenseUiState(
 ) {
     companion object {
         val new = CreateExpenseUiState(
-            amount = 0f,
-            balanceAfter = 0f,
+            amount = 0,
+            balanceAfter = 0,
             name = "",
             description = "",
             dateTime = LocalDateTime.now(),
@@ -62,7 +60,7 @@ class CreateExpenseViewModel @Inject constructor(
             name,
             description,
         ) = _uiState.value
-        return amount == 0f && name == "" && description == ""
+        return amount == 0 && name == "" && description == ""
     }
 
     fun tryToGoBack() {
@@ -117,17 +115,17 @@ class CreateExpenseViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(state = State.Submitting)
         viewModelScope.launch {
             try {
-                val rs = groupRepository.createBalanceEntry(groupId, _uiState.value.let {
-                    BalanceEntryCreate(
-                        name = it.name,
-                        description = it.description,
-                        amount = it.amount,
-                        createdAt = LocalDateTime.now()
-                    )
-                })
+//                val rs = groupRepository.createBalanceEntry(groupId, _uiState.value.let {
+//                    BalanceEntryCreate(
+//                        name = it.name,
+//                        description = it.description,
+//                        amount = it.amount,
+//                        createdAt = LocalDateTime.now()
+//                    )
+//                })
                 _uiState.value = _uiState.value.copy(state = State.Success)
-            } catch (e: CreateBalanceEntryException) {
-                _uiState.value = _uiState.value.copy(state = State.Error, error = e.msg)
+            } catch (e: Exception) {
+//                _uiState.value = _uiState.value.copy(state = State.Error, error = e.msg)
             }
         }
     }

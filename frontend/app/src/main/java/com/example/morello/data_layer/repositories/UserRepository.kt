@@ -31,7 +31,6 @@ class UserRepository @Inject constructor(
             id = response.id,
             name = response.name,
             email = response.email,
-            createdAt = response.createdAt,
         )
     }
 

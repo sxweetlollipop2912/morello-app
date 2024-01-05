@@ -1,4 +1,4 @@
-package com.example.morello.data_layer.data_sources.data_types
+package com.example.morello.data_layer.data_types
 
 import java.time.LocalDateTime
 
