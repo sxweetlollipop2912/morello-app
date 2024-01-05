@@ -3,8 +3,8 @@ package com.example.morello.ui.authorized_home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.morello.data_layer.data_sources.data_types.groups.Group
-import com.example.morello.data_layer.data_sources.data_types.user.User
+import com.example.morello.data_layer.data_sources.data_types.group.Group
+import com.example.morello.data_layer.data_types.User
 import com.example.morello.data_layer.repositories.GroupRepository
 import com.example.morello.data_layer.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

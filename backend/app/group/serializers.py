@@ -4,7 +4,7 @@ from .models import (
 )
 from collect_session.models import CollectSession
 from collect_session.serializers import CollectSessionListSerializer
-from balance.serializers import BalanceEntrySerializer
+from balance.serializers import BalanceEntryListSerializer
 
 
 class GroupListSerializer(serializers.ModelSerializer):
@@ -28,7 +28,6 @@ class GroupCreateSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        # Add the leader_user_id from the context to the validated_data
         validated_data["leader_user_id"] = self.context["request"].user
         return super().create(validated_data)
 
@@ -36,6 +35,7 @@ class GroupCreateSerializer(serializers.ModelSerializer):
 class GroupDetailSerializer(serializers.ModelSerializer):
     recent_open_sessions = serializers.SerializerMethodField()
     recent_balance_entries = serializers.SerializerMethodField()
+    leader = serializers.SerializerMethodField()
     DEFAULT_OPEN_SESSION_COUNT = 5
     DEFAULT_OPEN_BALANCE_ENTRY_COUNT = 5
 
@@ -49,7 +49,16 @@ class GroupDetailSerializer(serializers.ModelSerializer):
             "updated_at",
             "recent_open_sessions",
             "recent_balance_entries",
+            "leader",
         ]
+
+    def get_leader(self, obj):
+        leader = obj.leader_user_id
+        return {
+            "id": leader.id,
+            "name": leader.name,
+            "email": leader.email,
+        }
 
     def get_recent_open_sessions(self, obj):
         open_session_count = self.context["request"].query_params.get(
@@ -69,7 +78,7 @@ class GroupDetailSerializer(serializers.ModelSerializer):
         recent_balance_entries = obj.balance_entries.order_by("-recorded_at")[
             :balance_entry_count
         ]
-        return BalanceEntrySerializer(recent_balance_entries, many=True).data
+        return BalanceEntryListSerializer(recent_balance_entries, many=True).data
 
 
 class GroupUpdateSerializer(serializers.ModelSerializer):

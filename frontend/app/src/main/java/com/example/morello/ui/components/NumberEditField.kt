@@ -18,9 +18,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection.Ltr
-import com.example.morello.data_layer.data_sources.data_types.Currency
-import com.example.morello.data_layer.data_sources.data_types.formattedNoSymbol
-import com.example.morello.data_layer.data_sources.data_types.formattedStrToCurrency
+import com.example.morello.data_layer.data_types.Currency
+import com.example.morello.data_layer.data_types.formattedNoSymbol
+import com.example.morello.data_layer.data_types.formattedStrToCurrency
 
 @Composable
 fun FixedSignNumberEditField(

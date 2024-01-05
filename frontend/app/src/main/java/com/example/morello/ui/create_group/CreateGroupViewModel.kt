@@ -3,8 +3,8 @@ package com.example.morello.ui.create_group
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.morello.data_layer.data_sources.CreateGroupException
-import com.example.morello.data_layer.data_sources.data_types.groups.NewGroupRequest
-import com.example.morello.data_layer.data_sources.data_types.members.NewMemberRequest
+import com.example.morello.data_layer.data_sources.data_types.group.NewGroupRequest
+import com.example.morello.data_layer.data_sources.data_types.member.NewMemberRequest
 import com.example.morello.data_layer.repositories.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

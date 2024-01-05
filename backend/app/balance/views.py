@@ -1,6 +1,12 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from .models import BalanceEntry
-from .serializers import BalanceEntrySerializer
+from .serializers import (
+    BalanceEntryListSerializer,
+    BalanceEntryDetailSerializer,
+    BalanceEntryCreateSerializer,
+    BalanceEntryUpdateSerializer,
+    BalanceEntryPartialUpdateSerializer,
+)
 from collect_session.models import CollectEntry
 from django.db.models import Sum, F
 from group.mixins import GroupPermissionMixin
@@ -54,8 +60,40 @@ class BalanceViewSet(GroupPermissionMixin, viewsets.ViewSet):
 
 @extend_schema(tags=["Balance Entry endpoints"])
 class BalanceEntryViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
-    serializer_class = BalanceEntrySerializer
-
     def get_queryset(self):
         group_id = self.kwargs["group_pk"]
         return BalanceEntry.objects.filter(group_id=group_id)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = BalanceEntryListSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = BalanceEntryDetailSerializer(instance)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        group_id = self.kwargs["group_pk"]
+        serializer = BalanceEntryCreateSerializer(
+            data=request.data, context={"group_id": group_id}
+        )
+        serializer.is_valid(raise_exception=True)
+        balance_entry = serializer.save()
+        serializer = BalanceEntryDetailSerializer(balance_entry)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = BalanceEntryUpdateSerializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = BalanceEntryPartialUpdateSerializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)

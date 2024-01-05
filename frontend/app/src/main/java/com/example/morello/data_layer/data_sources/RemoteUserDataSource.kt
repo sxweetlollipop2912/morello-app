@@ -1,19 +1,19 @@
 package com.example.morello.data_layer.data_sources
 
 import android.util.Log
-import com.example.morello.data_layer.data_sources.apis.BalanceEntryApi
-import com.example.morello.data_layer.data_sources.apis.UserApi
-import com.example.morello.data_layer.data_sources.data_types.user.LoginRequest
-import com.example.morello.data_layer.data_sources.data_types.user.LoginResponse
-import com.example.morello.data_layer.data_sources.data_types.user.RegisterRequest
-import com.example.morello.data_layer.data_sources.data_types.user.RegisterResponse
-import com.example.morello.data_layer.data_sources.data_types.user.User
+import com.example.morello.data_layer.apis.BalanceApi
+import com.example.morello.data_layer.apis.UserApi
+import com.example.morello.data_layer.data_types.LoginRequest
+import com.example.morello.data_layer.data_types.LoginResponse
+import com.example.morello.data_layer.data_types.RegisterRequest
+import com.example.morello.data_layer.data_types.RegisterResponse
+import com.example.morello.data_layer.data_types.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class RemoteUserDataSource @Inject constructor(
-    private val balanceEntryApi: BalanceEntryApi,
+    private val balanceApi: BalanceApi,
     private val userApi: UserApi,
 ) {
     private val dispatcher = Dispatchers.IO

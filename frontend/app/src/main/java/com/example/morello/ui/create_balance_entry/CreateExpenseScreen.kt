@@ -32,8 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.morello.data_layer.data_sources.data_types.Currency
-import com.example.morello.data_layer.data_sources.data_types.formattedWithSymbol
+import com.example.morello.data_layer.data_types.Currency
+import com.example.morello.data_layer.data_types.formattedWithSymbol
 import com.example.morello.ui.components.CreateBalanceEntryTopBar
 import com.example.morello.ui.components.FixedSignNumberEditField
 import java.time.Instant
