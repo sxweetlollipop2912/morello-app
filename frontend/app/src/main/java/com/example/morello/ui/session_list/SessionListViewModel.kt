@@ -4,7 +4,8 @@ import OwnerGroupHomeRoute
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.morello.data_layer.data_sources.data_types.Currency
+import com.example.morello.data_layer.data_types.CollectSession
+import com.example.morello.data_layer.data_types.Currency
 import com.example.morello.data_layer.repositories.CollectSessionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,29 +15,16 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
-
-data object SessionListData {
-    data class CollectSessionInfo(
-        val id: Int,
-        val name: String,
-        val description: String,
-        val dueDate: LocalDateTime,
-        val dueDays: Int,
-        val isOpen: Boolean,
-        val paidCount: Int,
-        val memberCount: Int,
-        val currentAmount: Currency,
-        val expectedAmount: Currency,
-    )
-}
-
+val CollectSession.dueDays: Int
+    get() = ChronoUnit.DAYS.between(LocalDateTime.now(), due).toInt()
 
 data class SessionListUiState(
-    val overdueSessions: List<SessionListData.CollectSessionInfo>,
-    val ongoingSessions: List<SessionListData.CollectSessionInfo>,
-    val closedSessions: List<SessionListData.CollectSessionInfo>,
+    val overdueSessions: List<CollectSession>,
+    val ongoingSessions: List<CollectSession>,
+    val closedSessions: List<CollectSession>,
     val searchQuery: String = "",
 ) {
     companion object {
@@ -56,7 +44,7 @@ class SessionListViewModel @Inject constructor(
 ) : ViewModel() {
     val groupId = savedStateHandle.get<Int>(OwnerGroupHomeRoute.groupId)!!
 
-    private var _sessions = MutableStateFlow<List<SessionListData.CollectSessionInfo>>(emptyList())
+    private var _sessions = MutableStateFlow<List<CollectSession>>(emptyList())
 
     private var _uiState = MutableStateFlow(SessionListUiState.empty)
     val uiState = _uiState.combine(_sessions) { uiState, sessions ->
@@ -88,77 +76,95 @@ class SessionListViewModel @Inject constructor(
             // TODO: mock data only
             _sessions.update {
                 listOf(
-                    SessionListData.CollectSessionInfo(
+                    CollectSession(
                         id = 1,
                         name = "Session 1",
                         description = "This is a description",
-                        dueDate = LocalDateTime.now(),
-                        dueDays = 3,
+                        start = LocalDateTime.now(),
+                        due = LocalDateTime.now(),
                         isOpen = true,
                         paidCount = 2,
                         memberCount = 3,
-                        currentAmount = 100000f,
-                        expectedAmount = 200000f,
+                        currentAmount = 100000,
+                        expectedAmount = 200000,
+                        paymentPerMember = 10000,
+                        createdAt = LocalDateTime.now(),
+                        updatedAt = LocalDateTime.now(),
                     ),
-                    SessionListData.CollectSessionInfo(
+                    CollectSession(
                         id = 2,
                         name = "Session 2",
                         description = "This is a description",
-                        dueDate = LocalDateTime.now(),
-                        dueDays = 3,
+                        start = LocalDateTime.now(),
+                        due = LocalDateTime.now(),
                         isOpen = true,
                         paidCount = 2,
                         memberCount = 3,
-                        currentAmount = 100000f,
-                        expectedAmount = 200000f,
+                        currentAmount = 100000,
+                        expectedAmount = 200000,
+                        paymentPerMember = 10000,
+                        createdAt = LocalDateTime.now(),
+                        updatedAt = LocalDateTime.now(),
                     ),
-                    SessionListData.CollectSessionInfo(
+                    CollectSession(
                         id = 3,
                         name = "Session 3",
                         description = "This is a description",
-                        dueDate = LocalDateTime.now(),
-                        dueDays = 3,
+                        start = LocalDateTime.now(),
+                        due = LocalDateTime.now(),
                         isOpen = true,
                         paidCount = 2,
                         memberCount = 3,
-                        currentAmount = 100000f,
-                        expectedAmount = 200000f,
+                        currentAmount = 100000,
+                        expectedAmount = 200000,
+                        paymentPerMember = 10000,
+                        createdAt = LocalDateTime.now(),
+                        updatedAt = LocalDateTime.now(),
                     ),
-                    SessionListData.CollectSessionInfo(
+                    CollectSession(
                         id = 4,
                         name = "Session 4",
                         description = "This is a description",
-                        dueDate = LocalDateTime.now(),
-                        dueDays = 3,
+                        start = LocalDateTime.now(),
+                        due = LocalDateTime.now(),
                         isOpen = true,
                         paidCount = 2,
                         memberCount = 3,
-                        currentAmount = 100000f,
-                        expectedAmount = 200000f,
+                        currentAmount = 100000,
+                        expectedAmount = 200000,
+                        paymentPerMember = 10000,
+                        createdAt = LocalDateTime.now(),
+                        updatedAt = LocalDateTime.now(),
                     ),
-                    SessionListData.CollectSessionInfo(
+                    CollectSession(
                         id = 5,
                         name = "Session 5",
                         description = "This is a description",
-                        dueDate = LocalDateTime.now(),
-                        dueDays = 3,
+                        start = LocalDateTime.now(),
+                        due = LocalDateTime.now(),
                         isOpen = true,
                         paidCount = 2,
                         memberCount = 3,
-                        currentAmount = 100000f,
-                        expectedAmount = 200000f,
+                        currentAmount = 100000,
+                        expectedAmount = 200000,
+                        paymentPerMember = 10000,
+                        createdAt = LocalDateTime.now(),
+                        updatedAt = LocalDateTime.now(),
                     ),
-                    SessionListData.CollectSessionInfo(
+                    CollectSession(
                         id = 6,
                         name = "Session 6",
                         description = "This is a description",
-                        dueDate = LocalDateTime.now(),
-                        dueDays = 3,
+                        start = LocalDateTime.now(),
+                        due = LocalDateTime.now(),
                         isOpen = true,
                         paidCount = 2,
                         memberCount = 3,
-                        currentAmount = 100000f,
-                        expectedAmount = 200000f,
+                        currentAmount = 100000,
+                        expectedAmount = 200000,
+                        paymentPerMember = 10000,
+                        createdAt = LocalDateTime.now(),
+                        updatedAt = LocalDateTime.now(),
                     ),
                 )
             }

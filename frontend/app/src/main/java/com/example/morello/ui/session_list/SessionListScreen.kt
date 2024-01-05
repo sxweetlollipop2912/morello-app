@@ -32,8 +32,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import com.example.morello.data_layer.data_sources.data_types.formattedNoTime
-import com.example.morello.data_layer.data_sources.data_types.formattedWithSymbol
+import com.example.morello.data_layer.data_types.CollectSession
+import com.example.morello.data_layer.data_types.formattedNoTime
+import com.example.morello.data_layer.data_types.formattedWithSymbol
 import com.example.morello.ui.components.BaseCard
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -132,9 +133,9 @@ fun SessionListScreen(
 
 @Composable
 fun SessionListScreenContent(
-    overdueSessions: List<SessionListData.CollectSessionInfo>,
-    ongoingSessions: List<SessionListData.CollectSessionInfo>,
-    closedSessions: List<SessionListData.CollectSessionInfo>,
+    overdueSessions: List<CollectSession>,
+    ongoingSessions: List<CollectSession>,
+    closedSessions: List<CollectSession>,
     onSessionClicked: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -160,7 +161,7 @@ fun SessionListScreenContent(
 
 @Composable
 fun ClosedSessionListItem(
-    session: SessionListData.CollectSessionInfo,
+    session: CollectSession,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -177,7 +178,7 @@ fun ClosedSessionListItem(
                 ),
             )
             Text(
-                text = "Closed on ${session.dueDate.formattedNoTime()}",
+                text = "Closed on ${session.due.formattedNoTime()}",
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.outline
                 )
@@ -217,7 +218,7 @@ fun ClosedSessionListItem(
 
 @Composable
 fun OverdueSessionListItem(
-    session: SessionListData.CollectSessionInfo,
+    session: CollectSession,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -274,7 +275,7 @@ fun OverdueSessionListItem(
 
 @Composable
 fun OngoingSessionListItem(
-    session: SessionListData.CollectSessionInfo,
+    session: CollectSession,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -331,7 +332,7 @@ fun OngoingSessionListItem(
 
 @Composable
 fun OverdueSessionsCard(
-    sessions: List<SessionListData.CollectSessionInfo>,
+    sessions: List<CollectSession>,
     modifier: Modifier = Modifier,
     onSessionClicked: (Int) -> Unit,
 ) {
@@ -357,7 +358,7 @@ fun OverdueSessionsCard(
 
 @Composable
 fun OngoingSessionsCard(
-    sessions: List<SessionListData.CollectSessionInfo>,
+    sessions: List<CollectSession>,
     modifier: Modifier = Modifier,
     onSessionClicked: (Int) -> Unit,
 ) {
@@ -383,7 +384,7 @@ fun OngoingSessionsCard(
 
 @Composable
 fun ClosedSessionsCard(
-    sessions: List<SessionListData.CollectSessionInfo>,
+    sessions: List<CollectSession>,
     modifier: Modifier = Modifier,
     onSessionClicked: (Int) -> Unit,
 ) {
