@@ -1,12 +1,10 @@
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 from user.models import User
 from .models import Group
 from .serializers import GroupDetailSerializer
 from rest_framework.request import Request
-from rest_framework.test import APIRequestFactory
 
 
 class GroupViewSetTestCase(TestCase):

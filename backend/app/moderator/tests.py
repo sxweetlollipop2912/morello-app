@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 from group.models import Group
 from moderator.models import Moderator
-from moderator.serializers import ModeratorDetailSerializer
 
 
 class ModeratorViewSetTestCase(TestCase):
