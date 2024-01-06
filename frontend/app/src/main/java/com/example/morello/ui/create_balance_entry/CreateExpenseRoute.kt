@@ -18,7 +18,7 @@ fun CreateExpenseRoute(
     LaunchedEffect(uiState.state) {
         when (uiState.state) {
             State.Uninitialized -> {
-                viewModel.init()
+                viewModel.init(groupId)
             }
 
             State.Success -> {

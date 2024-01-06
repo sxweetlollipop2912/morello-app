@@ -112,7 +112,7 @@ fun CreateExpenseScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Text(
-                text = "Balance after: ${balanceAfter.formattedWithSymbol()}",
+                text = "Balance after: ${balanceAfter?.formattedWithSymbol()}",
                 textAlign = TextAlign.End,
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.fillMaxWidth()

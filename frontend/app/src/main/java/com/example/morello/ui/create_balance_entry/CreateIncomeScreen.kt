@@ -50,6 +50,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.morello.data_layer.data_types.Currency
+import com.example.morello.data_layer.data_types.formattedWithSymbol
 import com.example.morello.ui.components.CreateBalanceEntryTopBar
 import com.example.morello.ui.components.FixedSignNumberEditField
 import com.example.morello.ui.components.FormBackHandler
@@ -82,9 +83,9 @@ fun CreateIncomeScreen(
         name,
         description,
         amount,
-        dateTime,
+        balanceAfter,
+        datetime,
     ) = uiState
-    val balanceAfter = amount
     var datePickerDisplayed by remember { mutableStateOf(false) }
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     val scrollableState = rememberScrollState()
@@ -147,7 +148,7 @@ fun CreateIncomeScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Text(
-                text = "Balance after: $balanceAfter VND",
+                text = "Balance after: ${balanceAfter?.formattedWithSymbol()}",
                 textAlign = TextAlign.End,
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.fillMaxWidth()
@@ -212,7 +213,7 @@ fun CreateIncomeScreen(
                                     contentDescription = "Date Picker"
                                 )
                                 Spacer(modifier = Modifier.padding(4.dp))
-                                Text(text = dateTime.format(dateFormatter) ?: "")
+                                Text(text = datetime.format(dateFormatter) ?: "")
                             }
                         }
                     }
@@ -262,7 +263,7 @@ fun CreateIncomeScreen(
                 StandaloneDatePickerDialogWithButton(
                     onDismissRequest = { datePickerDisplayed = false },
                     onDateTimeChanged = onDateTimeChanged,
-                    fallbackDateTime = dateTime,
+                    fallbackDateTime = datetime,
                 )
             }
         }

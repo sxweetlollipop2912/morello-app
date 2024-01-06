@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 data class CreateExpenseUiState(
     val amount: Currency,
-    val balanceAfter: Currency,
+    val balanceAfter: Currency?,
     val name: StringOrError,
     val description: String,
     val dateTime: OffsetDateTime,
@@ -25,7 +25,7 @@ data class CreateExpenseUiState(
     companion object {
         val new = CreateExpenseUiState(
             amount = 0,
-            balanceAfter = 0,
+            balanceAfter = null,
             name = StringOrError("", null),
             description = "",
             dateTime = OffsetDateTime.now(),
@@ -44,14 +44,17 @@ class CreateExpenseViewModel @Inject constructor(
     var uiState by mutableStateOf(CreateExpenseUiState.new)
         private set
 
-    fun init() {
-        uiState = CreateExpenseUiState.new
+    private var groupCurrentBalance: Int? = null
+
+    suspend fun init(groupId: Int) {
+        groupCurrentBalance = groupRepository.getGroupBalance(groupId).currentBalance
+        uiState = uiState.copy(balanceAfter = groupCurrentBalance?.let { it - uiState.amount })
     }
 
     private fun isEmpty(): Boolean {
         val (
             amount,
-            balanceAfter,
+            _,
             name,
             description,
         ) = uiState
@@ -59,15 +62,14 @@ class CreateExpenseViewModel @Inject constructor(
     }
 
     fun updateAmount(amount: Currency) {
-        uiState = uiState.copy(amount = amount)
+        uiState = uiState.copy(
+            balanceAfter = groupCurrentBalance?.let { it - amount },
+            amount = amount
+        )
     }
 
     fun finish() {
         uiState = uiState.copy(state = State.Uninitialized)
-    }
-
-    fun updateBalanceAfter(balanceAfter: Currency) {
-        uiState = uiState.copy(balanceAfter = balanceAfter)
     }
 
     fun updateName(name: String) {
@@ -98,7 +100,7 @@ class CreateExpenseViewModel @Inject constructor(
                     BalanceEntryCreate(
                         name = it.name.value,
                         description = it.description,
-                        amount = it.amount,
+                        amount = -it.amount,
                         recordedAt = it.dateTime,
                     )
                 })
