@@ -31,7 +31,7 @@ import com.example.morello.ui.forgot_password.ForgotPasswordEmailScreen
 import com.example.morello.ui.login.LoginRoute
 import com.example.morello.ui.owner_group.OwnerGroupRoute
 import com.example.morello.ui.register.RegisterRoute
-import com.example.morello.ui.session_list.BalanceEntryListRoute
+import com.example.morello.ui.balance_entry_list.BalanceEntryListRoute
 import com.example.morello.ui.session_list.SessionListRoute
 
 fun NavGraphBuilder.ownerGroupHomeGraph(
