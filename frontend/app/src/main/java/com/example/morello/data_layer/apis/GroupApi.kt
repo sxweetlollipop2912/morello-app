@@ -25,13 +25,13 @@ interface GroupApi {
     ): Response<GroupDetail>
 
     @PUT("groups/{groupId}/")
-    suspend fun updateGroupById(
+    suspend fun updateGroup(
         @Path("groupId") groupId: Int,
         @Body group: GroupUpdate
     ): Response<GroupDetail>
 
     @DELETE("groups/{groupId}/")
-    suspend fun deleteGroupById(
+    suspend fun deleteGroup(
         @Path("groupId") groupId: Int
     ): Response<Void>
 }

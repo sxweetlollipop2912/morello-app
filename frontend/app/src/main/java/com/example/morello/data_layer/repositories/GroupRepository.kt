@@ -3,12 +3,11 @@ package com.example.morello.data_layer.repositories
 import com.example.morello.data_layer.data_sources.RemoteGroupDataSource
 import com.example.morello.data_layer.data_sources.RemoteMemberDataSource
 import com.example.morello.data_layer.data_types.Group
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GroupRepository @Inject constructor(
     private val remoteGroupDataSource: RemoteGroupDataSource,
-    private val remoteMemberDataSource: RemoteMemberDataSource,
-    private val userRepository: UserRepository,
 ) {
     suspend fun getGroups(): List<Group> {
         return remoteGroupDataSource.getGroups()
