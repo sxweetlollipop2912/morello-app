@@ -4,6 +4,7 @@ import com.example.morello.data_layer.data_sources.RemoteBalanceDataSource
 import com.example.morello.data_layer.data_sources.RemoteCollectSessionDataSource
 import com.example.morello.data_layer.data_sources.RemoteGroupDataSource
 import com.example.morello.data_layer.data_sources.RemoteMemberDataSource
+import com.example.morello.data_layer.data_types.Balance
 import com.example.morello.data_layer.data_types.BalanceEntryCreate
 import com.example.morello.data_layer.data_types.Group
 import com.example.morello.data_layer.data_types.Member
@@ -22,6 +23,10 @@ class GroupRepository @Inject constructor(
 
     suspend fun createBalanceEntry(groupId: Int, balanceEntry: BalanceEntryCreate) {
         remoteBalanceDataSource.createBalanceEntry(groupId, balanceEntry)
+    }
+
+    suspend fun getGroupBalance(groupId: Int): Balance {
+        return remoteBalanceDataSource.getBalance(groupId)
     }
 
     suspend fun getMembers(groupId: Int): List<Member> {
