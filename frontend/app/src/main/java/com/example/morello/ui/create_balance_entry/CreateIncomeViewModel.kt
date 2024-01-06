@@ -52,6 +52,7 @@ data class CreateIncomeUiState(
     val name: StringOrError,
     val description: String,
     val amount: Currency,
+    val balanceAfter: Currency?,
     val dateTime: OffsetDateTime,
     val createNewSessionData: CreateNewSessionData,
     val state: State = State.Uninitialized,
@@ -64,6 +65,7 @@ data class CreateIncomeUiState(
             name = StringOrError("", null),
             description = "",
             amount = 0,
+            balanceAfter = null,
             dateTime = OffsetDateTime.now(),
             createNewSessionData = CreateNewSessionData(
                 amountPerMember = 0,
@@ -76,6 +78,7 @@ data class CreateIncomeUiState(
         fun newWithoutCollectSession(
             memberList: List<MemberEntryData> = listOf(),
         ) = CreateIncomeUiState(
+            balanceAfter = null,
             name = StringOrError("", null),
             description = "",
             amount = 0,
@@ -100,22 +103,24 @@ class CreateIncomeViewModel @Inject constructor(
     private val collectSessionRepository: CollectSessionRepository,
 ) : ViewModel() {
     var uiState by mutableStateOf(
-        CreateIncomeUiState.newWithoutCollectSession(
-            listOf(MemberEntryData(0, "Empty", false))
-        )
+        CreateIncomeUiState.newWithoutCollectSession()
     )
 
+    private var groupCurrentBalance: Currency? = null
+
     suspend fun init(groupId: Int) {
+        val currentBalance = groupRepository.getGroupBalance(groupId).currentBalance
         val state = CreateIncomeUiState.newWithoutCollectSession(
             groupRepository.getMembers(groupId).map {
                 MemberEntryData(
                     id = it.id,
                     name = it.name,
-                    selected = false,
+                    selected = true,
                 )
             }
         )
-        uiState = state.copy(state = State.Idle)
+        groupCurrentBalance = currentBalance
+        uiState = state.copy(state = State.Idle, balanceAfter = currentBalance)
     }
 
     fun switchToCreateNewSession() {
@@ -149,6 +154,7 @@ class CreateIncomeViewModel @Inject constructor(
         val newAmount = chosenMemberCount() * amount
         uiState = uiState.copy(
             amount = newAmount,
+            balanceAfter = groupCurrentBalance?.plus(newAmount) ?: 0,
             createNewSessionData = uiState.createNewSessionData.copy(
                 amountPerMember = amount,
             )
@@ -160,6 +166,7 @@ class CreateIncomeViewModel @Inject constructor(
         val newAmountPerMember: Currency = calculateAmountPerMember(amount)
         uiState = uiState.copy(
             amount = amount,
+            balanceAfter = groupCurrentBalance?.plus(amount) ?: 0,
             createNewSessionData = uiState.createNewSessionData.copy(
                 amountPerMember = newAmountPerMember,
             )
@@ -168,15 +175,6 @@ class CreateIncomeViewModel @Inject constructor(
 
     fun updateName(name: String) {
         uiState = uiState.copy(name = uiState.name.copy(value = name))
-    }
-
-    private fun calculateAmountPerMember(): Currency {
-        val memberCount = uiState.createNewSessionData.memberList.count { it.selected }
-        return if (memberCount == 0) {
-            0
-        } else {
-            uiState.amount / memberCount
-        }
     }
 
     fun finish() {
@@ -209,9 +207,14 @@ class CreateIncomeViewModel @Inject constructor(
             }
         }
         val newChosenMemberCount = newMemberList.count { it.selected }
+        val newAmountPerMember = if (newChosenMemberCount == 0) {
+            0
+        } else {
+            uiState.amount / newChosenMemberCount
+        }
         uiState = uiState.copy(
             createNewSessionData = uiState.createNewSessionData.copy(
-                amountPerMember = uiState.amount / newChosenMemberCount,
+                amountPerMember = newAmountPerMember,
                 memberList = newMemberList,
             )
         )

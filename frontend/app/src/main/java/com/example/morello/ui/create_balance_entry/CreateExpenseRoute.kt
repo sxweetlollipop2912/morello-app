@@ -1,10 +1,10 @@
 package com.example.morello.ui.create_balance_entry
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -16,9 +16,18 @@ fun CreateExpenseRoute(
 ) {
     val uiState = viewModel.uiState
     LaunchedEffect(uiState.state) {
-        if (uiState.state == State.Success) {
-            onBack()
-            viewModel.reset()
+        when (uiState.state) {
+            State.Uninitialized -> {
+                viewModel.init(groupId)
+            }
+
+            State.Success -> {
+                onBack()
+                delay(1000)
+                viewModel.finish()
+            }
+
+            else -> {}
         }
     }
     CreateExpenseScreen(
@@ -30,10 +39,7 @@ fun CreateExpenseRoute(
         onCreate = {
             viewModel.submit(groupId)
         },
-        onConfirmGoBack = {
-            onBack()
-            viewModel.reset()
-        },
+        onConfirmGoBack = onBack,
         modifier = modifier,
     )
 }
