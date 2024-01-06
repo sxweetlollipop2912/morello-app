@@ -89,7 +89,7 @@ data class CreateIncomeUiState(
     fun consideredEmpty(): Boolean {
         return name.value.isEmpty() &&
                 description.isEmpty() &&
-                amount == 0f
+                amount == 0
     }
 }
 

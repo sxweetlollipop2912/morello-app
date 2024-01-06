@@ -16,8 +16,6 @@ enum class State {
     Idle,
     Submitting,
     Success,
-    TryToGoBack,
-    ConfirmGoBack,
 }
 
 data class CreateExpenseUiState(
@@ -40,7 +38,7 @@ data class CreateExpenseUiState(
     }
 
     fun considerAsNew(): Boolean {
-        return amount == 0f && name.value == "" && description == ""
+        return amount == 0 && name.value == "" && description == ""
     }
 }
 
