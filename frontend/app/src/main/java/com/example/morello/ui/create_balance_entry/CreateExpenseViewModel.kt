@@ -19,7 +19,7 @@ data class CreateExpenseUiState(
     val name: StringOrError,
     val description: String,
     val dateTime: OffsetDateTime,
-    val state: State = State.Idle,
+    val state: State = State.Uninitialized,
     val error: String? = null,
 ) {
     companion object {
@@ -44,7 +44,7 @@ class CreateExpenseViewModel @Inject constructor(
     var uiState by mutableStateOf(CreateExpenseUiState.new)
         private set
 
-    fun reset() {
+    fun init() {
         uiState = CreateExpenseUiState.new
     }
 
@@ -60,6 +60,10 @@ class CreateExpenseViewModel @Inject constructor(
 
     fun updateAmount(amount: Currency) {
         uiState = uiState.copy(amount = amount)
+    }
+
+    fun finish() {
+        uiState = uiState.copy(state = State.Uninitialized)
     }
 
     fun updateBalanceAfter(balanceAfter: Currency) {
