@@ -13,14 +13,6 @@ import kotlinx.coroutines.launch
 import java.time.OffsetDateTime
 import javax.inject.Inject
 
-enum class State {
-    Uninitialized,
-    Idle,
-    Submitting,
-    Success,
-    Error,
-}
-
 data class CreateExpenseUiState(
     val amount: Currency,
     val balanceAfter: Currency,
