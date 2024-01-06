@@ -222,7 +222,7 @@ fun AuthorizedHomeScreen(
                     onClick = onCreateNewGroup,
                     shape = RoundedCornerShape(50.dp),
                     modifier = Modifier
-                        .padding(bottom = 16.dp)
+                        .padding(bottom = 16.dp, end = 8.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,

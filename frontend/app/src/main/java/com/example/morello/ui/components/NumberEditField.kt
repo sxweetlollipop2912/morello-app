@@ -23,9 +23,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection.Ltr
-import com.example.morello.data_layer.data_sources.data_types.Currency
-import com.example.morello.data_layer.data_sources.data_types.formatted
-import com.example.morello.data_layer.data_sources.data_types.formattedStrToCurrency
+import com.example.morello.data_layer.data_types.Currency
+import com.example.morello.data_layer.data_types.formattedNoSymbol
+import com.example.morello.data_layer.data_types.formattedStrToCurrency
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -46,13 +46,13 @@ fun FixedSignNumberEditField(
     val direction = LocalLayoutDirection.current
     val selection =
         if (direction == Ltr) {
-            TextRange(value.formatted().length + if (negativeSign) 1 else 0)
+            TextRange(value.formattedNoSymbol().length + if (negativeSign) 1 else 0)
         } else
             TextRange.Zero
     val valueString = if (negativeSign) {
-        "-${value.formatted()}"
+        "-${value.formattedNoSymbol()}"
     } else {
-        value.formatted()
+        value.formattedNoSymbol()
     }
     val textFieldValue = TextFieldValue(text = valueString, selection = selection)
     val focusRequester = remember { FocusRequester() }

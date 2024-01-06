@@ -66,7 +66,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import com.example.morello.data_layer.data_sources.data_types.Currency
+import com.example.morello.data_layer.data_types.Currency
 import com.example.morello.ui.components.CreateBalanceEntryTopBar
 import com.example.morello.ui.components.FixedSignNumberEditField
 import com.example.morello.ui.components.SectionDividerWithText

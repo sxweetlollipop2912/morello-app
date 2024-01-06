@@ -5,9 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.morello.data_layer.data_sources.data_types.Currency
-import com.example.morello.data_layer.data_sources.data_types.balance.NewBalanceEntryRequest
-import com.example.morello.data_layer.data_sources.data_types.collect_sessions.NewCollectSession
+import com.example.morello.data_layer.data_types.Currency
 import com.example.morello.data_layer.repositories.CollectSessionRepository
 import com.example.morello.data_layer.repositories.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +21,7 @@ data class CreateNewSessionData(
 ) {
     companion object {
         val new = CreateNewSessionData(
-            amountPerMember = 0f,
+            amountPerMember = 0,
             startDate = LocalDateTime.now(),
             endDate = LocalDateTime.now(),
             memberList = listOf(
@@ -69,10 +67,10 @@ data class CreateIncomeUiState(
         val newWithCollectSession = CreateIncomeUiState(
             name = StringOrError("", null),
             description = "",
-            amount = 0f,
+            amount = 0,
             dateTime = LocalDateTime.now(),
             createNewSessionData = CreateNewSessionData(
-                amountPerMember = 0f,
+                amountPerMember = 0,
                 startDate = LocalDateTime.now(),
                 endDate = LocalDateTime.now(),
             ),
@@ -81,7 +79,7 @@ data class CreateIncomeUiState(
         val newWithoutCollectSession = CreateIncomeUiState(
             name = StringOrError("", null),
             description = "",
-            amount = 0f,
+            amount = 0,
             dateTime = LocalDateTime.now(),
             mode = Mode.CreateNewEntry,
             createNewSessionData = CreateNewSessionData.new,
@@ -153,7 +151,7 @@ class CreateIncomeViewModel @Inject constructor(
     private fun calculateAmountPerMember(): Currency {
         val memberCount = uiState.createNewSessionData.memberList.count { it.second }
         return if (memberCount == 0) {
-            0f
+            0
         } else {
             uiState.amount / memberCount
         }
@@ -162,7 +160,7 @@ class CreateIncomeViewModel @Inject constructor(
     private fun calculateAmountPerMember(amount: Currency): Currency {
         val memberCount = uiState.createNewSessionData.memberList.count { it.second }
         return if (memberCount == 0) {
-            0f
+            0
         } else {
             amount / memberCount
         }
@@ -209,7 +207,7 @@ class CreateIncomeViewModel @Inject constructor(
         val uiState = uiState
         return uiState.name.value.isEmpty() &&
                 uiState.description.isEmpty() &&
-                uiState.amount == 0f
+                uiState.amount == 0
     }
 
     fun tryToGoBack() {
@@ -274,19 +272,19 @@ class CreateIncomeViewModel @Inject constructor(
         uiState = uiState.copy(state = State.Submitting)
         viewModelScope.launch {
             uiState = try {
-                collectSessionRepository.createCollectSession(
-                    groupId = groupId,
-                    collectSession = uiState.let {
-                        NewCollectSession(
-                            name = it.name.value,
-                            description = it.description,
-                            start = it.createNewSessionData.startDate.toString(),
-                            due = it.createNewSessionData.endDate.toString(),
-                            isOpen = true,
-                            paymentPerMember = it.createNewSessionData.amountPerMember,
-                        )
-                    },
-                )
+//                collectSessionRepository.createCollectSession(
+//                    groupId = groupId,
+//                    collectSession = uiState.let {
+//                        NewCollectSession(
+//                            name = it.name.value,
+//                            description = it.description,
+//                            start = it.createNewSessionData.startDate.toString(),
+//                            due = it.createNewSessionData.endDate.toString(),
+//                            isOpen = true,
+//                            paymentPerMember = it.createNewSessionData.amountPerMember,
+//                        )
+//                    },
+//                )
                 uiState.copy(
                     state = State.Success,
                 )
@@ -302,15 +300,15 @@ class CreateIncomeViewModel @Inject constructor(
         uiState = uiState.copy(state = State.Submitting)
         viewModelScope.launch {
             try {
-                groupRepository.createBalanceEntry(
-                    groupId = groupId,
-                    balanceEntry = NewBalanceEntryRequest(
-                        name = uiState.name.value,
-                        description = uiState.description,
-                        amount = uiState.amount,
-                        createdAt = LocalDateTime.now(),
-                    )
-                )
+//                groupRepository.createBalanceEntry(
+//                    groupId = groupId,
+//                    balanceEntry = CreateNewSessionData(
+//                        amountPerMember = uiState.amount,
+//                        startDate = uiState.createNewSessionData.startDate,
+//                        endDate = uiState.createNewSessionData.endDate,
+//                        memberList = uiState.createNewSessionData.memberList,
+//                    )
+//                )
                 uiState = uiState.copy(
                     state = State.Success,
                 )
