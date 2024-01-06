@@ -1,17 +1,12 @@
 package com.example.morello.ui.create_balance_entry
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,21 +14,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,8 +31,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -55,26 +42,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.morello.data_layer.data_types.Currency
 import com.example.morello.ui.components.CreateBalanceEntryTopBar
 import com.example.morello.ui.components.FixedSignNumberEditField
+import com.example.morello.ui.components.FormBackHandler
 import com.example.morello.ui.components.SectionDividerWithText
-import java.time.Instant
+import com.example.morello.ui.components.StandaloneDatePickerDialogWithButton
+import com.example.morello.ui.components.rememberFormBackHandlerState
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import kotlin.math.floor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,9 +75,7 @@ fun CreateIncomeScreen(
     onStartDateTimeChanged: (LocalDateTime) -> Unit,
     onEndDateTimeChanged: (LocalDateTime) -> Unit,
     onMemberUpdated: (Int, Boolean) -> Unit,
-    onTryToGoBack: () -> Unit,
     onConfirmGoBack: () -> Unit,
-    onCancelGoBack: () -> Unit,
     onDismissDateTimeError: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -105,33 +87,26 @@ fun CreateIncomeScreen(
     ) = uiState
     val balanceAfter = amount
     var datePickerDisplayed by remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState()
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     val scrollableState = rememberScrollState()
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(key1 = uiState.dateTimeError) {
         if (uiState.dateTimeError != null) {
-            snackbarHostState.showSnackbar("${uiState.dateTimeError}")
-        }
-    }
-    BackHandler(onBack = onTryToGoBack)
-    if (uiState.state == State.TryToGoBack) {
-        AlertDialog(
-            onDismissRequest = { onCancelGoBack() },
-            title = { Text(text = "Discard changes?") },
-            text = { Text(text = "Are you sure you want to discard changes?") },
-            confirmButton = {
-                Button(onClick = { onConfirmGoBack() }) {
-                    Text(text = "Discard")
+            val snackbarResult = snackbarHostState.showSnackbar("${uiState.dateTimeError}")
+            when (snackbarResult) {
+                SnackbarResult.Dismissed -> {
+                    onDismissDateTimeError()
                 }
-            },
-            dismissButton = {
-                Button(onClick = { onCancelGoBack() }) {
-                    Text(text = "Cancel")
+
+                SnackbarResult.ActionPerformed -> {
+                    onDismissDateTimeError()
                 }
             }
-        )
+        }
     }
+    val backHandlerState = rememberFormBackHandlerState()
+    FormBackHandler(backHandlerState, onConfirmGoBack)
+    BackHandler(onBack = { backHandlerState.goBack(!uiState.consideredEmpty()) })
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -141,7 +116,9 @@ fun CreateIncomeScreen(
                 isLoading = uiState.state == State.Submitting,
                 title = "New income",
                 onCreate = onCreate,
-                onBack = onTryToGoBack,
+                onBack = {
+                    backHandlerState.goBack(!uiState.consideredEmpty())
+                }
             )
         },
         modifier = modifier,
@@ -283,29 +260,11 @@ fun CreateIncomeScreen(
                 }
             }
             if (datePickerDisplayed) {
-                DatePickerDialog(
+                StandaloneDatePickerDialogWithButton(
                     onDismissRequest = { datePickerDisplayed = false },
-                    confirmButton = {
-                        Button(onClick = {
-                            if (datePickerState.selectedDateMillis == null) {
-                                onDateTimeChanged(
-                                    LocalDateTime.now()
-                                )
-                            } else {
-                                onDateTimeChanged(
-                                    LocalDateTime.ofInstant(
-                                        Instant.ofEpochMilli(datePickerState.selectedDateMillis!!),
-                                        ZoneId.systemDefault(),
-                                    )
-                                )
-                            }
-                            datePickerDisplayed = false
-                        }) {
-                            Text(text = "Submit")
-                        }
-                    }) {
-                    DatePicker(state = datePickerState)
-                }
+                    onDateTimeChanged = onDateTimeChanged,
+                    fallbackDateTime = dateTime,
+                )
             }
         }
     }
@@ -330,58 +289,19 @@ fun OpenSessionSection(
     )
     var startDatePickerDisplayed by remember { mutableStateOf(false) }
     var endDatePickerDisplayed by remember { mutableStateOf(false) }
-    val startDatePickerState = rememberDatePickerState()
-    val endDatePickerState = rememberDatePickerState()
     val memberListScrollState = rememberScrollState()
     if (startDatePickerDisplayed) {
-        DatePickerDialog(
+        StandaloneDatePickerDialogWithButton(
             onDismissRequest = { startDatePickerDisplayed = false },
-            confirmButton = {
-                Button(onClick = {
-                    if (startDatePickerState.selectedDateMillis == null) {
-                        Log.d(
-                            "CreateIncomeScreen",
-                            "OpenSessionSection: startDatePickerState.selectedDateMillis == null"
-                        )
-                        onStartDateTimeChanged(LocalDateTime.now())
-                    } else {
-                        onStartDateTimeChanged(
-                            LocalDateTime.ofInstant(
-                                Instant.ofEpochMilli(startDatePickerState.selectedDateMillis!!),
-                                ZoneId.systemDefault(),
-                            )
-                        )
-                    }
-                    startDatePickerDisplayed = false
-                }) {
-                    Text(text = "Submit")
-                }
-            }) {
-            DatePicker(state = startDatePickerState)
-        }
+            onDateTimeChanged = onStartDateTimeChanged,
+            fallbackDateTime = startDateTime,
+        )
     }
     if (endDatePickerDisplayed) {
-        DatePickerDialog(
+        StandaloneDatePickerDialogWithButton(
             onDismissRequest = { endDatePickerDisplayed = false },
-            confirmButton = {
-                Button(onClick = {
-                    if (endDatePickerState.selectedDateMillis == null) {
-                        onEndDateTimeChanged(LocalDateTime.now())
-                    } else {
-                        onEndDateTimeChanged(
-                            LocalDateTime.ofInstant(
-                                Instant.ofEpochMilli(endDatePickerState.selectedDateMillis!!),
-                                ZoneId.systemDefault(),
-                            )
-                        )
-                    }
-                    endDatePickerDisplayed = false
-                }) {
-                    Text(text = "Submit")
-                }
-            }) {
-            DatePicker(state = endDatePickerState)
-        }
+            onDateTimeChanged = onEndDateTimeChanged,
+        )
     }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

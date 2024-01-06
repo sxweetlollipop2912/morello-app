@@ -36,6 +36,9 @@ import com.example.morello.data_layer.data_types.Currency
 import com.example.morello.data_layer.data_types.formattedWithSymbol
 import com.example.morello.ui.components.CreateBalanceEntryTopBar
 import com.example.morello.ui.components.FixedSignNumberEditField
+import com.example.morello.ui.components.FormBackHandler
+import com.example.morello.ui.components.StandaloneDatePickerDialogWithButton
+import com.example.morello.ui.components.rememberFormBackHandlerState
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -51,40 +54,28 @@ fun CreateExpenseScreen(
     onDescriptionChanged: (String) -> Unit,
     onDateTimeChanged: (LocalDateTime) -> Unit,
     onCreate: () -> Unit,
-    onBack: () -> Unit,
     onConfirmGoBack: () -> Unit,
-    onCancelGoBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var datePickerDisplayed by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     val (amount, balanceAfter, name, description, dateTime, state, error) = uiState
-    BackHandler(onBack = onBack)
-    if (state == State.TryToGoBack) {
-        AlertDialog(
-            onDismissRequest = { onCancelGoBack() },
-            title = { Text(text = "Discard changes?") },
-            text = { Text(text = "Are you sure you want to discard changes?") },
-            confirmButton = {
-                Button(onClick = { onConfirmGoBack() }) {
-                    Text(text = "Discard")
-                }
-            },
-            dismissButton = {
-                Button(onClick = { onCancelGoBack() }) {
-                    Text(text = "Cancel")
-                }
-            }
-        )
-    }
+    val formBackHandlerState = rememberFormBackHandlerState()
+    FormBackHandler(formBackHandlerState, onConfirmGoBack)
+    BackHandler(onBack = {
+        formBackHandlerState.goBack(!uiState.considerAsNew())
+
+    })
     Scaffold(
         topBar = {
             CreateBalanceEntryTopBar(
                 isLoading = state == State.Submitting,
                 title = "New expense",
                 onCreate = onCreate,
-                onBack = onBack,
+                onBack = {
+                    formBackHandlerState.goBack(!uiState.considerAsNew())
+                },
                 modifier = Modifier.padding(end = 16.dp)
             )
         },
@@ -183,29 +174,10 @@ fun CreateExpenseScreen(
                 }
             }
             if (datePickerDisplayed) {
-                DatePickerDialog(
+                StandaloneDatePickerDialogWithButton(
                     onDismissRequest = { datePickerDisplayed = false },
-                    confirmButton = {
-                        Button(onClick = {
-                            if (datePickerState.selectedDateMillis == null) {
-                                onDateTimeChanged(
-                                    LocalDateTime.now()
-                                )
-                            } else {
-                                onDateTimeChanged(
-                                    LocalDateTime.ofInstant(
-                                        Instant.ofEpochMilli(datePickerState.selectedDateMillis!!),
-                                        ZoneId.systemDefault(),
-                                    )
-                                )
-                            }
-                            datePickerDisplayed = false
-                        }) {
-                            Text(text = "Submit")
-                        }
-                    }) {
-                    DatePicker(state = datePickerState)
-                }
+                    onDateTimeChanged = onDateTimeChanged,
+                )
             }
         }
     }
