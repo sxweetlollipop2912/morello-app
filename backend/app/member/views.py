@@ -32,13 +32,12 @@ class MemberViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
-        serializer = MemberCreateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
         group_id = self.kwargs["group_pk"]
-        member = Member.objects.create(
-            name=serializer.validated_data.get("name"),
-            group_id=group_id,
+        serializer = MemberCreateSerializer(
+            data=request.data, context={"group_id": group_id}
         )
+        serializer.is_valid(raise_exception=True)
+        member = serializer.save()
         serializer = MemberDetailSerializer(member, context={"member_id": member.id})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

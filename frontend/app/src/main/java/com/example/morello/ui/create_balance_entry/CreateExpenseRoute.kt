@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 
 
 @Composable
@@ -11,13 +12,11 @@ fun CreateExpenseRoute(
     groupId: Int,
     viewModel: CreateExpenseViewModel,
     onBack: () -> Unit,
+    modifier: Modifier,
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState = viewModel.uiState
     LaunchedEffect(uiState.state) {
         if (uiState.state == State.Success) {
-            onBack()
-            viewModel.reset()
-        } else if (uiState.state == State.ConfirmGoBack) {
             onBack()
             viewModel.reset()
         }
@@ -31,14 +30,10 @@ fun CreateExpenseRoute(
         onCreate = {
             viewModel.submit(groupId)
         },
-        onBack = {
-            viewModel.tryToGoBack()
-        },
         onConfirmGoBack = {
-            viewModel.confirmGoBack()
+            onBack()
+            viewModel.reset()
         },
-        onCancelGoBack = {
-            viewModel.cancelGoBack()
-        }
+        modifier = modifier,
     )
 }

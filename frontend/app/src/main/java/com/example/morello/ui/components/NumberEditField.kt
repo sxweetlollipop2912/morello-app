@@ -1,5 +1,6 @@
 package com.example.morello.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -8,42 +9,58 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection.Ltr
-import com.example.morello.data_layer.data_sources.data_types.Currency
-import com.example.morello.data_layer.data_sources.data_types.formatted
-import com.example.morello.data_layer.data_sources.data_types.formattedStrToCurrency
+import com.example.morello.data_layer.data_types.Currency
+import com.example.morello.data_layer.data_types.formattedNoSymbol
+import com.example.morello.data_layer.data_types.formattedStrToCurrency
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FixedSignNumberEditField(
     value: Currency,
     negativeSign: Boolean,
+    textStyle: TextStyle = MaterialTheme.typography.headlineLarge.copy(
+        textAlign = TextAlign.End,
+        color = MaterialTheme.colorScheme.error,
+    ),
     onValueChange: (Currency) -> Unit,
+    prefix: @Composable () -> Unit = {},
+    suffix: @Composable () -> Unit = {},
+    shape: Shape = MaterialTheme.shapes.medium,
+    autoFocus: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     val direction = LocalLayoutDirection.current
     val selection =
         if (direction == Ltr) {
-            TextRange(value.formatted().length + if (negativeSign) 1 else 0)
+            TextRange(value.formattedNoSymbol().length + if (negativeSign) 1 else 0)
         } else
             TextRange.Zero
     val valueString = if (negativeSign) {
-        "-${value.formatted()}"
+        "-${value.formattedNoSymbol()}"
     } else {
-        value.formatted()
+        value.formattedNoSymbol()
     }
     val textFieldValue = TextFieldValue(text = valueString, selection = selection)
     val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+        if (autoFocus) {
+            focusRequester.requestFocus()
+        }
     }
     OutlinedTextField(
         value = textFieldValue,
@@ -52,26 +69,28 @@ fun FixedSignNumberEditField(
                 onValueChange(formattedStrToCurrency(newTfv.text.substring(1)))
             } else {
                 onValueChange(formattedStrToCurrency(newTfv.text))
+                Log.d("FixedSignNumberEditField", "newTfv.text: ${newTfv.text}")
             }
         },
-        prefix = {
-            Button(onClick = {}, enabled = false) {
-                Text(text = "VND")
-            }
-        },
+        shape = shape,
+        prefix = prefix,
+        suffix = suffix,
         singleLine = true,
-        textStyle = MaterialTheme.typography.headlineLarge.copy(
+        textStyle = textStyle.copy(
             textAlign = TextAlign.End,
-            color = MaterialTheme.colorScheme.error,
         ),
-        shape = MaterialTheme.shapes.medium,
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-        modifier = modifier
-            .focusRequester(focusRequester)
-            .onFocusChanged {
-                if (it.isFocused) {
+        modifier = if (autoFocus) {
+            modifier
+                .focusRequester(focusRequester)
+                .onFocusChanged {
+                    if (it.isFocused) {
+                        keyboardController?.show()
 //                    tfv = tfv.copy(selection = TextRange(0, tfv.text.length))
+                    }
                 }
-            },
+        } else {
+            modifier
+        },
     )
 }

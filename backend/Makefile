@@ -33,3 +33,6 @@ clean:
 
 createsuperuser:
 	docker-compose run --rm app sh -c "python manage.py createsuperuser"
+
+populate:
+	docker-compose run --rm app sh -c "python manage.py populate_database"

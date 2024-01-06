@@ -1,56 +1,36 @@
 package com.example.morello.data_layer.data_sources
 
-import com.example.morello.data_layer.data_sources.apis.CollectSessionApi
-import com.example.morello.data_layer.data_sources.apis.ModeratorApi
-import com.example.morello.data_layer.data_sources.apis.client.ErrorResponse
-import com.example.morello.data_layer.data_sources.data_types.collect_sessions.CollectSession
-import com.example.morello.data_layer.data_sources.data_types.collect_sessions.CollectSessionEntry
+import com.example.morello.data_layer.apis.CollectSessionApi
+import com.example.morello.data_layer.data_types.CollectSession
+import com.example.morello.data_layer.data_types.CollectSessionCreate
+import com.example.morello.data_layer.data_types.CollectSessionDetail
+import com.example.morello.data_layer.data_types.CollectSessionUpdate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class RemoteCollectSessionDataSource @Inject constructor(
-    private val moderatorApi: ModeratorApi,
     private val collectSessionApi: CollectSessionApi,
 ) {
     private val dispatcher = Dispatchers.IO
-    suspend fun getCollectSessionEntries(
-        groupId: Int,
-        collectSessionId: Int
-    ): List<CollectSessionEntry> {
-        return withContext(dispatcher) {
-            val res =
-                collectSessionApi.getCollectSessionEntriesBySessionId(groupId, collectSessionId)
-            if (res.isSuccessful) {
-                return@withContext res.body()!!
-            } else {
-                val err = ErrorResponse.fromResponseBody(res.errorBody())
-                throw Exception("Error getting collect session entries")
-            }
-        }
-    }
-
-    suspend fun updateCollectSessionEntry(
-        groupId: Int,
-        sessionId: Int,
-        entry: CollectSessionEntry
-    ) {
-        withContext(dispatcher) {
-            val res = collectSessionApi.updateCollectSessionEntry(
-                groupId,
-                sessionId,
-                entry.id,
-                entry
-            )
-            if (!res.isSuccessful) {
-                throw Exception("Error updating collect session entry")
-            }
-        }
-    }
 
     suspend fun getCollectSessions(groupId: Int): List<CollectSession> {
         return withContext(dispatcher) {
-            val res = collectSessionApi.getCollectSessionsByGroupId(groupId)
+            val res = collectSessionApi.getCollectSessions(groupId)
+            if (res.isSuccessful) {
+                return@withContext res.body()!!
+            } else {
+                throw Exception("Error getting collect sessions")
+            }
+        }
+    }
+
+    suspend fun getCollectSessionDetail(groupId: Int, sessionId: Int): CollectSessionDetail {
+        return withContext(dispatcher) {
+            val res = collectSessionApi.getCollectSessionDetail(
+                groupId,
+                sessionId
+            )
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
@@ -59,23 +39,23 @@ class RemoteCollectSessionDataSource @Inject constructor(
         }
     }
 
-    suspend fun deleteCollectSession(groupId: Int, collectSessionId: Int) {
+    suspend fun createCollectSession(groupId: Int, collectSession: CollectSessionCreate) {
         withContext(dispatcher) {
-            val res = collectSessionApi.deleteCollectSession(
+            val res = collectSessionApi.createCollectSession(
                 groupId,
-                collectSessionId
+                collectSession
             )
             if (!res.isSuccessful) {
-                throw Exception("Error deleting collect session")
+                throw Exception("Error creating collect session")
             }
         }
     }
 
-    suspend fun updateCollectSession(groupId: Int, collectSession: CollectSession) {
+    suspend fun updateCollectSession(groupId: Int, sessionId: Int, collectSession: CollectSessionUpdate) {
         withContext(dispatcher) {
             val res = collectSessionApi.updateCollectSession(
                 groupId,
-                collectSession.id,
+                sessionId,
                 collectSession
             )
             if (!res.isSuccessful) {
@@ -84,14 +64,14 @@ class RemoteCollectSessionDataSource @Inject constructor(
         }
     }
 
-    suspend fun createCollectSession(groupId: Int, collectSession: CollectSession) {
+    suspend fun deleteCollectSession(groupId: Int, sessionId: Int) {
         withContext(dispatcher) {
-            val res = collectSessionApi.addCollectSessionToGroup(
+            val res = collectSessionApi.deleteCollectSession(
                 groupId,
-                collectSession
+                sessionId
             )
             if (!res.isSuccessful) {
-                throw Exception("Error creating collect session")
+                throw Exception("Error deleting collect session")
             }
         }
     }

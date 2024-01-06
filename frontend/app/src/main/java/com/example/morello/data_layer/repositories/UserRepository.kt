@@ -2,7 +2,7 @@ package com.example.morello.data_layer.repositories
 
 import com.example.morello.data_layer.data_sources.RemoteUserDataSource
 import com.example.morello.data_layer.data_sources.SettingDataSource
-import com.example.morello.data_layer.data_sources.data_types.user.User
+import com.example.morello.data_layer.data_types.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -31,7 +31,6 @@ class UserRepository @Inject constructor(
             id = response.id,
             name = response.name,
             email = response.email,
-            createdAt = response.createdAt,
         )
     }
 

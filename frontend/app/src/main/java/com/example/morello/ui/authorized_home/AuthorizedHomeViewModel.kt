@@ -1,17 +1,17 @@
 package com.example.morello.ui.authorized_home
 
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.morello.data_layer.data_sources.data_types.groups.Group
-import com.example.morello.data_layer.data_sources.data_types.user.User
+import com.example.morello.data_layer.data_types.Group
+import com.example.morello.data_layer.data_types.User
 import com.example.morello.data_layer.repositories.GroupRepository
 import com.example.morello.data_layer.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 data class AuthorizedHomeUiState(
@@ -26,7 +26,6 @@ data class AuthorizedHomeUiState(
                 id = 0,
                 name = "",
                 email = "",
-                createdAt = LocalDateTime.MIN,
             )
         )
     }
@@ -48,10 +47,10 @@ class AuthorizedHomeViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-        reload()
+        refreshUiState()
     }
 
-    fun reload() {
+    fun refreshUiState() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(state = State.Loading)
             try {
@@ -61,7 +60,7 @@ class AuthorizedHomeViewModel @Inject constructor(
                 _uiState.value = _uiState.value.copy(state = State.Error, error = e.message)
             }
             try {
-                val groups = groupRepository.getManagedGroups()
+                val groups = groupRepository.getGroups()
                 _uiState.value = _uiState.value.copy(groups = groups, state = State.Success)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(state = State.Error, error = e.message)
