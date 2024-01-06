@@ -103,9 +103,7 @@ class CreateIncomeViewModel @Inject constructor(
     private val collectSessionRepository: CollectSessionRepository,
 ) : ViewModel() {
     var uiState by mutableStateOf(
-        CreateIncomeUiState.newWithoutCollectSession(
-            listOf(MemberEntryData(0, "Empty", false))
-        )
+        CreateIncomeUiState.newWithoutCollectSession()
     )
 
     private var groupCurrentBalance: Currency? = null
@@ -117,7 +115,7 @@ class CreateIncomeViewModel @Inject constructor(
                 MemberEntryData(
                     id = it.id,
                     name = it.name,
-                    selected = false,
+                    selected = true,
                 )
             }
         )
@@ -209,9 +207,14 @@ class CreateIncomeViewModel @Inject constructor(
             }
         }
         val newChosenMemberCount = newMemberList.count { it.selected }
+        val newAmountPerMember = if (newChosenMemberCount == 0) {
+            0
+        } else {
+            uiState.amount / newChosenMemberCount
+        }
         uiState = uiState.copy(
             createNewSessionData = uiState.createNewSessionData.copy(
-                amountPerMember = uiState.amount / newChosenMemberCount,
+                amountPerMember = newAmountPerMember,
                 memberList = newMemberList,
             )
         )
