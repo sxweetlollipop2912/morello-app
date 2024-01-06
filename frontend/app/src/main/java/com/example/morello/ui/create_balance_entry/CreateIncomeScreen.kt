@@ -19,7 +19,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Error
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,7 +56,7 @@ import com.example.morello.ui.components.FormBackHandler
 import com.example.morello.ui.components.SectionDividerWithText
 import com.example.morello.ui.components.StandaloneDatePickerDialogWithButton
 import com.example.morello.ui.components.rememberFormBackHandlerState
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,13 +66,13 @@ fun CreateIncomeScreen(
     onBalanceChanged: (Currency) -> Unit,
     onNameChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
-    onDateTimeChanged: (LocalDateTime) -> Unit,
+    onDateTimeChanged: (OffsetDateTime) -> Unit,
     onCreate: () -> Unit,
     onSwitchToOpenCollectSession: () -> Unit,
     onSwitchToCreateNewEntry: () -> Unit,
     onPaymentPerMemberChanged: (Currency) -> Unit,
-    onStartDateTimeChanged: (LocalDateTime) -> Unit,
-    onEndDateTimeChanged: (LocalDateTime) -> Unit,
+    onStartDateTimeChanged: (OffsetDateTime) -> Unit,
+    onEndDateTimeChanged: (OffsetDateTime) -> Unit,
     onMemberUpdated: (Int, Boolean) -> Unit,
     onConfirmGoBack: () -> Unit,
     onDismissDateTimeError: () -> Unit,
@@ -274,12 +273,12 @@ fun CreateIncomeScreen(
 @Composable
 fun OpenSessionSection(
     paymentPerMember: Currency,
-    startDateTime: LocalDateTime,
-    endDateTime: LocalDateTime,
-    memberList: List<Pair<String, Boolean>>,
+    startDateTime: OffsetDateTime,
+    endDateTime: OffsetDateTime,
+    memberList: List<MemberEntryData>,
     onPaymentPerMemberChanged: (Currency) -> Unit,
-    onStartDateTimeChanged: (LocalDateTime) -> Unit,
-    onEndDateTimeChanged: (LocalDateTime) -> Unit,
+    onStartDateTimeChanged: (OffsetDateTime) -> Unit,
+    onEndDateTimeChanged: (OffsetDateTime) -> Unit,
     onMemberUpdated: (Int, Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -408,7 +407,7 @@ fun OpenSessionSection(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier
                             .clickable {
-                                onMemberUpdated(index, !member.second)
+                                onMemberUpdated(index, !member.selected)
                             }
                             .fillMaxWidth()
                             .drawBehind {
@@ -434,7 +433,7 @@ fun OpenSessionSection(
                             }
                             .padding(8.dp)
                     ) {
-                        val textStyle = if (member.second) {
+                        val textStyle = if (member.selected) {
                             MaterialTheme.typography.titleLarge.copy(
                                 color = MaterialTheme.colorScheme.primary,
                             )
@@ -443,13 +442,13 @@ fun OpenSessionSection(
                                 color = MaterialTheme.colorScheme.tertiary,
                             )
                         }
-                        val decoration = if (member.second) {
+                        val decoration = if (member.selected) {
                             TextDecoration.None
                         } else {
                             TextDecoration.LineThrough
                         }
                         Text(
-                            text = member.first,
+                            text = member.name,
                             style = textStyle,
                             textDecoration = decoration
                         )

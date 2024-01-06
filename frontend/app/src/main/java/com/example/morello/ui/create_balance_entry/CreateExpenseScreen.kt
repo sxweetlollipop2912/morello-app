@@ -10,10 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,9 +35,7 @@ import com.example.morello.ui.components.FixedSignNumberEditField
 import com.example.morello.ui.components.FormBackHandler
 import com.example.morello.ui.components.StandaloneDatePickerDialogWithButton
 import com.example.morello.ui.components.rememberFormBackHandlerState
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
+import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 
@@ -52,7 +46,7 @@ fun CreateExpenseScreen(
     onAmountChanged: (Currency) -> Unit,
     onNameChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
-    onDateTimeChanged: (LocalDateTime) -> Unit,
+    onDateTimeChanged: (OffsetDateTime) -> Unit,
     onCreate: () -> Unit,
     onConfirmGoBack: () -> Unit,
     modifier: Modifier = Modifier,

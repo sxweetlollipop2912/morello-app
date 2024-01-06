@@ -5,17 +5,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.morello.data_layer.data_types.BalanceEntryCreate
 import com.example.morello.data_layer.data_types.Currency
 import com.example.morello.data_layer.repositories.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 enum class State {
+    Uninitialized,
     Idle,
     Submitting,
     Success,
+    Error,
 }
 
 data class CreateExpenseUiState(
@@ -23,7 +26,7 @@ data class CreateExpenseUiState(
     val balanceAfter: Currency,
     val name: StringOrError,
     val description: String,
-    val dateTime: LocalDateTime,
+    val dateTime: OffsetDateTime,
     val state: State = State.Idle,
     val error: String? = null,
 ) {
@@ -33,7 +36,7 @@ data class CreateExpenseUiState(
             balanceAfter = 0,
             name = StringOrError("", null),
             description = "",
-            dateTime = LocalDateTime.now(),
+            dateTime = OffsetDateTime.now(),
         )
     }
 
@@ -79,7 +82,7 @@ class CreateExpenseViewModel @Inject constructor(
         uiState = uiState.copy(description = description)
     }
 
-    fun updateDateTime(dateTime: LocalDateTime) {
+    fun updateDateTime(dateTime: OffsetDateTime) {
         uiState = uiState.copy(dateTime = dateTime)
     }
 
@@ -95,17 +98,17 @@ class CreateExpenseViewModel @Inject constructor(
         uiState = uiState.copy(state = State.Submitting)
         viewModelScope.launch {
             try {
-//                val rs = groupRepository.createBalanceEntry(groupId, _uiState.value.let {
-//                    BalanceEntryCreate(
-//                        name = it.name,
-//                        description = it.description,
-//                        amount = it.amount,
-//                        createdAt = LocalDateTime.now()
-//                    )
-//                })
+                val rs = groupRepository.createBalanceEntry(groupId, uiState.let {
+                    BalanceEntryCreate(
+                        name = it.name.value,
+                        description = it.description,
+                        amount = it.amount,
+                        recordedAt = it.dateTime,
+                    )
+                })
                 uiState = uiState.copy(state = State.Success)
             } catch (e: Exception) {
-//                _uiState.value = _uiState.value.copy(state = State.Error, error = e.msg)
+                uiState = uiState.copy(state = State.Error, error = e.message)
             }
         }
     }

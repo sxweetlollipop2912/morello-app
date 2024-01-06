@@ -33,7 +33,7 @@ annotation class NoAuthRetrofitClient
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val BASE_URL = "http://192.168.102.3:8000/api/"
+    private const val BASE_URL = "http://192.168.1.179:8000/api/"
     private val objectMapper = jacksonObjectMapper()
         .registerModule(JavaTimeModule())
         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)  // add this line

@@ -8,15 +8,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import java.time.Instant
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.ZoneId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StandaloneDatePickerDialogWithButton(
     onDismissRequest: () -> Unit,
-    onDateTimeChanged: (LocalDateTime) -> Unit,
-    fallbackDateTime: LocalDateTime? = null,
+    onDateTimeChanged: (OffsetDateTime) -> Unit,
+    fallbackDateTime: OffsetDateTime? = null,
 ) {
     val datePickerState = rememberDatePickerState()
     DatePickerDialog(
@@ -24,10 +24,10 @@ fun StandaloneDatePickerDialogWithButton(
         confirmButton = {
             Button(onClick = {
                 if (datePickerState.selectedDateMillis == null) {
-                    onDateTimeChanged(fallbackDateTime ?: LocalDateTime.now())
+                    onDateTimeChanged(fallbackDateTime ?: OffsetDateTime.now())
                 } else {
                     onDateTimeChanged(
-                        LocalDateTime.ofInstant(
+                        OffsetDateTime.ofInstant(
                             Instant.ofEpochMilli(datePickerState.selectedDateMillis!!),
                             ZoneId.systemDefault(),
                         )

@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.launch
 
 @Composable
 fun CreateIncomeRoute(
@@ -15,9 +17,12 @@ fun CreateIncomeRoute(
 ) {
     val uiState = viewModel.uiState
     LaunchedEffect(uiState.state) {
+        if (uiState.state == State.Uninitialized) {
+            viewModel.init(groupId)
+        }
         if (uiState.state == State.Success) {
+            viewModel.finish()
             onBack()
-            viewModel.reset()
         }
     }
     CreateIncomeScreen(
@@ -35,10 +40,7 @@ fun CreateIncomeRoute(
         onStartDateTimeChanged = viewModel::updateStartDateTime,
         onEndDateTimeChanged = viewModel::updateEndDateTime,
         onMemberUpdated = viewModel::updateChosenMember,
-        onConfirmGoBack = {
-            onBack()
-            viewModel.reset()
-        },
+        onConfirmGoBack = onBack,
         onDismissDateTimeError = viewModel::dismissDateTimeError,
         modifier = modifier,
     )

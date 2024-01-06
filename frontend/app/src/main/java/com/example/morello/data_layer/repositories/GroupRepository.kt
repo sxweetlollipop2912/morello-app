@@ -1,16 +1,31 @@
 package com.example.morello.data_layer.repositories
 
+import com.example.morello.data_layer.data_sources.RemoteBalanceDataSource
+import com.example.morello.data_layer.data_sources.RemoteCollectSessionDataSource
 import com.example.morello.data_layer.data_sources.RemoteGroupDataSource
 import com.example.morello.data_layer.data_sources.RemoteMemberDataSource
+import com.example.morello.data_layer.data_types.BalanceEntryCreate
 import com.example.morello.data_layer.data_types.Group
+import com.example.morello.data_layer.data_types.Member
+import com.example.morello.ui.create_balance_entry.CreateNewSessionData
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GroupRepository @Inject constructor(
     private val remoteGroupDataSource: RemoteGroupDataSource,
+    private val remoteBalanceDataSource: RemoteBalanceDataSource,
+    private val remoteMemberDataSource: RemoteMemberDataSource,
 ) {
     suspend fun getGroups(): List<Group> {
         return remoteGroupDataSource.getGroups()
+    }
+
+    suspend fun createBalanceEntry(groupId: Int, balanceEntry: BalanceEntryCreate) {
+        remoteBalanceDataSource.createBalanceEntry(groupId, balanceEntry)
+    }
+
+    suspend fun getMembers(groupId: Int): List<Member> {
+        return remoteMemberDataSource.getMembers(groupId)
     }
 //    fun getLeader(groupId: Int): Flow<User> = TODO()
 //    suspend fun deleteGroup(groupId: Int): Nothing = TODO()

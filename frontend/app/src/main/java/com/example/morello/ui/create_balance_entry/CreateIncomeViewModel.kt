@@ -5,38 +5,34 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.morello.data_layer.data_types.BalanceEntryCreate
+import com.example.morello.data_layer.data_types.CollectSessionCreate
 import com.example.morello.data_layer.data_types.Currency
 import com.example.morello.data_layer.repositories.CollectSessionRepository
 import com.example.morello.data_layer.repositories.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import javax.inject.Inject
+
+data class MemberEntryData(
+    val id: Int,
+    val name: String,
+    val selected: Boolean,
+)
 
 data class CreateNewSessionData(
     val amountPerMember: Currency,
-    val startDate: LocalDateTime,
-    val endDate: LocalDateTime,
-    val memberList: List<Pair<String, Boolean>> = listOf(),
+    val startDate: OffsetDateTime,
+    val endDate: OffsetDateTime,
+    val memberList: List<MemberEntryData> = listOf(),
 ) {
     companion object {
-        val new = CreateNewSessionData(
+        fun new(memberList: List<MemberEntryData> = listOf()) = CreateNewSessionData(
             amountPerMember = 0,
-            startDate = LocalDateTime.now(),
-            endDate = LocalDateTime.now(),
-            memberList = listOf(
-                Pair("member1", true),
-                Pair("member2", true),
-                Pair("member3", true),
-                Pair("member4", true),
-                Pair("member5", true),
-                Pair("member6", true),
-                Pair("member7", true),
-                Pair("member8", false),
-                Pair("member9", false),
-                Pair("member10", true),
-
-                )
+            startDate = OffsetDateTime.now(),
+            endDate = OffsetDateTime.now(),
+            memberList = memberList,
         )
     }
 
@@ -56,9 +52,9 @@ data class CreateIncomeUiState(
     val name: StringOrError,
     val description: String,
     val amount: Currency,
-    val dateTime: LocalDateTime,
+    val dateTime: OffsetDateTime,
     val createNewSessionData: CreateNewSessionData,
-    val state: State = State.Idle,
+    val state: State = State.Uninitialized,
     val mode: Mode,
     val error: String? = null,
     val dateTimeError: String? = null,
@@ -68,21 +64,26 @@ data class CreateIncomeUiState(
             name = StringOrError("", null),
             description = "",
             amount = 0,
-            dateTime = LocalDateTime.now(),
+            dateTime = OffsetDateTime.now(),
             createNewSessionData = CreateNewSessionData(
                 amountPerMember = 0,
-                startDate = LocalDateTime.now(),
-                endDate = LocalDateTime.now(),
+                startDate = OffsetDateTime.now(),
+                endDate = OffsetDateTime.now(),
             ),
             mode = Mode.CreateNewSession,
         )
-        val newWithoutCollectSession = CreateIncomeUiState(
+
+        fun newWithoutCollectSession(
+            memberList: List<MemberEntryData> = listOf(),
+        ) = CreateIncomeUiState(
             name = StringOrError("", null),
             description = "",
             amount = 0,
-            dateTime = LocalDateTime.now(),
+            dateTime = OffsetDateTime.now(),
             mode = Mode.CreateNewEntry,
-            createNewSessionData = CreateNewSessionData.new,
+            createNewSessionData = CreateNewSessionData.new(
+                memberList = memberList,
+            ),
         )
     }
 
@@ -98,8 +99,24 @@ class CreateIncomeViewModel @Inject constructor(
     private val groupRepository: GroupRepository,
     private val collectSessionRepository: CollectSessionRepository,
 ) : ViewModel() {
-    var uiState by mutableStateOf(CreateIncomeUiState.newWithoutCollectSession)
-        private set
+    var uiState by mutableStateOf(
+        CreateIncomeUiState.newWithoutCollectSession(
+            listOf(MemberEntryData(0, "Empty", false))
+        )
+    )
+
+    suspend fun init(groupId: Int) {
+        val state = CreateIncomeUiState.newWithoutCollectSession(
+            groupRepository.getMembers(groupId).map {
+                MemberEntryData(
+                    id = it.id,
+                    name = it.name,
+                    selected = false,
+                )
+            }
+        )
+        uiState = state.copy(state = State.Idle)
+    }
 
     fun switchToCreateNewSession() {
         uiState = uiState.copy(
@@ -119,14 +136,13 @@ class CreateIncomeViewModel @Inject constructor(
         )
     }
 
-    fun chosenMembers(): List<String> {
+    fun chosenMembers(): List<MemberEntryData> {
         return uiState.createNewSessionData.memberList
-            .filter { it.second }
-            .map { it.first }
+            .filter { it.selected }
     }
 
     private fun chosenMemberCount(): Int {
-        return uiState.createNewSessionData.memberList.count { it.second }
+        return uiState.createNewSessionData.memberList.count { it.selected }
     }
 
     fun updateAmountPerMember(amount: Currency) {
@@ -155,7 +171,7 @@ class CreateIncomeViewModel @Inject constructor(
     }
 
     private fun calculateAmountPerMember(): Currency {
-        val memberCount = uiState.createNewSessionData.memberList.count { it.second }
+        val memberCount = uiState.createNewSessionData.memberList.count { it.selected }
         return if (memberCount == 0) {
             0
         } else {
@@ -163,8 +179,12 @@ class CreateIncomeViewModel @Inject constructor(
         }
     }
 
+    fun finish() {
+        uiState = uiState.copy(state = State.Uninitialized)
+    }
+
     private fun calculateAmountPerMember(amount: Currency): Currency {
-        val memberCount = uiState.createNewSessionData.memberList.count { it.second }
+        val memberCount = uiState.createNewSessionData.memberList.count { it.selected }
         return if (memberCount == 0) {
             0
         } else {
@@ -183,12 +203,12 @@ class CreateIncomeViewModel @Inject constructor(
         val memberList = uiState.createNewSessionData.memberList
         val newMemberList = memberList.mapIndexed { i, it ->
             if (i == index) {
-                it.copy(second = status)
+                it.copy(selected = status)
             } else {
                 it
             }
         }
-        val newChosenMemberCount = newMemberList.count { it.second }
+        val newChosenMemberCount = newMemberList.count { it.selected }
         uiState = uiState.copy(
             createNewSessionData = uiState.createNewSessionData.copy(
                 amountPerMember = uiState.amount / newChosenMemberCount,
@@ -197,16 +217,12 @@ class CreateIncomeViewModel @Inject constructor(
         )
     }
 
-    fun updateDateTime(dateTime: LocalDateTime) {
+    fun updateDateTime(dateTime: OffsetDateTime) {
         uiState = uiState.copy(dateTime = dateTime)
     }
 
     fun updateDescription(description: String) {
         uiState = uiState.copy(description = description)
-    }
-
-    fun reset() {
-        uiState = CreateIncomeUiState.newWithoutCollectSession
     }
 
     private fun isEmpty(): Boolean {
@@ -216,7 +232,7 @@ class CreateIncomeViewModel @Inject constructor(
                 uiState.amount == 0
     }
 
-    fun updateStartDateTime(dateTime: LocalDateTime) {
+    fun updateStartDateTime(dateTime: OffsetDateTime) {
         if (uiState.mode != Mode.CreateNewSession) {
             throw IllegalStateException("mode is not CreateNewSession")
         }
@@ -233,7 +249,7 @@ class CreateIncomeViewModel @Inject constructor(
         }
     }
 
-    fun updateEndDateTime(dateTime: LocalDateTime) {
+    fun updateEndDateTime(dateTime: OffsetDateTime) {
         if (uiState.mode != Mode.CreateNewSession) {
             throw IllegalStateException("mode is not CreateNewSession")
         }
@@ -270,24 +286,27 @@ class CreateIncomeViewModel @Inject constructor(
         uiState = uiState.copy(state = State.Submitting)
         viewModelScope.launch {
             uiState = try {
-//                collectSessionRepository.createCollectSession(
-//                    groupId = groupId,
-//                    collectSession = uiState.let {
-//                        NewCollectSession(
-//                            name = it.name.value,
-//                            description = it.description,
-//                            start = it.createNewSessionData.startDate.toString(),
-//                            due = it.createNewSessionData.endDate.toString(),
-//                            isOpen = true,
-//                            paymentPerMember = it.createNewSessionData.amountPerMember,
-//                        )
-//                    },
-//                )
+                collectSessionRepository.createCollectSession(
+                    groupId = groupId,
+                    collectSession = uiState.let { incomeUiState ->
+                        CollectSessionCreate(
+                            name = incomeUiState.name.value,
+                            description = incomeUiState.description,
+                            start = incomeUiState.createNewSessionData.startDate,
+                            due = incomeUiState.createNewSessionData.endDate,
+                            paymentPerMember = incomeUiState.createNewSessionData.amountPerMember,
+                            memberIds = incomeUiState.createNewSessionData.memberList
+                                .filter { it.selected }
+                                .map { it.id },
+                        )
+                    },
+                )
                 uiState.copy(
                     state = State.Success,
                 )
             } catch (e: Exception) {
                 uiState.copy(
+                    state = State.Error,
                     error = e.message,
                 )
             }
@@ -297,21 +316,24 @@ class CreateIncomeViewModel @Inject constructor(
     private fun submitNewEntry(groupId: Int) {
         uiState = uiState.copy(state = State.Submitting)
         viewModelScope.launch {
-            try {
-//                groupRepository.createBalanceEntry(
-//                    groupId = groupId,
-//                    balanceEntry = CreateNewSessionData(
-//                        amountPerMember = uiState.amount,
-//                        startDate = uiState.createNewSessionData.startDate,
-//                        endDate = uiState.createNewSessionData.endDate,
-//                        memberList = uiState.createNewSessionData.memberList,
-//                    )
-//                )
-                uiState = uiState.copy(
+            uiState = try {
+                groupRepository.createBalanceEntry(
+                    groupId = groupId,
+                    balanceEntry = uiState.let {
+                        BalanceEntryCreate(
+                            name = it.name.value,
+                            description = it.description,
+                            amount = it.amount,
+                            recordedAt = OffsetDateTime.now(),
+                        )
+                    },
+                )
+                uiState.copy(
                     state = State.Success,
                 )
             } catch (e: Exception) {
-                uiState = uiState.copy(
+                uiState.copy(
+                    state = State.Error,
                     error = e.message,
                 )
             }

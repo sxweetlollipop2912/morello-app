@@ -1,11 +1,14 @@
 package com.example.morello.data_layer.repositories
 
+import com.example.morello.data_layer.data_sources.RemoteCollectSessionDataSource
 import com.example.morello.data_layer.data_types.CollectSessionCreate
 import javax.inject.Inject
 
-class CollectSessionRepository @Inject constructor() {
-    fun createCollectSession(groupId: Int, collectSession: CollectSessionCreate) {
-
+class CollectSessionRepository @Inject constructor(
+    private val remoteCollectSessionDataSource: RemoteCollectSessionDataSource,
+) {
+    suspend fun createCollectSession(groupId: Int, collectSession: CollectSessionCreate) {
+        remoteCollectSessionDataSource.createCollectSession(groupId, collectSession)
     }
 //    fun getCollectSessionEntries(collectSessionId: Int): Flow<List<CollectSessionEntry>> = TODO()
 //    suspend fun updateCollectSessionEntry(collectSessionEntry: CollectSessionEntry): Nothing =
