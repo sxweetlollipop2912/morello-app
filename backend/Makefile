@@ -1,6 +1,9 @@
 test:
 	docker-compose run --rm app sh -c "python manage.py wait_for_database && python manage.py test"
 
+testapp:
+	docker-compose run --rm app sh -c "python manage.py wait_for_database && python manage.py test $(app)"
+
 lint:
 	docker-compose run --rm app sh -c "flake8"
 
