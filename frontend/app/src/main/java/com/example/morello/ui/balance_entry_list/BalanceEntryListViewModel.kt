@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.morello.data_layer.data_types.BalanceEntry
+import com.example.morello.data_layer.repositories.BalanceEntryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -28,7 +29,7 @@ data class BalanceEntryListUiState(
 
 @HiltViewModel
 class BalanceEntryListViewModel @Inject constructor(
-//    val balanceEntryRepository: BalanceEntryRepository,
+    val balanceEntryRepository: BalanceEntryRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val groupId = savedStateHandle.get<Int>(OwnerGroupHomeRoute.groupId)!!
@@ -38,10 +39,11 @@ class BalanceEntryListViewModel @Inject constructor(
     private var _uiState = MutableStateFlow(BalanceEntryListUiState.empty)
     val uiState = _uiState.combine(_entries) { uiState, entries ->
         val filteredEntries = entries.filter {
-            it.name.contains(uiState.searchQuery, ignoreCase = true)
+            it.name.contains(uiState.searchQuery, ignoreCase = true) ||
+                    it.description.contains(uiState.searchQuery, ignoreCase = true)
         }
         uiState.copy(
-            entries = filteredEntries,
+            entries = filteredEntries.sortedByDescending { it.recordedAt },
         )
     }.stateIn(
         viewModelScope,
@@ -59,56 +61,7 @@ class BalanceEntryListViewModel @Inject constructor(
 
     fun refreshUiState() {
         viewModelScope.launch {
-            // TODO: Mock data only
-            _entries.update {
-                listOf(
-                    BalanceEntry(
-                        id = 1,
-                        name = "Entry 1",
-                        amount = 100000,
-                        description = "Description 1",
-                        recordedAt = LocalDateTime.now(),
-                        createdAt = LocalDateTime.now(),
-                        updatedAt = LocalDateTime.now(),
-                    ),
-                    BalanceEntry(
-                        id = 2,
-                        name = "Entry 2",
-                        amount = -200000,
-                        description = "Description 2",
-                        recordedAt = LocalDateTime.now(),
-                        createdAt = LocalDateTime.now(),
-                        updatedAt = LocalDateTime.now(),
-                    ),
-                    BalanceEntry(
-                        id = 3,
-                        name = "Entry 3",
-                        amount = 300000,
-                        description = "Description 3",
-                        recordedAt = LocalDateTime.now(),
-                        createdAt = LocalDateTime.now(),
-                        updatedAt = LocalDateTime.now(),
-                    ),
-                    BalanceEntry(
-                        id = 4,
-                        name = "Entry 4",
-                        amount = -400000,
-                        description = "Description 4",
-                        recordedAt = LocalDateTime.now(),
-                        createdAt = LocalDateTime.now(),
-                        updatedAt = LocalDateTime.now(),
-                    ),
-                    BalanceEntry(
-                        id = 5,
-                        name = "Entry 5",
-                        amount = 500000,
-                        description = "Description 5",
-                        recordedAt = LocalDateTime.now(),
-                        createdAt = LocalDateTime.now(),
-                        updatedAt = LocalDateTime.now(),
-                    ),
-                )
-            }
+            _entries.update { balanceEntryRepository.getBalanceEntries(groupId) }
         }
     }
 }

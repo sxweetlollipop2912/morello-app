@@ -58,7 +58,9 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
                 onNewExpenseEntry = {
                     navController.navigate(CreateExpenseRoute.base)
                 },
-                onBalanceEntryList = {},
+                onBalanceEntryList = {
+                    navController.navigate(BalanceEntryListRoute.base)
+                },
                 onCollectSessionList = {
                     navController.navigate(SessionListRoute.base)
                 },
