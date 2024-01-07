@@ -260,16 +260,22 @@ fun CollectSessionsCard(
                     horizontalAlignment = Alignment.End,
                 ) {
                     val currentAmount = session.currentAmount
-                    Text(
-                        text = if (currentAmount > 0) {
-                            "+${currentAmount.formattedWithSymbol()}"
-                        } else {
-                            currentAmount.formattedWithSymbol()
-                        },
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = MaterialTheme.colorScheme.onSurface
+                    if (currentAmount >= 0) {
+                        Text(
+                            text = "+${currentAmount.formattedWithSymbol()}",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
                         )
-                    )
+                    }
+                    else {
+                        Text(
+                            text = currentAmount.formattedWithSymbol(),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        )
+                    }
 
                     val expectedAmount = session.expectedAmount
                     Text(
@@ -335,16 +341,22 @@ fun BalanceEntriesCard(
                     horizontalAlignment = Alignment.End
                 ) {
                     val amount = balanceEntry.amount
-                    Text(
-                        text = if (amount > 0) {
-                            "+${amount.formattedWithSymbol()}"
-                        } else {
-                            amount.formattedWithSymbol()
-                        },
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = MaterialTheme.colorScheme.onSurface
+                    if (amount >= 0) {
+                        Text(
+                            text = "+${amount.formattedWithSymbol()}",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
                         )
-                    )
+                    }
+                    else {
+                        Text(
+                            text = amount.formattedWithSymbol(),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        )
+                    }
                     Text(
                         text = balanceEntry.recordedAt.formattedNoTime(),
                         style = MaterialTheme.typography.bodySmall.copy(

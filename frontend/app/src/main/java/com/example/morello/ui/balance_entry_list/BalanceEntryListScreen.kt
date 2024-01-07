@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -97,6 +98,7 @@ fun BalanceEntryListScreen(
             val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier
+                    .fillMaxSize()
                     .verticalScroll(scrollState)
                     .padding(horizontal = 16.dp)
             ) {
@@ -139,8 +141,11 @@ fun BalanceEntryListScreenContent(
             BalanceEntryListItem(
                 entry = entry,
                 onClick = { onEntryClicked(entry.id) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp, bottom = 16.dp)
             )
+            HorizontalDivider()
         }
     }
 }
@@ -151,50 +156,59 @@ fun BalanceEntryListItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
+    Box(
+        Modifier.clickable { onClick() }
     ) {
-        Column(Modifier.weight(1f)) {
-            Text(
-                text = entry.name,
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurface
-                ),
-            )
-            Text(
-                text = entry.description,
-                style = MaterialTheme.typography.bodySmall.copy(
-                    color = MaterialTheme.colorScheme.outline
-                ),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
-        Column(
-            Modifier.weight(1f),
-            horizontalAlignment = Alignment.End
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = modifier
         ) {
-            val amount = entry.amount
-            Text(
-                text = if (amount > 0) {
-                    "+${amount.formattedWithSymbol()}"
-                } else {
-                    amount.formattedWithSymbol()
-                },
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurface
+            Column(Modifier.weight(1f)) {
+                Text(
+                    text = entry.name,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurface
+                    ),
                 )
-            )
-            Text(
-                text = entry.recordedAt.formattedNoTime(),
-                style = MaterialTheme.typography.bodySmall.copy(
-                    color = MaterialTheme.colorScheme.outline
+                Text(
+                    text = entry.description,
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        color = MaterialTheme.colorScheme.outline
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
-            )
+            }
+            Spacer(modifier = Modifier.size(16.dp))
+            Column(
+                Modifier.weight(1f),
+                horizontalAlignment = Alignment.End
+            ) {
+                val amount = entry.amount
+                if (amount >= 0) {
+                    Text(
+                        text = "+${amount.formattedWithSymbol()}",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    )
+                }
+                else {
+                    Text(
+                        text = amount.formattedWithSymbol(),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    )
+                }
+                Text(
+                    text = entry.recordedAt.formattedNoTime(),
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                )
+            }
         }
     }
 }

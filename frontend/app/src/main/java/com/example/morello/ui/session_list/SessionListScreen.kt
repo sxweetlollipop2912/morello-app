@@ -195,7 +195,7 @@ fun ClosedSessionListItem(
         ) {
             val currentAmount = session.currentAmount
             Text(
-                text = if (currentAmount > 0) {
+                text = if (currentAmount >= 0) {
                     "+${currentAmount.formattedWithSymbol()}"
                 } else {
                     currentAmount.formattedWithSymbol()
@@ -251,16 +251,22 @@ fun OverdueSessionListItem(
             horizontalAlignment = Alignment.End,
         ) {
             val currentAmount = session.currentAmount
-            Text(
-                text = if (currentAmount > 0) {
-                    "+${currentAmount.formattedWithSymbol()}"
-                } else {
-                    currentAmount.formattedWithSymbol()
-                },
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurface
+            if (currentAmount >= 0) {
+                Text(
+                    text = "+${currentAmount.formattedWithSymbol()}",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
                 )
-            )
+            }
+            else {
+                Text(
+                    text = currentAmount.formattedWithSymbol(),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.error
+                    )
+                )
+            }
 
             val expectedAmount = session.expectedAmount
             Text(
@@ -309,7 +315,7 @@ fun OngoingSessionListItem(
         ) {
             val currentAmount = session.currentAmount
             Text(
-                text = if (currentAmount > 0) {
+                text = if (currentAmount >= 0) {
                     "+${currentAmount.formattedWithSymbol()}"
                 } else {
                     currentAmount.formattedWithSymbol()
