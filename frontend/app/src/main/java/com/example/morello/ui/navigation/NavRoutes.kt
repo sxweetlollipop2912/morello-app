@@ -104,3 +104,18 @@ object SessionDetailRoute : NavRoute {
             }
         )
 }
+
+object BalanceEntryDetailRoute : NavRoute {
+    val entryId
+        get() = "entryId"
+    override val base
+        get() = "balanceEntryDetail"
+    override val routeWithArgs
+        get() = "$base/{$entryId}"
+    override val args
+        get() = listOf(
+            navArgument(entryId) {
+                type = NavType.IntType
+            }
+        )
+}
