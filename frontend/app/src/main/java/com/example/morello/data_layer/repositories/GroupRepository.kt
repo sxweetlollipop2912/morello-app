@@ -1,10 +1,13 @@
 package com.example.morello.data_layer.repositories
 
+import android.util.Log
 import com.example.morello.data_layer.data_sources.RemoteBalanceDataSource
 import com.example.morello.data_layer.data_sources.RemoteGroupDataSource
 import com.example.morello.data_layer.data_sources.RemoteMemberDataSource
 import com.example.morello.data_layer.data_types.Balance
+import com.example.morello.data_layer.data_types.BalanceEntry
 import com.example.morello.data_layer.data_types.BalanceEntryCreate
+import com.example.morello.data_layer.data_types.BalanceEntryDetail
 import com.example.morello.data_layer.data_types.Group
 import com.example.morello.data_layer.data_types.GroupDetail
 import com.example.morello.data_layer.data_types.Member
@@ -21,6 +24,10 @@ class GroupRepository @Inject constructor(
 
     suspend fun createBalanceEntry(groupId: Int, balanceEntry: BalanceEntryCreate) {
         remoteBalanceDataSource.createBalanceEntry(groupId, balanceEntry)
+    }
+
+    suspend fun getBalanceEntry(groupId: Int, entryId: Int) : BalanceEntryDetail {
+        return remoteBalanceDataSource.getBalanceEntryDetail(groupId, entryId)
     }
 
     suspend fun getGroupDetail(groupId: Int): GroupDetail {
