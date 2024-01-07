@@ -20,8 +20,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -236,7 +236,7 @@ fun CreateIncomeScreen(
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Divider(modifier = Modifier.padding(vertical = 8.dp))
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     OpenSessionSection(
                         paymentPerMember = uiState.createNewSessionData.amountPerMember,
                         startDateTime = uiState.createNewSessionData.startDate,
@@ -393,8 +393,7 @@ fun OpenSessionSection(
         }
         Spacer(modifier = Modifier.padding(8.dp))
         SectionDividerWithText(text = "Members")
-        OutlinedCard(
-        ) {
+        OutlinedCard {
             Column(
                 modifier = Modifier
                     .padding(8.dp)
@@ -415,7 +414,7 @@ fun OpenSessionSection(
                                 // draw dotted border
                                 val strokeWidth = 1.dp.toPx()
                                 val dashPathEffect =
-                                    androidx.compose.ui.graphics.PathEffect.dashPathEffect(
+                                    PathEffect.dashPathEffect(
                                         intervals = floatArrayOf(10f, 10f),
                                         phase = 0f
                                     )

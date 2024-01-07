@@ -12,6 +12,7 @@ fun OwnerGroupRoute(
     onNewExpenseEntry: () -> Unit,
     onBalanceEntryList: () -> Unit,
     onCollectSessionList: () -> Unit,
+    onCollectSessionDetail: (sessionId: Int) -> Unit,
     onBack: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
@@ -25,7 +26,7 @@ fun OwnerGroupRoute(
         onAddNewIncomeEntry = onNewIncomeEntry,
         onSeeBalanceEntryClicked = {},
         onSeeAllBalanceEntryClicked = onBalanceEntryList,
-        onSeeCollectSessionClicked = {},
+        onSeeCollectSessionClicked = onCollectSessionDetail,
         onSeeAllCollectSessionClicked = onCollectSessionList,
         onBack = onBack,
     )

@@ -60,12 +60,14 @@ class OwnerGroupViewModel @Inject constructor(
 
     private var _uiState = MutableStateFlow(OwnerGroupUiState.empty)
     val uiState = _uiState.transform {
-        emit(it.copy(
-            groupDetail = it.groupDetail.copy(
-                recentOpenSessions = it.groupDetail.recentOpenSessions.sortedBy { it.dueDays },
-                recentBalanceEntries = it.groupDetail.recentBalanceEntries.sortedByDescending { it.recordedAt },
+        emit(
+            it.copy(
+                groupDetail = it.groupDetail.copy(
+                    recentOpenSessions = it.groupDetail.recentOpenSessions.sortedBy { it.dueDays },
+                    recentBalanceEntries = it.groupDetail.recentBalanceEntries.sortedByDescending { it.recordedAt },
+                )
             )
-        ))
+        )
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),

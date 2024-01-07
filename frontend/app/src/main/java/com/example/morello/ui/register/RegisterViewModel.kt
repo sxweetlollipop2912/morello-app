@@ -7,10 +7,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 enum class RegisterState {
     Input,
@@ -48,18 +48,20 @@ class RegisterViewModel @Inject constructor(
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(RegisterUiState.empty)
     val uiState: StateFlow<RegisterUiState> = _uiState.transform {
-        emit(it.copy(
-            isRegisterButtonEnabled = shouldEnableRegisterButton(),
-            error = if (it.email.isNotEmpty() && !isValidEmail(it.email)) {
-                "Invalid email"
-            } else if (it.password.isNotEmpty() && !isValidPassword(it.password)) {
-                "Password must be at least 8 characters"
-            } else if (it.confirmPassword.isNotEmpty() && it.confirmPassword != it.password) {
-                "Passwords do not match"
-            } else {
-                null
-            }
-        ))
+        emit(
+            it.copy(
+                isRegisterButtonEnabled = shouldEnableRegisterButton(),
+                error = if (it.email.isNotEmpty() && !isValidEmail(it.email)) {
+                    "Invalid email"
+                } else if (it.password.isNotEmpty() && !isValidPassword(it.password)) {
+                    "Password must be at least 8 characters"
+                } else if (it.confirmPassword.isNotEmpty() && it.confirmPassword != it.password) {
+                    "Passwords do not match"
+                } else {
+                    null
+                }
+            )
+        )
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),

@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
@@ -82,7 +82,7 @@ fun OtpChar(
                 imeAction = ImeAction.Next
             ),
         )
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .width(28.dp)
                 .padding(bottom = 2.dp)

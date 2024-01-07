@@ -1,17 +1,14 @@
 package com.example.morello.ui.components
 
-import android.util.Log
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 
-class FormBackHandlerState() {
+class FormBackHandlerState {
     val state = mutableStateOf<State>(State.Idle)
 
     companion object {
