@@ -8,6 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @Composable
 fun OwnerGroupRoute(
     viewModel: OwnerGroupViewModel,
+    onSettings: () -> Unit,
     onNewIncomeEntry: () -> Unit,
     onNewExpenseEntry: () -> Unit,
     onBalanceEntryList: () -> Unit,
@@ -20,6 +21,7 @@ fun OwnerGroupRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     OwnerGroupScreen(
         uiState = uiState,
+        onSettings = onSettings,
         onRefreshUiState = viewModel::refreshUiState,
         onAddNewExpenseEntry = onNewExpenseEntry,
         onAddNewIncomeEntry = onNewIncomeEntry,

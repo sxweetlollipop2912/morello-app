@@ -6,7 +6,10 @@ import CreateGroupRoute
 import CreateIncomeRoute
 import ForgotPasswordCodeRoute
 import ForgotPasswordRoute
+import GroupMembersRoute
+import GroupModeratorsRoute
 import GroupOwnerHomeRoute
+import GroupSettingsRoute
 import HomeRoute
 import LoginRoute
 import OwnerGroupHomeRoute
@@ -34,6 +37,9 @@ import com.example.morello.ui.login.LoginRoute
 import com.example.morello.ui.owner_group.OwnerGroupRoute
 import com.example.morello.ui.register.RegisterRoute
 import com.example.morello.ui.balance_entry_list.BalanceEntryListRoute
+import com.example.morello.ui.group_settings.GroupMembersRoute
+import com.example.morello.ui.group_settings.GroupModeratorsRoute
+import com.example.morello.ui.group_settings.GroupSettingsRoute
 import com.example.morello.ui.session_list.SessionListRoute
 
 fun NavGraphBuilder.ownerGroupHomeGraph(
@@ -52,6 +58,9 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
             }
             OwnerGroupRoute(
                 viewModel = hiltViewModel(parentEntry),
+                onSettings = {
+                    navController.navigate(GroupSettingsRoute.base)
+                },
                 onNewIncomeEntry = {
                     navController.navigate(CreateIncomeRoute.base)
                 },
@@ -67,6 +76,41 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
                 onBack = {
                     navController.popBackStack()
                 })
+        }
+        composable(GroupSettingsRoute.routeWithArgs) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(graphRoute.routeWithArgs)
+            }
+            val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
+            GroupSettingsRoute(
+                groupId = groupId,
+                viewModel = hiltViewModel(),
+                onBack = { navController.popBackStack() },
+                navToMembers = { navController.navigate(GroupMembersRoute.routeWithArgs) },
+                navToModerators = { navController.navigate(GroupModeratorsRoute.routeWithArgs) }
+            )
+        }
+        composable(GroupMembersRoute.routeWithArgs) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(graphRoute.routeWithArgs)
+            }
+            val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
+            GroupMembersRoute(
+                groupId = groupId,
+                viewModel = hiltViewModel(),
+                onBack = { navController.popBackStack() },
+            )
+        }
+        composable(GroupModeratorsRoute.routeWithArgs) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(graphRoute.routeWithArgs)
+            }
+            val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
+            GroupModeratorsRoute(
+                groupId = groupId,
+                viewModel = hiltViewModel(),
+                onBack = { navController.popBackStack() },
+            )
         }
         composable(
             CreateExpenseRoute.routeWithArgs
