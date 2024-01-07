@@ -15,6 +15,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -31,6 +33,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.morello.data_layer.data_types.formattedWithSymbol
 import kotlinx.coroutines.launch
@@ -88,49 +96,96 @@ fun SessionDetailScreen(
                     Modifier.padding(horizontal = 16.dp)
                 ) {
                     Text(
-                        text = "Collected",
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        ),
-                    )
-                    Text(
                         text = sessionDetail.currentAmount.formattedWithSymbol(),
-                        style = MaterialTheme.typography.displayMedium.copy(
-                            color = MaterialTheme.colorScheme.primary
+                        style = MaterialTheme.typography.displayLarge.copy(
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Black
                         )
                     )
                     Text(
-                        text = "Expecting: ${sessionDetail.expectedAmount.formattedWithSymbol()}",
+                        text = "/ ${sessionDetail.expectedAmount.formattedWithSymbol()} collected",
                         style = MaterialTheme.typography.titleSmall.copy(
+                            textAlign = TextAlign.End,
                             color = MaterialTheme.colorScheme.outline
-                        )
+                        ),
+                        modifier = Modifier.fillMaxWidth()
                     )
 
-                    Spacer(modifier = Modifier.padding(8.dp))
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         Text(
-                            text = "Payment: ${sessionDetail.paymentPerMember.formattedWithSymbol()}/member",
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            ),
-                        )
-                        Text(
-                            text = "Paid: ${sessionDetail.paidCount}/${sessionDetail.memberCount}",
-                            style = MaterialTheme.typography.titleMedium.copy(
+                            text = buildAnnotatedString {
+                                withStyle(
+                                    style = MaterialTheme.typography.titleSmall.copy(
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                            alpha = 0.5f
+                                        )
+                                    ).toSpanStyle()
+                                ) {
+                                    append("Paid: ")
+                                }
+                                withStyle(
+                                    style = MaterialTheme.typography.displaySmall.copy(
+                                        color = MaterialTheme.colorScheme.primary
+                                    ).toSpanStyle()
+                                ) {
+                                    append("${sessionDetail.paidCount}")
+                                }
+                                append(" / ")
+                                withStyle(
+                                    style = MaterialTheme.typography.displaySmall.copy(
+                                        color = MaterialTheme.colorScheme.secondary
+                                    ).toSpanStyle()
+                                ) {
+                                    append("${sessionDetail.memberCount}")
+                                }
+                            },
+                            style = MaterialTheme.typography.titleSmall.copy(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             ),
                         )
                     }
-
                     Spacer(modifier = Modifier.padding(8.dp))
+
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(
+                                style = MaterialTheme.typography.titleSmall.copy(
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                        alpha = 0.5f
+                                    )
+                                ).toSpanStyle()
+                            ) {
+                                append("Payment: ")
+                            }
+                            withStyle(
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                ).toSpanStyle()
+                            ) {
+                                append(sessionDetail.paymentPerMember.formattedWithSymbol())
+                            }
+                            withStyle(
+                                style = MaterialTheme.typography.titleSmall.copy(
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                        alpha = 0.5f
+                                    )
+                                ).toSpanStyle()
+                            ) {
+                                append(" / member")
+                            }
+                        },
+                    )
+                    Spacer(modifier = Modifier.padding(4.dp))
 
                     Column(
                         modifier = Modifier
-                            .padding(horizontal = 16.dp)
+                            .padding(horizontal = 8.dp)
                     ) {
                         SearchBar(
                             query = searchQuery,
@@ -147,7 +202,7 @@ fun SessionDetailScreen(
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {}
-                        Spacer(modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.size(8.dp))
 
                         val scrollState = rememberScrollState()
                         Column(
@@ -163,7 +218,7 @@ fun SessionDetailScreen(
                                         status = member.status,
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(top = 8.dp, bottom = 16.dp)
+                                            .padding(top = 8.dp, bottom = 8.dp)
                                     )
                                     HorizontalDivider()
                                 }
@@ -203,9 +258,15 @@ fun MemberStatusEntry(
                 style = MaterialTheme.typography.titleMedium,
             )
         }
-        Spacer(modifier = Modifier.size(16.dp))
         Button(
             onClick = onClick,
+            shape = MaterialTheme.shapes.small,
+            colors = ButtonDefaults.buttonColors(
+                contentColor = if (!status) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary.copy(
+                    alpha = 0.5f
+                ),
+                containerColor = if (!status) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
+            ),
             modifier = Modifier.weight(1f)
         ) {
             Text(
