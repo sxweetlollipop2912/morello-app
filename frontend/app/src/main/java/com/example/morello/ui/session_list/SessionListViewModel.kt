@@ -13,12 +13,12 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
+import java.time.OffsetDateTime
+import java.time.temporal.ChronoUnit.DAYS
 import javax.inject.Inject
 
 val CollectSession.dueDays: Int
-    get() = ChronoUnit.DAYS.between(LocalDateTime.now(), due).toInt()
+    get() = DAYS.between(OffsetDateTime.now(), due).toInt()
 
 data class SessionListUiState(
     val overdueSessions: List<CollectSession>,
@@ -51,9 +51,12 @@ class SessionListViewModel @Inject constructor(
             it.name.contains(uiState.searchQuery, ignoreCase = true)
         }
         uiState.copy(
-            overdueSessions = filteredSessions.filter { it.isOpen && it.dueDays <= 0 },
-            ongoingSessions = filteredSessions.filter { it.isOpen && it.dueDays > 0 },
-            closedSessions = filteredSessions.filter { !it.isOpen },
+            overdueSessions = filteredSessions.filter { it.isOpen && it.dueDays <= 0 }
+                .sortedBy { it.dueDays },
+            ongoingSessions = filteredSessions.filter { it.isOpen && it.dueDays > 0 }
+                .sortedBy { it.dueDays },
+            closedSessions = filteredSessions.filter { !it.isOpen }
+                .sortedByDescending { it.updatedAt },
         )
     }.stateIn(
         viewModelScope,
@@ -71,101 +74,7 @@ class SessionListViewModel @Inject constructor(
 
     fun refreshUiState() {
         viewModelScope.launch {
-            // TODO: mock data only
-            _sessions.update {
-                listOf(
-                    CollectSession(
-                        id = 1,
-                        name = "Session 1",
-                        description = "This is a description",
-                        start = LocalDateTime.now(),
-                        due = LocalDateTime.now(),
-                        isOpen = true,
-                        paidCount = 2,
-                        memberCount = 3,
-                        currentAmount = 100000,
-                        expectedAmount = 200000,
-                        paymentPerMember = 10000,
-                        createdAt = LocalDateTime.now(),
-                        updatedAt = LocalDateTime.now(),
-                    ),
-                    CollectSession(
-                        id = 2,
-                        name = "Session 2",
-                        description = "This is a description",
-                        start = LocalDateTime.now(),
-                        due = LocalDateTime.now(),
-                        isOpen = true,
-                        paidCount = 2,
-                        memberCount = 3,
-                        currentAmount = 100000,
-                        expectedAmount = 200000,
-                        paymentPerMember = 10000,
-                        createdAt = LocalDateTime.now(),
-                        updatedAt = LocalDateTime.now(),
-                    ),
-                    CollectSession(
-                        id = 3,
-                        name = "Session 3",
-                        description = "This is a description",
-                        start = LocalDateTime.now(),
-                        due = LocalDateTime.now(),
-                        isOpen = true,
-                        paidCount = 2,
-                        memberCount = 3,
-                        currentAmount = 100000,
-                        expectedAmount = 200000,
-                        paymentPerMember = 10000,
-                        createdAt = LocalDateTime.now(),
-                        updatedAt = LocalDateTime.now(),
-                    ),
-                    CollectSession(
-                        id = 4,
-                        name = "Session 4",
-                        description = "This is a description",
-                        start = LocalDateTime.now(),
-                        due = LocalDateTime.now(),
-                        isOpen = true,
-                        paidCount = 2,
-                        memberCount = 3,
-                        currentAmount = 100000,
-                        expectedAmount = 200000,
-                        paymentPerMember = 10000,
-                        createdAt = LocalDateTime.now(),
-                        updatedAt = LocalDateTime.now(),
-                    ),
-                    CollectSession(
-                        id = 5,
-                        name = "Session 5",
-                        description = "This is a description",
-                        start = LocalDateTime.now(),
-                        due = LocalDateTime.now(),
-                        isOpen = true,
-                        paidCount = 2,
-                        memberCount = 3,
-                        currentAmount = 100000,
-                        expectedAmount = 200000,
-                        paymentPerMember = 10000,
-                        createdAt = LocalDateTime.now(),
-                        updatedAt = LocalDateTime.now(),
-                    ),
-                    CollectSession(
-                        id = 6,
-                        name = "Session 6",
-                        description = "This is a description",
-                        start = LocalDateTime.now(),
-                        due = LocalDateTime.now(),
-                        isOpen = true,
-                        paidCount = 2,
-                        memberCount = 3,
-                        currentAmount = 100000,
-                        expectedAmount = 200000,
-                        paymentPerMember = 10000,
-                        createdAt = LocalDateTime.now(),
-                        updatedAt = LocalDateTime.now(),
-                    ),
-                )
-            }
+            _sessions.update { sessionRepository.getCollectSessions(groupId) }
         }
     }
 }

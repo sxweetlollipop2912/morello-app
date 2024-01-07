@@ -42,7 +42,10 @@ class CollectSessionViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
-        serializer = CollectSessionCreateSerializer(data=request.data)
+        group_id = self.kwargs["group_pk"]
+        serializer = CollectSessionCreateSerializer(
+            data=request.data, context={"group_id": group_id}
+        )
         serializer.is_valid(raise_exception=True)
         collect_session = serializer.save()
         serializer = CollectSessionDetailSerializer(

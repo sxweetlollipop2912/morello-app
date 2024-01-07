@@ -1,5 +1,8 @@
 package com.example.morello.data_layer.apis.client
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -7,7 +10,9 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
+import java.util.TimeZone
 import javax.inject.Qualifier
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
@@ -29,6 +34,10 @@ annotation class NoAuthRetrofitClient
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     private const val BASE_URL = "http://10.0.2.2:8000/api/"
+    private val objectMapper = jacksonObjectMapper()
+        .registerModule(JavaTimeModule())
+        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)  // add this line
+        .setTimeZone(TimeZone.getTimeZone("UTC"))
 
     @AuthOkHttpClient
     @Provides
@@ -60,7 +69,7 @@ object NetworkModule {
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(BASE_URL)
-            .addConverterFactory(JacksonConverterFactory.create())
+            .addConverterFactory(JacksonConverterFactory.create(objectMapper))
             .build()
     }
 
@@ -72,7 +81,7 @@ object NetworkModule {
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(BASE_URL)
-            .addConverterFactory(JacksonConverterFactory.create())
+            .addConverterFactory(JacksonConverterFactory.create(objectMapper))
             .build()
     }
 }

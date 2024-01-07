@@ -17,7 +17,9 @@ class RemoteGroupDataSource @Inject constructor(
 
     suspend fun getGroups(): List<Group> {
         return withContext(dispatcher) {
+            Log.d("HERE", "HERE")
             val res = groupApi.getGroups()
+            Log.d("DONE", "DONE")
             Log.d("RemoteGroupDataSource", res.toString())
             if (res.isSuccessful) {
                 return@withContext res.body()!!
@@ -51,7 +53,7 @@ class RemoteGroupDataSource @Inject constructor(
 
     suspend fun updateGroup(groupId: Int, group: GroupUpdate): GroupDetail {
         return withContext(dispatcher) {
-            val res = groupApi.updateGroupById(groupId, group)
+            val res = groupApi.updateGroup(groupId, group)
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
@@ -62,7 +64,7 @@ class RemoteGroupDataSource @Inject constructor(
 
     suspend fun deleteGroup(groupId: Int): Void {
         return withContext(dispatcher) {
-            val res = groupApi.deleteGroupById(groupId)
+            val res = groupApi.deleteGroup(groupId)
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {

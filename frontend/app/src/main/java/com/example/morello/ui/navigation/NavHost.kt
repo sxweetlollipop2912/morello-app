@@ -25,6 +25,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.morello.ui.authorized_home.AuthorizedHomeRoute
 import com.example.morello.ui.create_balance_entry.CreateExpenseRoute
+import com.example.morello.ui.create_balance_entry.CreateExpenseViewModel
+import com.example.morello.ui.create_balance_entry.CreateIncomeRoute
 import com.example.morello.ui.create_group.CreateGroupRoute
 import com.example.morello.ui.forgot_password.ForgotPasswordCodeValidationScreen
 import com.example.morello.ui.forgot_password.ForgotPasswordEmailScreen
@@ -70,13 +72,14 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(graphRoute.routeWithArgs)
             }
-                val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
+            val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
             CreateExpenseRoute(
                 groupId = groupId,
-                viewModel = hiltViewModel(parentEntry),
+                viewModel = hiltViewModel(),
                 onBack = {
                     navController.popBackStack()
-                }
+                },
+                modifier = Modifier.padding(10.dp)
             )
         }
         composable(CreateIncomeRoute.routeWithArgs) {
@@ -84,13 +87,13 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
                 navController.getBackStackEntry(graphRoute.routeWithArgs)
             }
             val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
-            // TODO: Replace with CreateIncomeRoute
-            CreateExpenseRoute(
+            CreateIncomeRoute(
                 groupId = groupId,
-                viewModel = hiltViewModel(parentEntry),
+                viewModel = hiltViewModel(),
                 onBack = {
                     navController.popBackStack()
-                }
+                },
+                modifier = Modifier.padding(10.dp)
             )
         }
         composable(SessionListRoute.routeWithArgs) {
