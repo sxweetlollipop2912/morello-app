@@ -258,8 +258,7 @@ fun OverdueSessionListItem(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 )
-            }
-            else {
+            } else {
                 Text(
                     text = currentAmount.formattedWithSymbol(),
                     style = MaterialTheme.typography.titleMedium.copy(

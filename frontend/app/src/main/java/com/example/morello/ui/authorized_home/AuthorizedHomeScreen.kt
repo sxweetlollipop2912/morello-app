@@ -52,7 +52,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -297,8 +296,8 @@ fun GroupListEntry(
 ) {
     Box(
         modifier = Modifier.clickable {
-                onClick()
-            }
+            onClick()
+        }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

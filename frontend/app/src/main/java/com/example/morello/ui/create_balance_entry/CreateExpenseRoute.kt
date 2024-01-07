@@ -1,6 +1,5 @@
 package com.example.morello.ui.create_balance_entry
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier

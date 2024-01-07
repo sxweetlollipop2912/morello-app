@@ -3,8 +3,8 @@ package com.example.morello.data_layer.apis
 import com.example.morello.data_layer.data_types.Balance
 import com.example.morello.data_layer.data_types.BalanceEntry
 import com.example.morello.data_layer.data_types.BalanceEntryCreate
-import com.example.morello.data_layer.data_types.BalanceEntryUpdate
 import com.example.morello.data_layer.data_types.BalanceEntryDetail
+import com.example.morello.data_layer.data_types.BalanceEntryUpdate
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

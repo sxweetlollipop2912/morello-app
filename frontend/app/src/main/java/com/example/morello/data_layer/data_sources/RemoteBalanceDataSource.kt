@@ -59,7 +59,11 @@ class RemoteBalanceDataSource @Inject constructor(
         }
     }
 
-    suspend fun updateBalanceEntry(groupId: Int, entryId: Int, entry: BalanceEntryUpdate): BalanceEntryDetail {
+    suspend fun updateBalanceEntry(
+        groupId: Int,
+        entryId: Int,
+        entry: BalanceEntryUpdate
+    ): BalanceEntryDetail {
         return withContext(dispatcher) {
             val res = balanceApi.updateBalanceEntry(groupId, entryId, entry)
             if (res.isSuccessful) {

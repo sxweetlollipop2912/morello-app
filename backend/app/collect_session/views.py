@@ -85,7 +85,7 @@ class CollectSessionViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
         session = self.get_object()
         session.close()
         return Response(
-            {"success": "Collect session closed"}, status=status.HTTP_200_OK
+            {"message": "Collect session closed"}, status=status.HTTP_200_OK
         )
 
     @action(
@@ -99,11 +99,11 @@ class CollectSessionViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
         collect_entry = session.collect_entries.filter(member_id=member_id).first()
         if not collect_entry:
             return Response(
-                {"error": "Member not found in this session"},
+                {"message": "Member not found in this session"},
                 status=status.HTTP_404_NOT_FOUND,
             )
 
         serializer = CollectEntryUpdateSerializer(collect_entry, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({"success": "Member status updated"}, status=status.HTTP_200_OK)
+        return Response({"message": "Member status updated"}, status=status.HTTP_200_OK)

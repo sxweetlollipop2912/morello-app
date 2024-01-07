@@ -1,8 +1,8 @@
 package com.example.morello.data_layer.apis.client
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,7 +12,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import java.util.TimeZone
 import javax.inject.Qualifier
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
