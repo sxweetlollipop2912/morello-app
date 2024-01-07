@@ -193,8 +193,7 @@ fun BalanceEntryListItem(
                             color = MaterialTheme.colorScheme.primary
                         )
                     )
-                }
-                else {
+                } else {
                     Text(
                         text = amount.formattedWithSymbol(),
                         style = MaterialTheme.typography.titleMedium.copy(

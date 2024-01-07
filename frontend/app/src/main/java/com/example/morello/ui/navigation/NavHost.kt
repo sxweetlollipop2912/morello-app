@@ -1,6 +1,8 @@
 package com.example.morello.ui.navigation
 
 import AuthorizedHomeRoute
+import BalanceEntryDetailRoute
+import BalanceEntryListRoute
 import CreateExpenseRoute
 import CreateGroupRoute
 import CreateIncomeRoute
@@ -14,7 +16,9 @@ import HomeRoute
 import LoginRoute
 import OwnerGroupHomeRoute
 import RegisterRoute
+import SessionDetailRoute
 import SessionListRoute
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -27,8 +31,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.morello.ui.authorized_home.AuthorizedHomeRoute
+import com.example.morello.ui.balance_entry_detail.BalanceEntryDetailRoute
+import com.example.morello.ui.balance_entry_detail.BalanceEntryDetailViewModel
+import com.example.morello.ui.balance_entry_list.BalanceEntryListRoute
 import com.example.morello.ui.create_balance_entry.CreateExpenseRoute
-import com.example.morello.ui.create_balance_entry.CreateExpenseViewModel
 import com.example.morello.ui.create_balance_entry.CreateIncomeRoute
 import com.example.morello.ui.create_group.CreateGroupRoute
 import com.example.morello.ui.forgot_password.ForgotPasswordCodeValidationScreen
@@ -40,6 +46,8 @@ import com.example.morello.ui.balance_entry_list.BalanceEntryListRoute
 import com.example.morello.ui.group_settings.GroupMembersRoute
 import com.example.morello.ui.group_settings.GroupModeratorsRoute
 import com.example.morello.ui.group_settings.GroupSettingsRoute
+import com.example.morello.ui.session_detail.SessionDetailRoute
+import com.example.morello.ui.session_detail.SessionDetailViewModel
 import com.example.morello.ui.session_list.SessionListRoute
 
 fun NavGraphBuilder.ownerGroupHomeGraph(
@@ -72,6 +80,10 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
                 },
                 onCollectSessionList = {
                     navController.navigate(SessionListRoute.base)
+                },
+                onCollectSessionDetail = { sessionId ->
+                    Log.d("NavHost", "Moving to: ${SessionDetailRoute.base}/$sessionId")
+                    navController.navigate("${SessionDetailRoute.base}/$sessionId")
                 },
                 onBack = {
                     navController.popBackStack()
@@ -145,10 +157,30 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
             }
             SessionListRoute(
                 viewModel = hiltViewModel(parentEntry),
-                onSessionClicked = {},
+                onSessionClicked = { sessionId ->
+                    navController.navigate("${SessionDetailRoute.base}/$sessionId")
+                },
                 onCreateNewSession = {
                     navController.navigate(CreateIncomeRoute.base)
                 },
+                onBack = {
+                    navController.popBackStack()
+                },
+            )
+        }
+        composable(
+            route = SessionDetailRoute.routeWithArgs,
+            arguments = SessionDetailRoute.args
+        ) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(graphRoute.routeWithArgs)
+            }
+            val sessionId = it.arguments?.getInt(SessionDetailRoute.sessionId)!!
+            val viewModel: SessionDetailViewModel = hiltViewModel(parentEntry)
+
+            viewModel.setSessionId(sessionId)
+            SessionDetailRoute(
+                viewModel = viewModel,
                 onBack = {
                     navController.popBackStack()
                 },
@@ -160,11 +192,33 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
             }
             BalanceEntryListRoute(
                 viewModel = hiltViewModel(parentEntry),
-                onBalanceEntryClicked = {},
+                onBalanceEntryClicked = { entryId ->
+                    navController.navigate("${BalanceEntryDetailRoute.base}/$entryId")
+                },
                 onCreateNewBalanceEntry = {},
                 onBack = {
                     navController.popBackStack()
                 },
+            )
+        }
+        composable(
+            route = BalanceEntryDetailRoute.routeWithArgs,
+            arguments = BalanceEntryDetailRoute.args
+        ) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(graphRoute.routeWithArgs)
+            }
+            val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
+            val entryId = it.arguments?.getInt(BalanceEntryDetailRoute.entryId)!!
+            val viewModel: BalanceEntryDetailViewModel = hiltViewModel(parentEntry)
+            BalanceEntryDetailRoute(
+                groupId = groupId,
+                entryId = entryId,
+                viewModel = viewModel,
+                onBack = {
+                    navController.popBackStack()
+                },
+                modifier = Modifier.padding(horizontal = 10.dp),
             )
         }
     }
@@ -193,7 +247,10 @@ fun NavGraphBuilder.authorizedHomeGraph(
                 },
                 navigateToGroup = { groupId ->
                     navController.navigate("${OwnerGroupHomeRoute.base}/$groupId")
-                }
+                },
+                navigateToLogin = {
+                    navController.navigate(LoginRoute.base)
+                },
             )
         }
         composable(CreateGroupRoute.routeWithArgs) {

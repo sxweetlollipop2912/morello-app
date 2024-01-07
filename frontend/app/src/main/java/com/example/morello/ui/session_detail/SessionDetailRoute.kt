@@ -1,4 +1,4 @@
-package com.example.morello.ui.authorized_home
+package com.example.morello.ui.session_detail
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -7,26 +7,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 
 @Composable
-fun AuthorizedHomeRoute(
-    viewModel: AuthorizedHomeViewModel,
-    onCreateNewGroup: () -> Unit,
-    navigateToGroup: (groupId: Int) -> Unit,
-    navigateToLogin: () -> Unit,
+fun SessionDetailRoute(
+    viewModel: SessionDetailViewModel,
+    onBack: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         viewModel.refreshUiState()
     }
-    AuthorizedHomeScreen(
+    SessionDetailScreen(
         uiState = uiState,
-        onGroupSelect = navigateToGroup,
-        onProfileClicked = {},
-        onLogOutClicked = {
-            viewModel.onLogout()
-            navigateToLogin()
-        },
-        onCreateNewGroup = onCreateNewGroup,
         onRefreshUiState = viewModel::refreshUiState,
         onSearchQueryChanged = viewModel::onSearchQueryChanged,
+        onToggleMemberStatus = viewModel::onMemberStatusToggled,
+        onBack = onBack,
     )
 }

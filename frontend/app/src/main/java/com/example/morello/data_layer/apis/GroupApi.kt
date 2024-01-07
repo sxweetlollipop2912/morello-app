@@ -1,8 +1,8 @@
 package com.example.morello.data_layer.apis
 
-import com.example.morello.data_layer.data_types.GroupDetail
 import com.example.morello.data_layer.data_types.Group
 import com.example.morello.data_layer.data_types.GroupCreate
+import com.example.morello.data_layer.data_types.GroupDetail
 import com.example.morello.data_layer.data_types.GroupUpdate
 import retrofit2.Response
 import retrofit2.http.Body

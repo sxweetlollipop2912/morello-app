@@ -52,7 +52,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -62,6 +61,7 @@ fun AuthorizedHomeScreen(
     uiState: AuthorizedHomeUiState,
     onCreateNewGroup: () -> Unit,
     onProfileClicked: () -> Unit,
+    onLogOutClicked: () -> Unit,
     onGroupSelect: (groupId: Int) -> Unit,
     onRefreshUiState: () -> Unit,
     onSearchQueryChanged: (String) -> Unit,
@@ -152,7 +152,7 @@ fun AuthorizedHomeScreen(
                         }
                     }
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = onLogOutClicked,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent
                         ),
@@ -296,8 +296,8 @@ fun GroupListEntry(
 ) {
     Box(
         modifier = Modifier.clickable {
-                onClick()
-            }
+            onClick()
+        }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

@@ -17,7 +17,6 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -35,7 +34,6 @@ import com.example.morello.ui.components.MorelloTopBar
 import com.example.morello.ui.components.PasswordFormField
 import com.example.morello.ui.components.SectionDividerWithText
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
     uiState: RegisterUiState,
@@ -47,9 +45,13 @@ fun RegisterScreen(
     onShowPasswordChanged: (Boolean) -> Unit,
     onShowConfirmPasswordChanged: (Boolean) -> Unit,
     onAgreeTermsAndPolicyChanged: (Boolean) -> Unit,
+    onRegisterSuccess: () -> Unit,
     onLoginClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    if (uiState.registerState == RegisterState.Success) {
+        onRegisterSuccess()
+    }
     Scaffold(
         topBar = {
             MorelloTopBar(head = {
@@ -178,13 +180,21 @@ fun RegisterScreen(
                 }
             }
             Spacer(modifier = Modifier.padding(spacing))
+            if (!uiState.error.isNullOrEmpty()) {
+                Text(
+                    text = uiState.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
             Button(
                 onClick = onRegisterButtonClicked,
+                enabled = uiState.isRegisterButtonEnabled,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = "Create account")
-                if (uiState.isLoading) {
+                if (uiState.registerState == RegisterState.Loading) {
                     Spacer(modifier = Modifier.padding(4.dp))
                     CircularProgressIndicator(
                         color = MaterialTheme.colorScheme.secondary,

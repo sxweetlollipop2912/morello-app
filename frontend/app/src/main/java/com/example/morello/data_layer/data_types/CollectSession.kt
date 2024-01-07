@@ -22,7 +22,7 @@ data class CollectSession(
 data class MemberStatus(
     @JsonProperty("id") val id: Int,
     @JsonProperty("name") val name: String,
-    @JsonProperty("status") val status: String
+    @JsonProperty("status") val status: Boolean
 )
 
 data class CollectSessionDetail(
@@ -65,9 +65,13 @@ data class CollectSessionMemberView(
     @JsonProperty("start") val start: OffsetDateTime,
     @JsonProperty("due") val due: OffsetDateTime,
     @JsonProperty("payment_per_member") val paymentPerMember: Currency,
-    @JsonProperty("status") val status: String
+    @JsonProperty("status") val status: Boolean
+)
+
+data class MessageResponse(
+    @JsonProperty("message") val message: String
 )
 
 data class CollectEntryUpdate(
-    @JsonProperty("status") val status: String
+    @JsonProperty("status") val status: Boolean
 )

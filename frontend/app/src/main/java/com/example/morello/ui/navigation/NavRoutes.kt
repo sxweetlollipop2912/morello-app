@@ -103,4 +103,32 @@ object GroupMembersRoute: NavRoute {
 object GroupModeratorsRoute: NavRoute {
     override val base: String
         get() = "groupOwnerHome/groupModerators"
+object SessionDetailRoute : NavRoute {
+    val sessionId
+        get() = "sessionId"
+    override val base
+        get() = "sessionDetail"
+    override val routeWithArgs
+        get() = "$base/{$sessionId}"
+    override val args
+        get() = listOf(
+            navArgument(sessionId) {
+                type = NavType.IntType
+            }
+        )
+}
+
+object BalanceEntryDetailRoute : NavRoute {
+    val entryId
+        get() = "entryId"
+    override val base
+        get() = "balanceEntryDetail"
+    override val routeWithArgs
+        get() = "$base/{$entryId}"
+    override val args
+        get() = listOf(
+            navArgument(entryId) {
+                type = NavType.IntType
+            }
+        )
 }

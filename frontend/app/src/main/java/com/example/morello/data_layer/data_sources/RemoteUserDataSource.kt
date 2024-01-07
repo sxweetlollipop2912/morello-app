@@ -3,6 +3,7 @@ package com.example.morello.data_layer.data_sources
 import android.util.Log
 import com.example.morello.data_layer.apis.BalanceApi
 import com.example.morello.data_layer.apis.UserApi
+import com.example.morello.data_layer.apis.UserLoginRegisterApi
 import com.example.morello.data_layer.data_types.LoginRequest
 import com.example.morello.data_layer.data_types.LoginResponse
 import com.example.morello.data_layer.data_types.RegisterRequest
@@ -15,12 +16,13 @@ import javax.inject.Inject
 class RemoteUserDataSource @Inject constructor(
     private val balanceApi: BalanceApi,
     private val userApi: UserApi,
+    private val userLoginRegisterApi: UserLoginRegisterApi,
 ) {
     private val dispatcher = Dispatchers.IO
 
     suspend fun login(username: String, password: String): LoginResponse {
         return withContext(dispatcher) {
-            val res = userApi.login(LoginRequest(username, password))
+            val res = userLoginRegisterApi.login(LoginRequest(username, password))
             Log.d("RemoteUserDataSource", res.toString())
             if (res.isSuccessful) {
                 return@withContext res.body()!!
@@ -32,7 +34,7 @@ class RemoteUserDataSource @Inject constructor(
 
     suspend fun register(username: String, password: String, email: String): RegisterResponse {
         return withContext(dispatcher) {
-            val res = userApi.register(RegisterRequest(username, password, email))
+            val res = userLoginRegisterApi.register(RegisterRequest(username, password, email))
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {

@@ -5,6 +5,7 @@ import com.example.morello.data_layer.data_types.CollectSession
 import com.example.morello.data_layer.data_types.CollectSessionCreate
 import com.example.morello.data_layer.data_types.CollectSessionDetail
 import com.example.morello.data_layer.data_types.CollectSessionUpdate
+import com.example.morello.data_layer.data_types.MessageResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -41,6 +42,7 @@ interface CollectSessionApi {
         @Path("groupId") groupId: Int,
         @Path("sessionId") sessionId: Int
     ): Response<Void>
+
     // ------------------------------------------------------------
     @POST("groups/{groupId}/sessions/{sessionId}/close/")
     suspend fun closeCollectSession(
@@ -48,12 +50,12 @@ interface CollectSessionApi {
         @Path("sessionId") sessionId: Int
     ): Response<Void>
 
-    @PUT("groups/{groupId}/sessions/{sessionId}/members/{memberId}/status/")
-    suspend fun updateCollectSessionEntry(
+    @POST("groups/{groupId}/sessions/{sessionId}/members/{memberId}/status/")
+    suspend fun updateCollectEntry(
         @Path("groupId") groupId: Int,
         @Path("sessionId") sessionId: Int,
         @Path("memberId") memberId: Int,
         @Body collectSessionEntry: CollectEntryUpdate,
-    ): Response<CollectSession>
+    ): Response<MessageResponse>
 
 }

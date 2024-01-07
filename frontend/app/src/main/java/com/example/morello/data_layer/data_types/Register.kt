@@ -1,7 +1,6 @@
 package com.example.morello.data_layer.data_types
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.time.LocalDateTime
 
 data class RegisterRequest(
     @JsonProperty("name") val name: String,

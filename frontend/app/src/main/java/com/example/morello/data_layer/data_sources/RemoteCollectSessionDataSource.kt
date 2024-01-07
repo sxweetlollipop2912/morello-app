@@ -1,6 +1,7 @@
 package com.example.morello.data_layer.data_sources
 
 import com.example.morello.data_layer.apis.CollectSessionApi
+import com.example.morello.data_layer.data_types.CollectEntryUpdate
 import com.example.morello.data_layer.data_types.CollectSession
 import com.example.morello.data_layer.data_types.CollectSessionCreate
 import com.example.morello.data_layer.data_types.CollectSessionDetail
@@ -51,7 +52,11 @@ class RemoteCollectSessionDataSource @Inject constructor(
         }
     }
 
-    suspend fun updateCollectSession(groupId: Int, sessionId: Int, collectSession: CollectSessionUpdate) {
+    suspend fun updateCollectSession(
+        groupId: Int,
+        sessionId: Int,
+        collectSession: CollectSessionUpdate
+    ) {
         withContext(dispatcher) {
             val res = collectSessionApi.updateCollectSession(
                 groupId,
@@ -72,6 +77,25 @@ class RemoteCollectSessionDataSource @Inject constructor(
             )
             if (!res.isSuccessful) {
                 throw Exception("Error deleting collect session")
+            }
+        }
+    }
+
+    suspend fun updateCollectEntry(
+        groupId: Int,
+        sessionId: Int,
+        entryId: Int,
+        collectEntry: CollectEntryUpdate
+    ) {
+        withContext(dispatcher) {
+            val res = collectSessionApi.updateCollectEntry(
+                groupId,
+                sessionId,
+                entryId,
+                collectEntry
+            )
+            if (!res.isSuccessful) {
+                throw Exception("Error updating collect session entry status")
             }
         }
     }

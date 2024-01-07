@@ -15,13 +15,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -39,11 +40,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -60,7 +67,7 @@ import com.example.morello.ui.components.rememberFormBackHandlerState
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun CreateIncomeScreen(
     uiState: CreateIncomeUiState,
@@ -105,6 +112,8 @@ fun CreateIncomeScreen(
         }
     }
     val backHandlerState = rememberFormBackHandlerState()
+    val (first, second, third, forth) = remember { FocusRequester.createRefs() }
+    val focusManager = LocalFocusManager.current
     FormBackHandler(backHandlerState, onConfirmGoBack)
     BackHandler(onBack = { backHandlerState.goBack(!uiState.consideredEmpty()) })
     Scaffold(
@@ -145,7 +154,16 @@ fun CreateIncomeScreen(
                 value = amount,
                 negativeSign = false,
                 onValueChange = onBalanceChanged,
-                modifier = Modifier.fillMaxWidth()
+                keyboardActions = KeyboardActions(
+                    onAny = {
+                        focusManager.moveFocus(FocusDirection.Down)
+                    }
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .handleReopenKeyboard(focusManager, first)
+                    .focusRequester(first)
+                    .focusProperties { next = second }
             )
             Text(
                 text = "Balance after: ${balanceAfter?.formattedWithSymbol()}",
@@ -167,6 +185,11 @@ fun CreateIncomeScreen(
                 onValueChange = onNameChanged,
                 shape = MaterialTheme.shapes.medium,
                 singleLine = true,
+                keyboardActions = KeyboardActions(
+                    onAny = {
+                        focusManager.moveFocus(FocusDirection.Down)
+                    }
+                ),
                 trailingIcon = {
                     if (name.error != null) {
                         Icon(
@@ -175,7 +198,11 @@ fun CreateIncomeScreen(
                         )
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .handleReopenKeyboard(focusManager, second)
+                    .focusRequester(second)
+                    .focusProperties { next = third }
             )
             Spacer(modifier = Modifier.padding(8.dp))
             Text(text = "Description", style = titleTextStyle)
@@ -183,7 +210,16 @@ fun CreateIncomeScreen(
                 value = description,
                 onValueChange = onDescriptionChanged,
                 shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.fillMaxWidth()
+                keyboardActions = KeyboardActions(
+                    onAny = {
+                        focusManager.moveFocus(FocusDirection.Down)
+                    }
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .handleReopenKeyboard(focusManager, third)
+                    .focusRequester(third)
+                    .focusProperties { next = forth }
             )
             Spacer(modifier = Modifier.padding(8.dp))
             AnimatedVisibility(
@@ -236,7 +272,7 @@ fun CreateIncomeScreen(
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Divider(modifier = Modifier.padding(vertical = 8.dp))
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     OpenSessionSection(
                         paymentPerMember = uiState.createNewSessionData.amountPerMember,
                         startDateTime = uiState.createNewSessionData.startDate,
@@ -246,7 +282,10 @@ fun CreateIncomeScreen(
                         onPaymentPerMemberChanged = onPaymentPerMemberChanged,
                         onStartDateTimeChanged = onStartDateTimeChanged,
                         onEndDateTimeChanged = onEndDateTimeChanged,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .handleReopenKeyboard(focusManager, forth)
+                            .focusRequester(forth)
                     )
                     OutlinedButton(
                         onClick = {
@@ -393,8 +432,7 @@ fun OpenSessionSection(
         }
         Spacer(modifier = Modifier.padding(8.dp))
         SectionDividerWithText(text = "Members")
-        OutlinedCard(
-        ) {
+        OutlinedCard {
             Column(
                 modifier = Modifier
                     .padding(8.dp)
@@ -415,7 +453,7 @@ fun OpenSessionSection(
                                 // draw dotted border
                                 val strokeWidth = 1.dp.toPx()
                                 val dashPathEffect =
-                                    androidx.compose.ui.graphics.PathEffect.dashPathEffect(
+                                    PathEffect.dashPathEffect(
                                         intervals = floatArrayOf(10f, 10f),
                                         phase = 0f
                                     )

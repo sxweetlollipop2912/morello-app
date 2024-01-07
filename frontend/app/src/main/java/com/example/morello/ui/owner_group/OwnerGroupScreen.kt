@@ -273,8 +273,7 @@ fun CollectSessionsCard(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         )
-                    }
-                    else {
+                    } else {
                         Text(
                             text = currentAmount.formattedWithSymbol(),
                             style = MaterialTheme.typography.titleMedium.copy(
@@ -354,8 +353,7 @@ fun BalanceEntriesCard(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         )
-                    }
-                    else {
+                    } else {
                         Text(
                             text = amount.formattedWithSymbol(),
                             style = MaterialTheme.typography.titleMedium.copy(
