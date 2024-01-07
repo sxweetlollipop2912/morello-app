@@ -111,7 +111,7 @@ object BalanceEntryDetailRoute : NavRoute {
     override val base
         get() = "balanceEntryDetail"
     override val routeWithArgs
-        get() = "$base/${entryId}"
+        get() = "$base/{$entryId}"
     override val args
         get() = listOf(
             navArgument(entryId) {

@@ -115,7 +115,7 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
             }
             SessionListRoute(
                 viewModel = hiltViewModel(parentEntry),
-                onSessionClicked = {sessionId ->
+                onSessionClicked = { sessionId ->
                     navController.navigate("${SessionDetailRoute.base}/$sessionId")
                 },
                 onCreateNewSession = {
@@ -166,7 +166,6 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(graphRoute.routeWithArgs)
             }
-            Log.d("NavHost", "BalanceEntryDetailRoute: ${it.arguments}")
             val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
             val entryId = it.arguments?.getInt(BalanceEntryDetailRoute.entryId)!!
             val viewModel: BalanceEntryDetailViewModel = hiltViewModel(parentEntry)
@@ -177,6 +176,7 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
                 onBack = {
                     navController.popBackStack()
                 },
+                modifier = Modifier.padding(horizontal = 10.dp),
             )
         }
     }
