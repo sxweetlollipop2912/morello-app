@@ -1,9 +1,9 @@
 package com.example.morello.ui.group_settings
 
+import OwnerGroupHomeRoute
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.morello.data_layer.data_types.Group
 import com.example.morello.data_layer.data_types.GroupDetail
 import com.example.morello.data_layer.data_types.Member
 import com.example.morello.data_layer.data_types.Moderator
@@ -49,8 +49,8 @@ class GroupSettingsViewModel @Inject constructor(
     private val groupRepository: GroupRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-//    val groupId = savedStateHandle.get<Int>(GroupSettingsRoute.groupId)!!
-    val groupId = 0
+    val groupId = savedStateHandle.get<Int>(OwnerGroupHomeRoute.groupId)!!
+
     private var _uiState = MutableStateFlow(GroupSettingsUiState.empty)
     val uiState = _uiState.asStateFlow()
 

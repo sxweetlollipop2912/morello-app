@@ -93,9 +93,8 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(graphRoute.routeWithArgs)
             }
-            val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
             GroupSettingsRoute(
-                viewModel = hiltViewModel(),
+                viewModel = hiltViewModel(parentEntry),
                 onBack = { navController.popBackStack() },
                 navToMembers = { navController.navigate(GroupMembersRoute.routeWithArgs) },
                 navToModerators = { navController.navigate(GroupModeratorsRoute.routeWithArgs) }
@@ -105,9 +104,8 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(graphRoute.routeWithArgs)
             }
-            val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
             GroupMembersRoute(
-                viewModel = hiltViewModel(),
+                viewModel = hiltViewModel(parentEntry),
                 onBack = { navController.popBackStack() },
             )
         }
@@ -115,9 +113,8 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(graphRoute.routeWithArgs)
             }
-            val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
             GroupModeratorsRoute(
-                viewModel = hiltViewModel(),
+                viewModel = hiltViewModel(parentEntry),
                 onBack = { navController.popBackStack() },
             )
         }

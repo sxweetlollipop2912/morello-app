@@ -92,17 +92,17 @@ object BalanceEntryListRoute : NavRoute {
 
 object GroupSettingsRoute : NavRoute {
     override val base
-        get() = "groupOwnerHome/groupSettings"
+        get() = "settings"
 }
 
 object GroupMembersRoute: NavRoute {
     override val base: String
-        get() = "groupOwnerHome/groupMembers"
+        get() = "members"
 }
 
 object GroupModeratorsRoute: NavRoute {
     override val base: String
-        get() = "groupOwnerHome/groupModerators"
+        get() = "moderators"
 }
 
 object SessionDetailRoute : NavRoute {
