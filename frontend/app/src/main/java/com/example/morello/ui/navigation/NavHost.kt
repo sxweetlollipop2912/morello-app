@@ -1,6 +1,7 @@
 package com.example.morello.ui.navigation
 
 import AuthorizedHomeRoute
+import BalanceEntryDetailRoute
 import BalanceEntryListRoute
 import CreateExpenseRoute
 import CreateGroupRoute
@@ -27,6 +28,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.morello.ui.authorized_home.AuthorizedHomeRoute
+import com.example.morello.ui.balance_entry_detail.BalanceEntryDetailRoute
+import com.example.morello.ui.balance_entry_detail.BalanceEntryDetailViewModel
 import com.example.morello.ui.balance_entry_list.BalanceEntryListRoute
 import com.example.morello.ui.create_balance_entry.CreateExpenseRoute
 import com.example.morello.ui.create_balance_entry.CreateIncomeRoute
@@ -112,8 +115,8 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
             }
             SessionListRoute(
                 viewModel = hiltViewModel(parentEntry),
-                onSessionClicked = {
-                    navController.navigate("${SessionDetailRoute.base}/$it")
+                onSessionClicked = {sessionId ->
+                    navController.navigate("${SessionDetailRoute.base}/$sessionId")
                 },
                 onCreateNewSession = {
                     navController.navigate(CreateIncomeRoute.base)
@@ -147,8 +150,30 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
             }
             BalanceEntryListRoute(
                 viewModel = hiltViewModel(parentEntry),
-                onBalanceEntryClicked = {},
+                onBalanceEntryClicked = { entryId ->
+                    navController.navigate("${BalanceEntryDetailRoute.base}/$entryId")
+                },
                 onCreateNewBalanceEntry = {},
+                onBack = {
+                    navController.popBackStack()
+                },
+            )
+        }
+        composable(
+            route = BalanceEntryDetailRoute.routeWithArgs,
+            arguments = BalanceEntryDetailRoute.args
+        ) {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(graphRoute.routeWithArgs)
+            }
+            Log.d("NavHost", "BalanceEntryDetailRoute: ${it.arguments}")
+            val groupId = parentEntry.arguments?.getInt(graphRoute.groupId)!!
+            val entryId = it.arguments?.getInt(BalanceEntryDetailRoute.entryId)!!
+            val viewModel: BalanceEntryDetailViewModel = hiltViewModel(parentEntry)
+            BalanceEntryDetailRoute(
+                groupId = groupId,
+                entryId = entryId,
+                viewModel = viewModel,
                 onBack = {
                     navController.popBackStack()
                 },
