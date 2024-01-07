@@ -21,6 +21,7 @@ fun AuthorizedHomeRoute(
         onGroupSelect = navigateToGroup,
         onProfileClicked = {},
         onCreateNewGroup = onCreateNewGroup,
-        onReloadGroups = viewModel::refreshUiState,
+        onRefreshUiState = viewModel::refreshUiState,
+        onSearchQueryChanged = viewModel::onSearchQueryChanged,
     )
 }

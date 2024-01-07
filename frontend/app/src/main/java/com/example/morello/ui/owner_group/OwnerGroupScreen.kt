@@ -42,9 +42,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.morello.data_layer.data_types.BalanceEntry
+import com.example.morello.data_layer.data_types.CollectSession
 import com.example.morello.data_layer.data_types.formattedNoTime
 import com.example.morello.data_layer.data_types.formattedWithSymbol
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,17 +63,14 @@ fun OwnerGroupScreen(
     modifier: Modifier = Modifier,
 ) {
     val (
-        group,
-        subCollections,
-        subBalanceEntries,
+        groupDetail,
+        groupBalance,
     ) = uiState
 
     val refreshScope = rememberCoroutineScope()
     val refreshState = rememberPullToRefreshState()
     if (refreshState.isRefreshing) {
         refreshScope.launch {
-            // TODO
-            delay(500)
             onRefreshUiState()
             refreshState.endRefresh()
         }
@@ -141,7 +139,10 @@ fun OwnerGroupScreen(
         },
         topBar = {
             TopAppBar(title = {
-                Text(text = group.name)
+                Text(
+                    text = groupDetail.name,
+                    style = MaterialTheme.typography.titleMedium
+                )
             }, navigationIcon = {
                 IconButton(onClick = onBack) {
                     Icon(Icons.Default.ArrowBackIosNew, contentDescription = "Back")
@@ -169,13 +170,13 @@ fun OwnerGroupScreen(
                     ),
                 )
                 Text(
-                    text = group.currentBalance.formattedWithSymbol(),
+                    text = groupBalance.currentBalance.formattedWithSymbol(),
                     style = MaterialTheme.typography.displayMedium.copy(
                         color = MaterialTheme.colorScheme.primary
                     )
                 )
                 Text(
-                    text = "After collecting: ${group.expectedBalance.formattedWithSymbol()}",
+                    text = "After collecting: ${groupBalance.expectedBalance.formattedWithSymbol()}",
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.outline
                     )
@@ -186,7 +187,7 @@ fun OwnerGroupScreen(
                 CollectSessionsCard(
                     onSeeSession = onSeeCollectSessionClicked,
                     onSeeAll = onSeeAllCollectSessionClicked,
-                    collectSessions = subCollections,
+                    collectSessions = groupDetail.recentOpenSessions,
                     modifier = Modifier
                         .fillMaxWidth()
                 )
@@ -196,7 +197,7 @@ fun OwnerGroupScreen(
                 BalanceEntriesCard(
                     onSeeBalanceEntry = onSeeBalanceEntryClicked,
                     onSeeAll = onSeeAllBalanceEntryClicked,
-                    balanceEntries = subBalanceEntries,
+                    balanceEntries = groupDetail.recentBalanceEntries,
                     modifier = Modifier
                         .fillMaxWidth()
                 )
@@ -283,14 +284,14 @@ fun <T> BaseCard(
 
 @Composable
 fun CollectSessionsCard(
-    collectSessions: List<OwnerGroupData.CollectSessionInfo>,
+    collectSessions: List<CollectSession>,
     modifier: Modifier = Modifier,
     onSeeSession: (Int) -> Unit,
     onSeeAll: () -> Unit,
 ) {
     BaseCard(
         name = "Collect sessions",
-        builder = { collectSessionInfo ->
+        builder = { session ->
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
@@ -299,19 +300,19 @@ fun CollectSessionsCard(
             ) {
                 Column {
                     Text(
-                        text = collectSessionInfo.name,
+                        text = session.name,
                         style = MaterialTheme.typography.titleMedium.copy(
                             color = MaterialTheme.colorScheme.onSurface
                         ),
                     )
                     Text(
-                        text = "Due in ${collectSessionInfo.dueDays} day(s)",
+                        text = "Due in ${session.dueDays} day(s)",
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = MaterialTheme.colorScheme.outline
                         )
                     )
                     Text(
-                        text = "${collectSessionInfo.memberCount - collectSessionInfo.paidCount} pending payment(s)",
+                        text = "${session.memberCount - session.paidCount} pending payment(s)",
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = MaterialTheme.colorScheme.outline
                         )
@@ -320,7 +321,7 @@ fun CollectSessionsCard(
                 Column(
                     horizontalAlignment = Alignment.End,
                 ) {
-                    val currentAmount = collectSessionInfo.currentAmount
+                    val currentAmount = session.currentAmount
                     Text(
                         text = if (currentAmount > 0) {
                             "+${currentAmount.formattedWithSymbol()}"
@@ -332,7 +333,7 @@ fun CollectSessionsCard(
                         )
                     )
 
-                    val expectedAmount = collectSessionInfo.expectedAmount
+                    val expectedAmount = session.expectedAmount
                     Text(
                         text = "Total: ${expectedAmount.formattedWithSymbol()}",
                         style = MaterialTheme.typography.bodySmall.copy(
@@ -352,7 +353,7 @@ fun CollectSessionsCard(
 
 @Composable
 fun BalanceEntriesCard(
-    balanceEntries: List<OwnerGroupData.BalanceEntryInfo>,
+    balanceEntries: List<BalanceEntry>,
     onSeeBalanceEntry: (Int) -> Unit,
     onSeeAll: () -> Unit,
     modifier: Modifier = Modifier,

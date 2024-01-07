@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
@@ -62,9 +63,10 @@ fun AuthorizedHomeScreen(
     onCreateNewGroup: () -> Unit,
     onProfileClicked: () -> Unit,
     onGroupSelect: (groupId: Int) -> Unit,
-    onReloadGroups: () -> Unit,
+    onRefreshUiState: () -> Unit,
+    onSearchQueryChanged: (String) -> Unit,
 ) {
-    val (user, groups, state) = uiState
+    val (user, groups, searchQuery, state) = uiState
     val username = user.name
     val sideDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -73,9 +75,7 @@ fun AuthorizedHomeScreen(
     val refreshState = rememberPullToRefreshState()
     if (refreshState.isRefreshing) {
         refreshScope.launch {
-            // TODO
-            delay(500)
-            onReloadGroups()
+            onRefreshUiState()
             refreshState.endRefresh()
         }
     }
@@ -243,8 +243,8 @@ fun AuthorizedHomeScreen(
                         .align(Alignment.TopCenter),
                 ) {
                     SearchBar(
-                        query = "",
-                        onQueryChange = {},
+                        query = searchQuery,
+                        onQueryChange = onSearchQueryChanged,
                         onSearch = {},
                         active = false,
                         onActiveChange = {},
@@ -256,7 +256,9 @@ fun AuthorizedHomeScreen(
 
                     val scrollState = rememberScrollState()
                     Column(
-                        modifier = Modifier.verticalScroll(scrollState)
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(scrollState)
                     ) {
                         if (!refreshState.isRefreshing) {
                             groups.forEach { group ->
@@ -300,7 +302,9 @@ fun GroupListEntry(
                 onClick()
             }
     ) {
-        Column {
+        Column(
+            modifier = Modifier.weight(2f)
+        ) {
             Text(
                 text = name,
                 style = MaterialTheme.typography.titleMedium,
@@ -311,8 +315,11 @@ fun GroupListEntry(
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
         }
+        Spacer(modifier = Modifier.size(16.dp))
         Text(
             text = type,
             style = MaterialTheme.typography.bodyMedium.copy(
