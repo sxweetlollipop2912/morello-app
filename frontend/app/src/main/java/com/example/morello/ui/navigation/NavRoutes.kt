@@ -5,43 +5,29 @@ import androidx.navigation.navArgument
 interface NavRoute {
     val base: String
     val routeWithArgs: String
+        get() = base
     val args: List<NamedNavArgument>
+        get() = emptyList()
 }
 
 object LoginRoute : NavRoute {
     override val base
         get() = "login"
-    override val routeWithArgs
-        get() = base
-    override val args
-        get() = emptyList<NamedNavArgument>()
 }
 
 object RegisterRoute : NavRoute {
     override val base
         get() = "register"
-    override val routeWithArgs
-        get() = base
-    override val args
-        get() = emptyList<NamedNavArgument>()
 }
 
 object ForgotPasswordRoute : NavRoute {
     override val base
         get() = "forgotPassword"
-    override val routeWithArgs
-        get() = base
-    override val args
-        get() = emptyList<NamedNavArgument>()
 }
 
 object ForgotPasswordCodeRoute : NavRoute {
     override val base
         get() = "forgotPasswordCode"
-    override val routeWithArgs
-        get() = base
-    override val args
-        get() = emptyList<NamedNavArgument>()
 }
 
 object OwnerGroupHomeRoute : NavRoute {
@@ -62,62 +48,44 @@ object OwnerGroupHomeRoute : NavRoute {
 object GroupOwnerHomeRoute : NavRoute {
     override val base
         get() = "groupOwnerHome"
-    override val routeWithArgs
-        get() = base
-    override val args
-        get() = emptyList<NamedNavArgument>()
 }
 
 object CreateExpenseRoute : NavRoute {
     override val base
         get() = "createBalanceEntry/expense"
-    override val routeWithArgs
-        get() = base
-    override val args
-        get() = emptyList<NamedNavArgument>()
 }
 
 object CreateIncomeRoute : NavRoute {
     override val base
         get() = "createBalanceEntry/income"
-    override val routeWithArgs
-        get() = base
-    override val args
-        get() = emptyList<NamedNavArgument>()
 }
 
 object AddMemberRoute : NavRoute {
     override val base
         get() = "addMember"
-    override val routeWithArgs
-        get() = base
-    override val args
-        get() = emptyList<NamedNavArgument>()
 }
 
 object AuthorizedHomeRoute : NavRoute {
     override val base
         get() = "authorizedHome"
-    override val routeWithArgs
-        get() = base
-    override val args
-        get() = emptyList<NamedNavArgument>()
 }
 
 object HomeRoute : NavRoute {
     override val base
         get() = "home"
-    override val routeWithArgs
-        get() = base
-    override val args
-        get() = emptyList<NamedNavArgument>()
 }
 
 object CreateGroupRoute : NavRoute {
     override val base
         get() = "createGroup"
-    override val routeWithArgs
-        get() = base
-    override val args
-        get() = emptyList<NamedNavArgument>()
+}
+
+object SessionListRoute : NavRoute {
+    override val base
+        get() = "sessions"
+}
+
+object BalanceEntryListRoute : NavRoute {
+    override val base
+        get() = "balanceEntries"
 }

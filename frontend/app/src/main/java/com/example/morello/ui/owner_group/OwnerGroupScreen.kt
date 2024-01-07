@@ -1,8 +1,6 @@
 package com.example.morello.ui.owner_group
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,10 +17,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -42,9 +38,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.morello.data_layer.data_types.BalanceEntry
+import com.example.morello.data_layer.data_types.CollectSession
 import com.example.morello.data_layer.data_types.formattedNoTime
 import com.example.morello.data_layer.data_types.formattedWithSymbol
-import kotlinx.coroutines.delay
+import com.example.morello.ui.components.BaseCard
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,17 +60,14 @@ fun OwnerGroupScreen(
     modifier: Modifier = Modifier,
 ) {
     val (
-        group,
-        subCollections,
-        subBalanceEntries,
+        groupDetail,
+        groupBalance,
     ) = uiState
 
     val refreshScope = rememberCoroutineScope()
     val refreshState = rememberPullToRefreshState()
     if (refreshState.isRefreshing) {
         refreshScope.launch {
-            // TODO
-            delay(500)
             onRefreshUiState()
             refreshState.endRefresh()
         }
@@ -141,7 +136,12 @@ fun OwnerGroupScreen(
         },
         topBar = {
             TopAppBar(title = {
-                Text(text = group.name)
+                Text(
+                    text = groupDetail.name,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                )
             }, navigationIcon = {
                 IconButton(onClick = onBack) {
                     Icon(Icons.Default.ArrowBackIosNew, contentDescription = "Back")
@@ -157,50 +157,52 @@ fun OwnerGroupScreen(
         ) {
             val scrollState = rememberScrollState()
 
-            Column(
-                Modifier
-                    .verticalScroll(scrollState)
-                    .padding(horizontal = 16.dp)
-            ) {
-                Text(
-                    text = "Group balance",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    ),
-                )
-                Text(
-                    text = group.currentBalance.formattedWithSymbol(),
-                    style = MaterialTheme.typography.displayMedium.copy(
-                        color = MaterialTheme.colorScheme.primary
+            if (!refreshState.isRefreshing) {
+                Column(
+                    Modifier
+                        .verticalScroll(scrollState)
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Text(
+                        text = "Group balance",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
                     )
-                )
-                Text(
-                    text = "After collecting: ${group.expectedBalance.formattedWithSymbol()}",
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.outline
+                    Text(
+                        text = groupBalance.currentBalance.formattedWithSymbol(),
+                        style = MaterialTheme.typography.displayMedium.copy(
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     )
-                )
+                    Text(
+                        text = "After collecting: ${groupBalance.expectedBalance.formattedWithSymbol()}",
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                    )
 
-                Spacer(modifier = Modifier.padding(8.dp))
+                    Spacer(modifier = Modifier.padding(8.dp))
 
-                CollectSessionsCard(
-                    onSeeSession = onSeeCollectSessionClicked,
-                    onSeeAll = onSeeAllCollectSessionClicked,
-                    collectSessions = subCollections,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
+                    CollectSessionsCard(
+                        onSeeSession = onSeeCollectSessionClicked,
+                        onSeeAll = onSeeAllCollectSessionClicked,
+                        collectSessions = groupDetail.recentOpenSessions,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
 
-                Spacer(modifier = Modifier.padding(8.dp))
+                    Spacer(modifier = Modifier.padding(8.dp))
 
-                BalanceEntriesCard(
-                    onSeeBalanceEntry = onSeeBalanceEntryClicked,
-                    onSeeAll = onSeeAllBalanceEntryClicked,
-                    balanceEntries = subBalanceEntries,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.padding(60.dp))
+                    BalanceEntriesCard(
+                        onSeeBalanceEntry = onSeeBalanceEntryClicked,
+                        onSeeAll = onSeeAllBalanceEntryClicked,
+                        balanceEntries = groupDetail.recentBalanceEntries,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.padding(60.dp))
+                }
             }
 
             PullToRefreshContainer(
@@ -212,85 +214,22 @@ fun OwnerGroupScreen(
 }
 
 @Composable
-fun <T> BaseCard(
-    name: String,
-    items: List<T>,
-    getId: (T) -> Int,
-    builder: @Composable (T) -> Unit,
-    onSeeIndividual: (Int) -> Unit,
-    onSeeAll: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Card(
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-        modifier = modifier,
-    ) {
-        Column {
-            val horizontalPaddingValue = 15.dp
-            val verticalPaddingValue = 8.dp
-            Text(
-                text = name,
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurface
-                ),
-                modifier = Modifier.padding(
-                    top = verticalPaddingValue,
-                    start = horizontalPaddingValue,
-                    end = horizontalPaddingValue,
-                )
-            )
-
-            Spacer(modifier = Modifier.height(verticalPaddingValue))
-            HorizontalDivider()
-
-            items.forEach { item ->
-                HorizontalDivider()
-
-                Box(
-                    modifier = Modifier
-                        .clickable(onClick = { onSeeIndividual(getId(item)) })
-                        .padding(
-                            horizontal = horizontalPaddingValue,
-                            vertical = verticalPaddingValue
-                        )
-                ) {
-                    builder(item)
-                }
-            }
-
-            HorizontalDivider()
-
-            Row(
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier
-                    .clickable(onClick = onSeeAll)
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = horizontalPaddingValue,
-                        vertical = verticalPaddingValue
-                    )
-            ) {
-                Text(
-                    text = "See all",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        color = MaterialTheme.colorScheme.primary
-                    ),
-                )
-            }
-        }
-    }
-}
-
-@Composable
 fun CollectSessionsCard(
-    collectSessions: List<OwnerGroupData.CollectSessionInfo>,
+    collectSessions: List<CollectSession>,
     modifier: Modifier = Modifier,
     onSeeSession: (Int) -> Unit,
     onSeeAll: () -> Unit,
 ) {
     BaseCard(
-        name = "Collect sessions",
-        builder = { collectSessionInfo ->
+        title = {
+            Text(
+                text = "Collect sessions",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            )
+        },
+        builder = { session ->
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
@@ -299,19 +238,19 @@ fun CollectSessionsCard(
             ) {
                 Column {
                     Text(
-                        text = collectSessionInfo.name,
+                        text = session.name,
                         style = MaterialTheme.typography.titleMedium.copy(
                             color = MaterialTheme.colorScheme.onSurface
                         ),
                     )
                     Text(
-                        text = "Due in ${collectSessionInfo.dueDays} day(s)",
+                        text = "Due in ${session.dueDays} day(s)",
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = MaterialTheme.colorScheme.outline
                         )
                     )
                     Text(
-                        text = "${collectSessionInfo.memberCount - collectSessionInfo.paidCount} pending payment(s)",
+                        text = "${session.memberCount - session.paidCount} pending payment(s)",
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = MaterialTheme.colorScheme.outline
                         )
@@ -320,7 +259,7 @@ fun CollectSessionsCard(
                 Column(
                     horizontalAlignment = Alignment.End,
                 ) {
-                    val currentAmount = collectSessionInfo.currentAmount
+                    val currentAmount = session.currentAmount
                     Text(
                         text = if (currentAmount > 0) {
                             "+${currentAmount.formattedWithSymbol()}"
@@ -332,7 +271,7 @@ fun CollectSessionsCard(
                         )
                     )
 
-                    val expectedAmount = collectSessionInfo.expectedAmount
+                    val expectedAmount = session.expectedAmount
                     Text(
                         text = "Total: ${expectedAmount.formattedWithSymbol()}",
                         style = MaterialTheme.typography.bodySmall.copy(
@@ -352,13 +291,20 @@ fun CollectSessionsCard(
 
 @Composable
 fun BalanceEntriesCard(
-    balanceEntries: List<OwnerGroupData.BalanceEntryInfo>,
+    balanceEntries: List<BalanceEntry>,
     onSeeBalanceEntry: (Int) -> Unit,
     onSeeAll: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     BaseCard(
-        name = "Balance entries",
+        title = {
+            Text(
+                text = "Balance entries",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            )
+        },
         items = balanceEntries,
         getId = { it.id },
         builder = { balanceEntry ->
