@@ -7,6 +7,9 @@ import javax.inject.Inject
 class CollectSessionRepository @Inject constructor(
     private val remoteCollectSessionDataSource: RemoteCollectSessionDataSource,
 ) {
+    suspend fun getCollectSessions(groupId: Int) =
+        remoteCollectSessionDataSource.getCollectSessions(groupId)
+
     suspend fun createCollectSession(groupId: Int, collectSession: CollectSessionCreate) {
         remoteCollectSessionDataSource.createCollectSession(groupId, collectSession)
     }

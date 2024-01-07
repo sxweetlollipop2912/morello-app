@@ -4,61 +4,49 @@ import OwnerGroupHomeRoute
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.morello.data_layer.data_types.Currency
+import com.example.morello.data_layer.data_types.Balance
+import com.example.morello.data_layer.data_types.CollectSession
+import com.example.morello.data_layer.data_types.GroupDetail
+import com.example.morello.data_layer.data_types.User
 import com.example.morello.data_layer.repositories.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import java.time.OffsetDateTime
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
-data object OwnerGroupData {
-    data class GroupInfo(
-        val id: Int,
-        val name: String,
-        val currentBalance: Currency,
-        val expectedBalance: Currency,
-    )
-
-    data class CollectSessionInfo(
-        val id: Int,
-        val name: String,
-        val description: String,
-        val dueDate: LocalDateTime,
-        val dueDays: Int,
-        val isOpen: Boolean,
-        val paidCount: Int,
-        val memberCount: Int,
-        val currentAmount: Currency,
-        val expectedAmount: Currency,
-    )
-
-    data class BalanceEntryInfo(
-        val id: Int,
-        val name: String,
-        val amount: Currency,
-        val description: String,
-        val recordedAt: OffsetDateTime,
-    )
-}
+val CollectSession.dueDays: Int
+    get() = ChronoUnit.DAYS.between(OffsetDateTime.now(), due).toInt()
 
 data class OwnerGroupUiState(
-    val group: OwnerGroupData.GroupInfo,
-    val subCollections: List<OwnerGroupData.CollectSessionInfo>,
-    val subBalanceEntries: List<OwnerGroupData.BalanceEntryInfo>,
+    val groupDetail: GroupDetail,
+    val groupBalance: Balance,
 ) {
     companion object {
         val empty = OwnerGroupUiState(
-            group = OwnerGroupData.GroupInfo(
+            groupDetail = GroupDetail(
                 id = -1,
                 name = "",
+                description = "",
+                createdAt = OffsetDateTime.now(),
+                updatedAt = OffsetDateTime.now(),
+                recentOpenSessions = emptyList(),
+                recentBalanceEntries = emptyList(),
+                leader = User(
+                    id = -1,
+                    name = "",
+                    email = "",
+                ),
+            ),
+            groupBalance = Balance(
                 currentBalance = 0,
                 expectedBalance = 0,
             ),
-            subCollections = emptyList(),
-            subBalanceEntries = emptyList(),
         )
     }
 }
@@ -71,7 +59,18 @@ class OwnerGroupViewModel @Inject constructor(
     val groupId = savedStateHandle.get<Int>(OwnerGroupHomeRoute.groupId)!!
 
     private var _uiState = MutableStateFlow(OwnerGroupUiState.empty)
-    val uiState = _uiState.asStateFlow()
+    val uiState = _uiState.transform {
+        emit(it.copy(
+            groupDetail = it.groupDetail.copy(
+                recentOpenSessions = it.groupDetail.recentOpenSessions.sortedBy { it.dueDays },
+                recentBalanceEntries = it.groupDetail.recentBalanceEntries.sortedByDescending { it.recordedAt },
+            )
+        ))
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        initialValue = OwnerGroupUiState.empty,
+    )
 
     init {
         refreshUiState()
@@ -79,57 +78,12 @@ class OwnerGroupViewModel @Inject constructor(
 
     fun refreshUiState() {
         viewModelScope.launch {
-            // TODO: This is mock data
-            _uiState.value = OwnerGroupUiState(
-                group = OwnerGroupData.GroupInfo(
-                    id = groupId,
-                    name = "$groupId",
-                    currentBalance = 1000000,
-                    expectedBalance = 2000000,
-                ),
-                subCollections = listOf(
-                    OwnerGroupData.CollectSessionInfo(
-                        id = 1,
-                        name = "Session 1",
-                        description = "Collect session description",
-                        dueDate = LocalDateTime.now(),
-                        dueDays = 10,
-                        isOpen = true,
-                        paidCount = 1,
-                        memberCount = 2,
-                        currentAmount = 100000,
-                        expectedAmount = 200000,
-                    ),
-                    OwnerGroupData.CollectSessionInfo(
-                        id = 2,
-                        name = "Session 2",
-                        description = "Collect session description",
-                        dueDate = LocalDateTime.now(),
-                        dueDays = 10,
-                        isOpen = false,
-                        paidCount = 1,
-                        memberCount = 2,
-                        currentAmount = -100000,
-                        expectedAmount = -200000,
-                    ),
-                ),
-                subBalanceEntries = listOf(
-                    OwnerGroupData.BalanceEntryInfo(
-                        id = 1,
-                        name = "Entry 1",
-                        amount = 10000,
-                        description = "Balance entry very long description",
-                        recordedAt = OffsetDateTime.now(),
-                    ),
-                    OwnerGroupData.BalanceEntryInfo(
-                        id = 2,
-                        name = "Entry 2",
-                        amount = -100000,
-                        description = "Balance entry description",
-                        recordedAt = OffsetDateTime.now(),
-                    ),
-                ),
-            )
+            _uiState.update {
+                it.copy(
+                    groupDetail = groupRepository.getGroupDetail(groupId),
+                    groupBalance = groupRepository.getGroupBalance(groupId),
+                )
+            }
         }
     }
 }
