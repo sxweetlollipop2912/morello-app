@@ -152,7 +152,10 @@ fun NavGraphBuilder.authorizedHomeGraph(
                 },
                 navigateToGroup = { groupId ->
                     navController.navigate("${OwnerGroupHomeRoute.base}/$groupId")
-                }
+                },
+                navigateToLogin = {
+                    navController.navigate(LoginRoute.base)
+                },
             )
         }
         composable(CreateGroupRoute.routeWithArgs) {

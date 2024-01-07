@@ -72,6 +72,12 @@ class AuthorizedHomeViewModel @Inject constructor(
         _uiState.update { it.copy(searchQuery = query) }
     }
 
+    fun onLogout() {
+        viewModelScope.launch {
+            userRepository.logout()
+        }
+    }
+
     fun refreshUiState() {
         viewModelScope.launch {
             _uiState.update { it.copy(state = State.Loading) }

@@ -1,6 +1,7 @@
 package com.example.morello.data_layer.apis
 
 import com.example.morello.data_layer.apis.client.AuthRetrofitClient
+import com.example.morello.data_layer.apis.client.NoAuthRetrofitClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,4 +41,9 @@ class ApiModule {
     @ViewModelScoped
     fun bindUserApi(@AuthRetrofitClient retrofit: Retrofit): UserApi =
         retrofit.create(UserApi::class.java)
+
+    @Provides
+    @ViewModelScoped
+    fun bindUserLoginRegisterApi(@NoAuthRetrofitClient retrofit: Retrofit): UserLoginRegisterApi =
+        retrofit.create(UserLoginRegisterApi::class.java)
 }

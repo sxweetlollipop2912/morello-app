@@ -11,6 +11,7 @@ fun AuthorizedHomeRoute(
     viewModel: AuthorizedHomeViewModel,
     onCreateNewGroup: () -> Unit,
     navigateToGroup: (groupId: Int) -> Unit,
+    navigateToLogin: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
@@ -20,6 +21,10 @@ fun AuthorizedHomeRoute(
         uiState = uiState,
         onGroupSelect = navigateToGroup,
         onProfileClicked = {},
+        onLogOutClicked = {
+            viewModel.onLogout()
+            navigateToLogin()
+        },
         onCreateNewGroup = onCreateNewGroup,
         onRefreshUiState = viewModel::refreshUiState,
         onSearchQueryChanged = viewModel::onSearchQueryChanged,

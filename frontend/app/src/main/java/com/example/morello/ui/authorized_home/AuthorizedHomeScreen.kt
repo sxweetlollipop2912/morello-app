@@ -62,6 +62,7 @@ fun AuthorizedHomeScreen(
     uiState: AuthorizedHomeUiState,
     onCreateNewGroup: () -> Unit,
     onProfileClicked: () -> Unit,
+    onLogOutClicked: () -> Unit,
     onGroupSelect: (groupId: Int) -> Unit,
     onRefreshUiState: () -> Unit,
     onSearchQueryChanged: (String) -> Unit,
@@ -152,7 +153,7 @@ fun AuthorizedHomeScreen(
                         }
                     }
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = onLogOutClicked,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent
                         ),

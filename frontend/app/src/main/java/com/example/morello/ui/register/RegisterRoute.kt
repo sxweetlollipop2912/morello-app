@@ -22,6 +22,7 @@ fun RegisterRoute(
         onShowPasswordChanged = viewModel::updatePasswordVisibility,
         onShowConfirmPasswordChanged = viewModel::updateConfirmPasswordVisibility,
         onAgreeTermsAndPolicyChanged = viewModel::updateTermsAndPolicyAgreeStatus,
+        onRegisterSuccess = switchToLogin,
         onLoginClicked = switchToLogin,
         modifier = modifier,
     )

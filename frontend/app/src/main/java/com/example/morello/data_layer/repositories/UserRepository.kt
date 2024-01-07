@@ -35,8 +35,7 @@ class UserRepository @Inject constructor(
     }
 
     suspend fun logout() {
-        settingDataSource.setAccessToken("")
-        settingDataSource.setRefreshToken("")
+        settingDataSource.clearAllTokens()
     }
 
     suspend fun updateUserDetail(user: User) {
