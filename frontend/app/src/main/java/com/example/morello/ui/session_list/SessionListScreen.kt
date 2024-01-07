@@ -178,13 +178,13 @@ fun ClosedSessionListItem(
                 ),
             )
             Text(
-                text = "Closed on ${session.due.formattedNoTime()}",
+                text = "Last update on ${session.updatedAt.formattedNoTime()}",
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.outline
                 )
             )
             Text(
-                text = "${session.paidCount}/${session.memberCount} collected   ",
+                text = "${session.paidCount}/${session.memberCount} collected",
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.outline
                 )
@@ -207,7 +207,7 @@ fun ClosedSessionListItem(
 
             val expectedAmount = session.expectedAmount
             Text(
-                text = "Total: ${expectedAmount.formattedWithSymbol()}",
+                text = "Expected: ${expectedAmount.formattedWithSymbol()}",
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.outline
                 )
@@ -235,7 +235,7 @@ fun OverdueSessionListItem(
                 ),
             )
             Text(
-                text = "${session.dueDays} day(s) overdue",
+                text = "${-session.dueDays} day(s) overdue",
                 style = MaterialTheme.typography.labelSmall.copy(
                     color = MaterialTheme.colorScheme.error
                 )
@@ -264,7 +264,7 @@ fun OverdueSessionListItem(
 
             val expectedAmount = session.expectedAmount
             Text(
-                text = "Total: ${expectedAmount.formattedWithSymbol()}",
+                text = "Expected: ${expectedAmount.formattedWithSymbol()}",
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.outline
                 )
@@ -321,7 +321,7 @@ fun OngoingSessionListItem(
 
             val expectedAmount = session.expectedAmount
             Text(
-                text = "Total: ${expectedAmount.formattedWithSymbol()}",
+                text = "Expected: ${expectedAmount.formattedWithSymbol()}",
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.outline
                 )

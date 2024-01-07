@@ -215,7 +215,7 @@ fun OwnerGroupScreen(
 
 @Composable
 fun CollectSessionsCard(
-    collectSessions: List<OwnerGroupData.CollectSessionInfo>,
+    collectSessions: List<CollectSession>,
     modifier: Modifier = Modifier,
     onSeeSession: (Int) -> Unit,
     onSeeAll: () -> Unit,
