@@ -8,7 +8,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun GroupSettingsRoute(
-    groupId: Int,
     viewModel: GroupSettingsViewModel,
     onBack: () -> Unit,
     navToMembers: () -> Unit,

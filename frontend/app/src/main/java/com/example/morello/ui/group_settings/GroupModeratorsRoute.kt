@@ -7,7 +7,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun GroupModeratorsRoute(
-    groupId: Int,
     viewModel: GroupSettingsViewModel,
     onBack: () -> Unit
 ) {
