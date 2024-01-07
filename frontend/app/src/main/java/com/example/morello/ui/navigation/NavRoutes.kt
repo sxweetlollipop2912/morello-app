@@ -103,6 +103,8 @@ object GroupMembersRoute: NavRoute {
 object GroupModeratorsRoute: NavRoute {
     override val base: String
         get() = "groupOwnerHome/groupModerators"
+}
+
 object SessionDetailRoute : NavRoute {
     val sessionId
         get() = "sessionId"
