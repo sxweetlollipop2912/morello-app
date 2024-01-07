@@ -1,17 +1,38 @@
 package com.example.morello.data_layer.repositories
 
+import com.example.morello.data_layer.data_sources.RemoteBalanceDataSource
 import com.example.morello.data_layer.data_sources.RemoteGroupDataSource
 import com.example.morello.data_layer.data_sources.RemoteMemberDataSource
+import com.example.morello.data_layer.data_types.Balance
+import com.example.morello.data_layer.data_types.BalanceEntryCreate
 import com.example.morello.data_layer.data_types.Group
+import com.example.morello.data_layer.data_types.GroupDetail
+import com.example.morello.data_layer.data_types.Member
 import javax.inject.Inject
 
 class GroupRepository @Inject constructor(
     private val remoteGroupDataSource: RemoteGroupDataSource,
+    private val remoteBalanceDataSource: RemoteBalanceDataSource,
     private val remoteMemberDataSource: RemoteMemberDataSource,
-    private val userRepository: UserRepository,
 ) {
     suspend fun getGroups(): List<Group> {
         return remoteGroupDataSource.getGroups()
+    }
+
+    suspend fun createBalanceEntry(groupId: Int, balanceEntry: BalanceEntryCreate) {
+        remoteBalanceDataSource.createBalanceEntry(groupId, balanceEntry)
+    }
+
+    suspend fun getGroupDetail(groupId: Int): GroupDetail {
+        return remoteGroupDataSource.getGroup(groupId)
+    }
+
+    suspend fun getGroupBalance(groupId: Int): Balance {
+        return remoteBalanceDataSource.getBalance(groupId)
+    }
+
+    suspend fun getMembers(groupId: Int): List<Member> {
+        return remoteMemberDataSource.getMembers(groupId)
     }
 //    fun getLeader(groupId: Int): Flow<User> = TODO()
 //    suspend fun deleteGroup(groupId: Int): Nothing = TODO()

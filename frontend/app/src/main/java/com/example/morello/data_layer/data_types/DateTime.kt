@@ -1,8 +1,8 @@
 package com.example.morello.data_layer.data_types
 
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
-fun LocalDateTime.formattedNoTime(): String {
+fun OffsetDateTime.formattedNoTime(): String {
     // "2021-10-01T00:00:00".formatted() == "1 Dec 2021"
     // "2021-10-01T12:34:56".formatted() == "1 Dec 2021"
     return "${this.dayOfMonth} ${

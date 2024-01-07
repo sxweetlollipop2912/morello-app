@@ -56,6 +56,8 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.50")
     kapt("com.google.dagger:hilt-android-compiler:2.50")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.+")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.+")
 
     implementation(libs.androidx.material3.android)
     implementation(libs.material.icons.extended)

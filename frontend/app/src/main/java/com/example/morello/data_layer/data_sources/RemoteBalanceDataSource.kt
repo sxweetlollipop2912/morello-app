@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class BalanceDataSource @Inject constructor(
+class RemoteBalanceDataSource @Inject constructor(
     private val balanceApi: BalanceApi,
 ) {
     private val dispatcher = Dispatchers.IO

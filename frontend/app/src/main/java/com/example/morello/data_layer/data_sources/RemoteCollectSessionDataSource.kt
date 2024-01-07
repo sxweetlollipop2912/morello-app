@@ -1,7 +1,6 @@
 package com.example.morello.data_layer.data_sources
 
 import com.example.morello.data_layer.apis.CollectSessionApi
-import com.example.morello.data_layer.apis.client.ErrorResponse
 import com.example.morello.data_layer.data_types.CollectSession
 import com.example.morello.data_layer.data_types.CollectSessionCreate
 import com.example.morello.data_layer.data_types.CollectSessionDetail
