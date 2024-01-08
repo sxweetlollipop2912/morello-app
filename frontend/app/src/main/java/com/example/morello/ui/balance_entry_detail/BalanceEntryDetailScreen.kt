@@ -1,6 +1,7 @@
 package com.example.morello.ui.balance_entry_detail
 
 import android.graphics.DashPathEffect
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -61,6 +62,9 @@ fun BalanceEntryDetailScreen(
         description,
         dateTime,
     ) = uiState
+    BackHandler {
+        onBack()
+    }
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     Scaffold(
         topBar = {
