@@ -52,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.morello.data_layer.data_types.BalanceEntry
@@ -313,12 +314,22 @@ fun CollectSessionsCard(
                             color = MaterialTheme.colorScheme.onSurface
                         ),
                     )
-                    Text(
-                        text = "Due in ${session.dueDays} day(s)",
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.colorScheme.outline
+                    if (session.dueDays < 0) {
+                        Text(
+                            text = "${-session.dueDays} day(s) overdue",
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = MaterialTheme.colorScheme.error,
+                                fontWeight = FontWeight.Bold
+                            )
                         )
-                    )
+                    } else {
+                        Text(
+                            text = "Due in ${session.dueDays} day(s)",
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = MaterialTheme.colorScheme.outline
+                            )
+                        )
+                    }
                     Text(
                         text = "${session.memberCount - session.paidCount} pending payment(s)",
                         style = MaterialTheme.typography.bodySmall.copy(
