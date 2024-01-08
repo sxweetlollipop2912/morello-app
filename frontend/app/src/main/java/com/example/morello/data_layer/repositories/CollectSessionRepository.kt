@@ -32,12 +32,6 @@ class CollectSessionRepository @Inject constructor(
         )
     }
 
-//    fun getCollectSessionEntries(collectSessionId: Int): Flow<List<CollectSessionEntry>> = TODO()
-//    suspend fun updateCollectSessionEntry(collectSessionEntry: CollectSessionEntry): Nothing =
-//        TODO()
-//
-//    fun getCollectSessionById(id: Int): Flow<CollectSession> = TODO()
-//    suspend fun deleteCollectSession(collectSession: CollectSession): Nothing = TODO()
-//    suspend fun updateCollectSession(collectSession: CollectSession): Nothing = TODO()
-//    suspend fun createCollectSession(collectSession: CollectSession): Nothing = TODO()
+    suspend fun closeCollectSession(groupId: Int, sessionId: Int) =
+        remoteCollectSessionDataSource.closeCollectSession(groupId, sessionId)
 }

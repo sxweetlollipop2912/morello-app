@@ -88,6 +88,13 @@ class SessionDetailViewModel @Inject constructor(
         }
     }
 
+    fun onCloseSession() {
+        viewModelScope.launch {
+            collectSessionRepository.closeCollectSession(groupId, sessionId!!)
+            refreshUiState()
+        }
+    }
+
     fun onSearchQueryChanged(query: String) {
         _uiState.update { it.copy(searchQuery = query) }
     }

@@ -10,12 +10,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -34,10 +34,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.morello.data_layer.data_types.formattedWithSymbol
@@ -51,6 +50,7 @@ fun SessionDetailScreen(
     onRefreshUiState: () -> Unit,
     onSearchQueryChanged: (String) -> Unit,
     onToggleMemberStatus: (Int) -> Unit,
+    onCloseSession: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -71,18 +71,41 @@ fun SessionDetailScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopAppBar(title = {
-                Text(
-                    text = sessionDetail.name,
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        color = MaterialTheme.colorScheme.onSurface
+            TopAppBar(
+                title = {
+                    Text(
+                        text = sessionDetail.name,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                     )
-                )
-            }, navigationIcon = {
-                IconButton(onClick = onBack) {
-                    Icon(Icons.Default.ArrowBackIosNew, contentDescription = "Back")
-                }
-            })
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.Default.ArrowBackIosNew, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    if (sessionDetail.isOpen) {
+                        ClickableText(
+                            text = AnnotatedString("Close session"),
+                            onClick = { onCloseSession() },
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = MaterialTheme.colorScheme.error,
+                            )
+                        )
+                    } else {
+                        Text(
+                            text = "Session closed",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = MaterialTheme.colorScheme.outline,
+                                fontStyle = FontStyle.Italic
+                            )
+                        )
+                    }
+                },
+                modifier = Modifier.padding(end = 16.dp)
+            )
         }
     ) { contentPadding ->
         Box(
@@ -103,9 +126,8 @@ fun SessionDetailScreen(
                         )
                     )
                     Text(
-                        text = "/ ${sessionDetail.expectedAmount.formattedWithSymbol()} collected",
+                        text = "over ${sessionDetail.expectedAmount.formattedWithSymbol()} collected",
                         style = MaterialTheme.typography.titleSmall.copy(
-                            textAlign = TextAlign.End,
                             color = MaterialTheme.colorScheme.outline
                         ),
                         modifier = Modifier.fillMaxWidth()
@@ -120,28 +142,27 @@ fun SessionDetailScreen(
                         Text(
                             text = buildAnnotatedString {
                                 withStyle(
-                                    style = MaterialTheme.typography.titleSmall.copy(
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                            alpha = 0.5f
-                                        )
-                                    ).toSpanStyle()
-                                ) {
-                                    append("Paid: ")
-                                }
-                                withStyle(
                                     style = MaterialTheme.typography.displaySmall.copy(
                                         color = MaterialTheme.colorScheme.primary
                                     ).toSpanStyle()
                                 ) {
                                     append("${sessionDetail.paidCount}")
                                 }
-                                append(" / ")
                                 withStyle(
                                     style = MaterialTheme.typography.displaySmall.copy(
                                         color = MaterialTheme.colorScheme.secondary
                                     ).toSpanStyle()
                                 ) {
-                                    append("${sessionDetail.memberCount}")
+                                    append("/${sessionDetail.memberCount}")
+                                }
+                                withStyle(
+                                    style = MaterialTheme.typography.titleSmall.copy(
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                            alpha = 0.5f
+                                        )
+                                    ).toSpanStyle()
+                                ) {
+                                    append(" paid")
                                 }
                             },
                             style = MaterialTheme.typography.titleSmall.copy(
@@ -214,7 +235,11 @@ fun SessionDetailScreen(
                                 sessionDetail.memberStatuses.forEach { member ->
                                     MemberStatusEntry(
                                         name = member.name,
-                                        onClick = { onToggleMemberStatus(member.id) },
+                                        onClick = {
+                                            if (sessionDetail.isOpen) {
+                                                onToggleMemberStatus(member.id)
+                                            }
+                                        },
                                         status = member.status,
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -226,7 +251,7 @@ fun SessionDetailScreen(
                             }
                         }
                     }
-                    Spacer(modifier = Modifier.padding(60.dp))
+                    Spacer(modifier = Modifier.padding(20.dp))
                 }
             }
 

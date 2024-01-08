@@ -20,6 +20,7 @@ fun SessionDetailRoute(
         onRefreshUiState = viewModel::refreshUiState,
         onSearchQueryChanged = viewModel::onSearchQueryChanged,
         onToggleMemberStatus = viewModel::onMemberStatusToggled,
+        onCloseSession = viewModel::onCloseSession,
         onBack = onBack,
     )
 }
