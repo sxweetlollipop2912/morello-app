@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddToPhotos
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -54,6 +55,7 @@ import kotlinx.coroutines.launch
 fun OwnerGroupScreen(
     uiState: OwnerGroupUiState,
     onRefreshUiState: () -> Unit,
+    onSettings: () -> Unit,
     onSeeBalanceEntryClicked: (Int) -> Unit,
     onSeeAllBalanceEntryClicked: () -> Unit,
     onSeeCollectSessionClicked: (Int) -> Unit,
@@ -144,6 +146,10 @@ fun OwnerGroupScreen(
             }, navigationIcon = {
                 IconButton(onClick = onBack) {
                     Icon(Icons.Default.ArrowBackIosNew, contentDescription = "Back")
+                }
+            }, actions = {
+                IconButton(onClick = onSettings) {
+                    Icon(Icons.Default.MoreVert, contentDescription = "Settings")
                 }
             })
         }

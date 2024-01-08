@@ -90,6 +90,21 @@ object BalanceEntryListRoute : NavRoute {
         get() = "balanceEntries"
 }
 
+object GroupSettingsRoute : NavRoute {
+    override val base
+        get() = "settings"
+}
+
+object GroupMembersRoute: NavRoute {
+    override val base: String
+        get() = "members"
+}
+
+object GroupModeratorsRoute: NavRoute {
+    override val base: String
+        get() = "moderators"
+}
+
 object SessionDetailRoute : NavRoute {
     val sessionId
         get() = "sessionId"
