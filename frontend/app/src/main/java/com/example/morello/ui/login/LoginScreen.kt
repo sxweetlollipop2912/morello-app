@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -24,8 +25,15 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,7 +44,7 @@ import com.example.morello.ui.components.SectionDividerWithText
 import com.example.morello.ui.login.LoginState
 import com.example.morello.ui.login.LoginUiState
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(
     uiState: LoginUiState,
@@ -54,6 +62,8 @@ fun LoginScreen(
     if (uiState.loginState == LoginState.Success) {
         onLoginSuccess()
     }
+    val (first, second) = remember { FocusRequester.createRefs() }
+    val focusManager = LocalFocusManager.current
     Scaffold(
         topBar = {
             MorelloTopBar(head = {
@@ -111,14 +121,24 @@ fun LoginScreen(
                 value = uiState.email,
                 singleLine = true,
                 onValueChange = onEmailChanged,
-                modifier = Modifier.fillMaxWidth(),
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Email,
                         contentDescription = "Email",
                     )
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                keyboardActions = KeyboardActions(
+                    onAny = {
+                        focusManager.moveFocus(FocusDirection.Down)
+                    }
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(first)
+                    .focusProperties {
+                        next = second
+                    }
             )
             Spacer(modifier = Modifier.padding(spacing))
             PasswordFormField(
@@ -127,6 +147,9 @@ fun LoginScreen(
                 showPassword = uiState.showPassword,
                 onPasswordChanged = onPasswordChanged,
                 onShowPasswordChanged = onShowPasswordChanged,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(second)
             )
             Spacer(modifier = Modifier.padding(spacing))
             if (uiState.loginState == LoginState.Error) {
@@ -139,15 +162,20 @@ fun LoginScreen(
             Button(
                 onClick = onLoginButtonClicked,
                 enabled = uiState.isLoginButtonEnabled,
-                shape = MaterialTheme.shapes.medium,
+                shape = MaterialTheme.shapes.large,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Login", fontSize = MaterialTheme.typography.headlineSmall.fontSize)
+                Text(
+                    text = "Login",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
                 if (uiState.loginState == LoginState.Loading) {
                     Spacer(modifier = Modifier.padding(4.dp))
                     CircularProgressIndicator(
                         color = MaterialTheme.colorScheme.secondary,
-                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        trackColor = MaterialTheme.colorScheme.onSecondary,
                     )
                 }
             }
