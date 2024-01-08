@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 enum class LoginState {
@@ -81,9 +82,13 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
                     loginState = LoginState.Success,
                     error = null
                 )
+            } catch (e: SocketTimeoutException) {
+                _uiState.value =
+                    _uiState.value.copy(loginState = LoginState.Error, error = "Connection timeout")
             } catch (e: Exception) {
                 _uiState.value =
                     _uiState.value.copy(loginState = LoginState.Error, error = e.message)
+
             }
         }
     }
