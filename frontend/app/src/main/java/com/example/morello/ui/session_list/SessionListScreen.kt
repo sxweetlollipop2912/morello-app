@@ -62,6 +62,7 @@ fun SessionListScreen(
     }
 
     val (
+        isLeader,
         overdueSessions,
         ongoingSessions,
         closedSessions,
@@ -83,8 +84,10 @@ fun SessionListScreen(
                     Icon(Icons.Default.ArrowBackIosNew, contentDescription = "Back")
                 }
             }, actions = {
-                IconButton(onClick = onCreateNewSession) {
-                    Icon(Icons.Default.Add, contentDescription = "New collect session")
+                if (isLeader) {
+                    IconButton(onClick = onCreateNewSession) {
+                        Icon(Icons.Default.Add, contentDescription = "New collect session")
+                    }
                 }
             })
         }
