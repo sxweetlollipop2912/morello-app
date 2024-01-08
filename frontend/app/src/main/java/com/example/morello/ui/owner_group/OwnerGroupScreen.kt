@@ -1,6 +1,16 @@
 package com.example.morello.ui.owner_group
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +50,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.morello.data_layer.data_types.BalanceEntry
@@ -77,61 +88,11 @@ fun OwnerGroupScreen(
             refreshState.endRefresh()
         }
     }
+    var fabExpanded by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier,
         floatingActionButton = {
-            if (isLeader) {
-                Box(
-                    modifier = Modifier
-                        .animateContentSize()
-                        .padding(vertical = 16.dp, horizontal = 8.dp)
-                ) {
-                    var fabExpanded by remember { mutableStateOf(false) }
-
-                    if (!fabExpanded) {
-                        FloatingActionButton(
-                            onClick = { fabExpanded = true },
-                            shape = RoundedCornerShape(50.dp),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = "Expand",
-                            )
-                        }
-                    } else {
-                        Column {
-                            val spacing = 10.dp
-                            FloatingActionButton(
-                                onClick = onAddNewExpenseEntry,
-                                shape = RoundedCornerShape(50.dp),
-                            ) {
-                                Icon(
-                                    Icons.AutoMirrored.Default.TrendingDown,
-                                    contentDescription = "Add new expense"
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(spacing))
-                            FloatingActionButton(
-                                onClick = onAddNewIncomeEntry,
-                                shape = RoundedCornerShape(50.dp),
-                            ) {
-                                Icon(
-                                    Icons.AutoMirrored.Default.TrendingUp,
-                                    contentDescription = "Add new income"
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(spacing))
-                            FloatingActionButton(
-                                onClick = { fabExpanded = false },
-                                shape = RoundedCornerShape(50.dp),
-                            ) {
-                                Icon(Icons.Default.Clear, contentDescription = "Collapse")
-                            }
-                        }
-                    }
-                }
-            }
         },
         topBar = {
             TopAppBar(title = {
@@ -208,6 +169,110 @@ fun OwnerGroupScreen(
                 state = refreshState,
                 modifier = Modifier.align(Alignment.TopCenter),
             )
+        }
+    }
+    val interactionSource = remember {
+        MutableInteractionSource()
+    }
+    if (fabExpanded) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .animateContentSize()
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
+                ) {
+                    fabExpanded = false
+                }
+                .background(
+                    MaterialTheme.colorScheme.background.copy(alpha = 0.8f)
+                )
+        ) {
+        }
+    }
+    if (isLeader) {
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            AnimatedVisibility(
+                visible = !fabExpanded,
+                modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
+                Box(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    FloatingActionButton(
+                        onClick = { fabExpanded = true },
+                        shape = RoundedCornerShape(50.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Expand",
+                        )
+                    }
+                }
+            }
+            val density = LocalDensity.current
+            AnimatedVisibility(
+                visible = fabExpanded,
+                enter = expandVertically() + fadeIn(),
+                exit = fadeOut() + shrinkVertically(),
+                modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    val spacing = 10.dp
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = "New Expense",
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.padding(4.dp))
+                        FloatingActionButton(
+                            onClick = onAddNewExpenseEntry,
+                            shape = RoundedCornerShape(50.dp),
+                        ) {
+                            Icon(
+                                Icons.AutoMirrored.Default.TrendingDown,
+                                contentDescription = "Add new expense"
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(spacing))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = "New Income",
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.padding(4.dp))
+                        FloatingActionButton(
+                            onClick = onAddNewIncomeEntry,
+                            shape = RoundedCornerShape(50.dp),
+                        ) {
+                            Icon(
+                                Icons.AutoMirrored.Default.TrendingUp,
+                                contentDescription = "Add new income"
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(spacing))
+                    FloatingActionButton(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        onClick = { fabExpanded = false },
+                        shape = RoundedCornerShape(50.dp),
+                    ) {
+                        Icon(Icons.Default.Clear, contentDescription = "Collapse")
+                    }
+                }
+            }
         }
     }
 }
