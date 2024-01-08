@@ -2,7 +2,6 @@ package com.example.morello.ui.group_settings
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
@@ -19,6 +18,7 @@ fun GroupSettingsRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     GroupSettingsScreen(
         uiState = uiState,
+        onEditGroupInfo = viewModel::editGroupInfo,
         onBack = onBack,
         navToMembers = navToMembers,
         navToModerators = navToModerators

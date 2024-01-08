@@ -5,10 +5,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.morello.data_layer.data_types.GroupDetail
+import com.example.morello.data_layer.data_types.GroupUpdate
 import com.example.morello.data_layer.data_types.Member
+import com.example.morello.data_layer.data_types.MemberCreate
 import com.example.morello.data_layer.data_types.Moderator
 import com.example.morello.data_layer.data_types.User
 import com.example.morello.data_layer.repositories.GroupRepository
+import com.example.morello.data_layer.repositories.ModeratorRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,6 +50,7 @@ data class GroupSettingsUiState(
 @HiltViewModel
 class GroupSettingsViewModel @Inject constructor(
     private val groupRepository: GroupRepository,
+    private val moderatorRepository: ModeratorRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val groupId = savedStateHandle.get<Int>(OwnerGroupHomeRoute.groupId)!!
@@ -64,48 +68,49 @@ class GroupSettingsViewModel @Inject constructor(
                 it.copy(
                     group = groupRepository.getGroupDetail(groupId),
                     members = groupRepository.getMembers(groupId),
-                    moderators = emptyList()
+                    moderators = moderatorRepository.getModerators(groupId)
                 )
             }
-//            _uiState.value = GroupSettingsUiState(
-//                group = GroupInfo(
-//                    id = groupId,
-//                    name = "Test Group",
-//                    description = "This is a test group",
-//                ),
-//                members = listOf(
-//                    Member(
-//                        id = 123,
-//                        name = "Member 1",
-//                        isArchived = false,
-//                        createdAt = OffsetDateTime.now(),
-//                        updatedAt = OffsetDateTime.now()
-//                    ),
-//                    Member(
-//                        id = 456,
-//                        name = "Member 2",
-//                        isArchived = false,
-//                        createdAt = OffsetDateTime.now(),
-//                        updatedAt = OffsetDateTime.now()
-//                    )
-//                ),
-//                moderators = listOf(
-//                    Moderator(
-//                        id = 1,
-//                        userId = 1234,
-//                        userEmail = "mod1@email.com",
-//                        createdAt = OffsetDateTime.now(),
-//                        updatedAt = OffsetDateTime.now()
-//                    ),
-//                    Moderator(
-//                        id = 2,
-//                        userId = 5678,
-//                        userEmail = "mod2@email.com",
-//                        createdAt = OffsetDateTime.now(),
-//                        updatedAt = OffsetDateTime.now()
-//                    )
-//                )
-//            )
+        }
+    }
+
+    fun editGroupInfo(name: String, description: String) {
+        viewModelScope.launch {
+            groupRepository.updateGroup(
+                groupId, GroupUpdate(
+                    name = name,
+                    description = description
+                )
+            )
+            reload()
+        }
+    }
+
+    fun addModerator(userEmail: String) {
+        viewModelScope.launch {
+            moderatorRepository.addModerator(groupId, userEmail)
+            reload()
+        }
+    }
+
+    fun removeModerator(moderatorId: Int) {
+        viewModelScope.launch {
+            moderatorRepository.removeModerator(groupId, moderatorId)
+            reload()
+        }
+    }
+
+    fun addMember(member: String) {
+        viewModelScope.launch {
+            groupRepository.createMember(groupId, MemberCreate(member))
+            reload()
+        }
+    }
+
+    fun removeMember(memberId: Int) {
+        viewModelScope.launch {
+            groupRepository.deleteMember(groupId, memberId)
+            reload()
         }
     }
 }

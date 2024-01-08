@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddModerator
@@ -24,6 +25,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -31,11 +37,16 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun GroupSettingsScreen(
     uiState: GroupSettingsUiState,
+    onEditGroupInfo: (String, String) -> Unit,
     onBack: () -> Unit,
     navToMembers: () -> Unit,
     navToModerators: () -> Unit
 ) {
-    val (groupInfo, members, moderators) = uiState
+    val (groupInfo, _, _) = uiState
+    var editing by remember { mutableStateOf(false) }
+    var groupName by remember(groupInfo.name) { mutableStateOf(groupInfo.name) }
+    var groupDescription by remember(groupInfo.description) { mutableStateOf(groupInfo.description) }
+
     Scaffold(
         topBar = {
             GroupSettingsTopBar("Settings", onBack = onBack)
@@ -54,11 +65,33 @@ fun GroupSettingsScreen(
                     .padding(horizontal = 16.dp)
             ) {
                 Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                    Text(text = groupInfo.name, style = MaterialTheme.typography.headlineMedium)
-                    Text(text = groupInfo.description, style = MaterialTheme.typography.bodyMedium)
+                    BasicTextField(
+                        value = groupName,
+                        onValueChange = { groupName = it },
+                        readOnly = !editing,
+                        textStyle = MaterialTheme.typography.headlineMedium
+                    )
+                    BasicTextField(
+                        value = groupDescription,
+                        onValueChange = { groupDescription = it },
+                        readOnly = !editing,
+                        textStyle = MaterialTheme.typography.bodyMedium
+                    )
                 }
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Edit")
+                Button(
+                    onClick = {
+                        if (editing) {
+                            onEditGroupInfo(groupName, groupDescription)
+                        }
+                        editing = !editing
+                    },
+                    shape = MaterialTheme.shapes.small,
+                ) {
+                    if (editing) {
+                        Text(text = "Save")
+                    } else {
+                        Text(text = "Edit")
+                    }
                 }
             }
             Column(
@@ -81,12 +114,16 @@ fun GroupSettingsScreen(
                             contentDescription = "Manage moderators"
                         )
                     },
-                    onClick = navToModerators)
+                    onClick = navToModerators
+                )
                 SettingsItem(
                     modifier = Modifier,
                     title = "Leave Group",
                     icon = {
-                        Icon(imageVector = Icons.Default.ExitToApp, contentDescription = "See members")
+                        Icon(
+                            imageVector = Icons.Default.ExitToApp,
+                            contentDescription = "See members"
+                        )
                     },
                     onClick = { /*TODO*/ })
             }

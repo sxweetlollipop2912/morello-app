@@ -10,7 +10,9 @@ import com.example.morello.data_layer.data_types.BalanceEntryCreate
 import com.example.morello.data_layer.data_types.BalanceEntryDetail
 import com.example.morello.data_layer.data_types.Group
 import com.example.morello.data_layer.data_types.GroupDetail
+import com.example.morello.data_layer.data_types.GroupUpdate
 import com.example.morello.data_layer.data_types.Member
+import com.example.morello.data_layer.data_types.MemberCreate
 import javax.inject.Inject
 
 class GroupRepository @Inject constructor(
@@ -34,12 +36,24 @@ class GroupRepository @Inject constructor(
         return remoteGroupDataSource.getGroup(groupId)
     }
 
+    suspend fun updateGroup(groupId: Int, group: GroupUpdate) {
+        remoteGroupDataSource.updateGroup(groupId, group)
+    }
+
     suspend fun getGroupBalance(groupId: Int): Balance {
         return remoteBalanceDataSource.getBalance(groupId)
     }
 
     suspend fun getMembers(groupId: Int): List<Member> {
         return remoteMemberDataSource.getMembers(groupId)
+    }
+
+    suspend fun createMember(groupId: Int, member: MemberCreate) {
+        remoteMemberDataSource.createMember(groupId, member)
+    }
+
+    suspend fun deleteMember(groupId: Int, memberId: Int) {
+        remoteMemberDataSource.deleteMember(groupId, memberId)
     }
 //    fun getLeader(groupId: Int): Flow<User> = TODO()
 //    suspend fun deleteGroup(groupId: Int): Nothing = TODO()

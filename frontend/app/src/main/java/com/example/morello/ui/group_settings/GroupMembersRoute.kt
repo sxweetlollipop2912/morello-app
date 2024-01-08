@@ -15,5 +15,10 @@ fun GroupMembersRoute(
         viewModel.reload()
     }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    GroupMembersScreen(uiState = uiState, onBack = onBack)
+    GroupMembersScreen(
+        uiState = uiState,
+        onBack = onBack,
+        onAddMember = viewModel::addMember,
+        onRemoveMember = viewModel::removeMember
+    )
 }

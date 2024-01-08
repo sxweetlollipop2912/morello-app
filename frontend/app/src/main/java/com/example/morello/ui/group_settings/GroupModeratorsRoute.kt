@@ -14,5 +14,10 @@ fun GroupModeratorsRoute(
         viewModel.reload()
     }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    GroupModeratorsScreen(uiState = uiState, onBack = onBack)
+    GroupModeratorsScreen(
+        uiState = uiState,
+        onBack = onBack,
+        onAddModerator = viewModel::addModerator,
+        onRemoveModerator = viewModel::removeModerator
+    )
 }
