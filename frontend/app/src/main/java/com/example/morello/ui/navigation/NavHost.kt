@@ -217,7 +217,7 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
                 onBack = {
                     navController.popBackStack()
                 },
-                modifier = Modifier.padding(horizontal = 10.dp),
+                modifier = Modifier.padding(horizontal = 16.dp),
             )
         }
     }
