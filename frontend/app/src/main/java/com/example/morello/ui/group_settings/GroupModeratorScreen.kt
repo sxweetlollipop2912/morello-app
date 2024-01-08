@@ -103,7 +103,6 @@ fun GroupModeratorTopBar(
     onAddModerator: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scope = rememberCoroutineScope()
     TopAppBar(title = {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()
