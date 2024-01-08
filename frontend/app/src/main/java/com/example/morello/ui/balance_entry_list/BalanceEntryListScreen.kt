@@ -64,6 +64,7 @@ fun BalanceEntryListScreen(
     }
 
     val (
+        isLeader,
         entries,
         searchQuery,
     ) = uiState
@@ -83,8 +84,10 @@ fun BalanceEntryListScreen(
                     Icon(Icons.Default.ArrowBackIosNew, contentDescription = "Back")
                 }
             }, actions = {
-                IconButton(onClick = onCreateNewBalanceEntry) {
-                    Icon(Icons.Default.Add, contentDescription = "New collect session")
+                if (isLeader) {
+                    IconButton(onClick = onCreateNewBalanceEntry) {
+                        Icon(Icons.Default.Add, contentDescription = "New collect session")
+                    }
                 }
             })
         }
