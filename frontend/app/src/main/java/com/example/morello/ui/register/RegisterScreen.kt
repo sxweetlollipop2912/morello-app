@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -24,8 +25,15 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -34,6 +42,7 @@ import com.example.morello.ui.components.MorelloTopBar
 import com.example.morello.ui.components.PasswordFormField
 import com.example.morello.ui.components.SectionDividerWithText
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RegisterScreen(
     uiState: RegisterUiState,
@@ -52,6 +61,8 @@ fun RegisterScreen(
     if (uiState.registerState == RegisterState.Success) {
         onRegisterSuccess()
     }
+    val (first, second, third, forth) = remember { FocusRequester.createRefs() }
+    val focusManager = LocalFocusManager.current
     Scaffold(
         topBar = {
             MorelloTopBar(head = {
@@ -108,14 +119,24 @@ fun RegisterScreen(
                 singleLine = true,
                 value = uiState.email,
                 onValueChange = onEmailChanged,
-                modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                keyboardActions = KeyboardActions(
+                    onAny = {
+                        focusManager.moveFocus(FocusDirection.Down)
+                    }
+                ),
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.MailOutline,
                         contentDescription = "Email",
                     )
-                }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(first)
+                    .focusProperties {
+                        next = second
+                    }
             )
             Spacer(modifier = Modifier.padding(spacing))
             OutlinedTextField(
@@ -124,14 +145,24 @@ fun RegisterScreen(
                 singleLine = true,
                 value = uiState.username,
                 onValueChange = onNameChanged,
-                modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                keyboardActions = KeyboardActions(
+                    onAny = {
+                        focusManager.moveFocus(FocusDirection.Down)
+                    }
+                ),
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Person,
                         contentDescription = "Username",
                     )
-                }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(second)
+                    .focusProperties {
+                        next = third
+                    },
             )
             Spacer(modifier = Modifier.padding(spacing))
             PasswordFormField(
@@ -140,6 +171,17 @@ fun RegisterScreen(
                 showPassword = uiState.showPassword,
                 onPasswordChanged = onPasswordChanged,
                 onShowPasswordChanged = onShowPasswordChanged,
+                keyboardActions = KeyboardActions(
+                    onAny = {
+                        focusManager.moveFocus(FocusDirection.Down)
+                    }
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(third)
+                    .focusProperties {
+                        next = forth
+                    },
             )
             Spacer(modifier = Modifier.padding(spacing))
             PasswordFormField(
@@ -148,6 +190,14 @@ fun RegisterScreen(
                 showPassword = uiState.showConfirmPassword,
                 onPasswordChanged = onConfirmPasswordChanged,
                 onShowPasswordChanged = onShowConfirmPasswordChanged,
+                keyboardActions = KeyboardActions(
+                    onAny = {
+                        focusManager.moveFocus(FocusDirection.Down)
+                    }
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(forth)
             )
             Spacer(modifier = Modifier.padding(spacing))
             Row {
