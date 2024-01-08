@@ -69,6 +69,18 @@ class RemoteCollectSessionDataSource @Inject constructor(
         }
     }
 
+    suspend fun closeCollectSession(groupId: Int, sessionId: Int) {
+        withContext(dispatcher) {
+            val res = collectSessionApi.closeCollectSession(
+                groupId,
+                sessionId
+            )
+            if (!res.isSuccessful) {
+                throw Exception("Error closing collect session")
+            }
+        }
+    }
+
     suspend fun deleteCollectSession(groupId: Int, sessionId: Int) {
         withContext(dispatcher) {
             val res = collectSessionApi.deleteCollectSession(

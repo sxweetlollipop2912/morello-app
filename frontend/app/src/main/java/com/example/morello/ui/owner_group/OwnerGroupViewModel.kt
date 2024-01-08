@@ -9,6 +9,7 @@ import com.example.morello.data_layer.data_types.CollectSession
 import com.example.morello.data_layer.data_types.GroupDetail
 import com.example.morello.data_layer.data_types.User
 import com.example.morello.data_layer.repositories.GroupRepository
+import com.example.morello.data_layer.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,11 +25,13 @@ val CollectSession.dueDays: Int
     get() = ChronoUnit.DAYS.between(OffsetDateTime.now(), due).toInt()
 
 data class OwnerGroupUiState(
+    val isLeader: Boolean,
     val groupDetail: GroupDetail,
     val groupBalance: Balance,
 ) {
     companion object {
         val empty = OwnerGroupUiState(
+            isLeader = false,
             groupDetail = GroupDetail(
                 id = -1,
                 name = "",
@@ -54,6 +57,7 @@ data class OwnerGroupUiState(
 @HiltViewModel
 class OwnerGroupViewModel @Inject constructor(
     val groupRepository: GroupRepository,
+    val userRepository: UserRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val groupId = savedStateHandle.get<Int>(OwnerGroupHomeRoute.groupId)!!
@@ -80,8 +84,16 @@ class OwnerGroupViewModel @Inject constructor(
 
     fun refreshUiState() {
         viewModelScope.launch {
+            val user = userRepository.fetchUserDetail()
+            val groupDetail = groupRepository.getGroupDetail(groupId)
+            val isLeader = if (user.id != groupDetail.leader.id) {
+                false
+            } else {
+                true
+            }
             _uiState.update {
                 it.copy(
+                    isLeader = isLeader,
                     groupDetail = groupRepository.getGroupDetail(groupId),
                     groupBalance = groupRepository.getGroupBalance(groupId),
                 )
