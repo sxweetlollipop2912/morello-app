@@ -108,7 +108,7 @@ fun RegisterScreen(
                 .fillMaxSize(),
         ) {
             val spacing = 12.dp
-            Text(text = "Sign in", style = MaterialTheme.typography.headlineLarge)
+            Text(text = "Sign up", style = MaterialTheme.typography.headlineLarge)
             Text(
                 text = "Hello there! Let's create your account.",
                 style = MaterialTheme.typography.bodySmall
