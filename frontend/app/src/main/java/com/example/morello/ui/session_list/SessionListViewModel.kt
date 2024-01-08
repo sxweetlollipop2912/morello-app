@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.morello.data_layer.data_types.CollectSession
 import com.example.morello.data_layer.repositories.CollectSessionRepository
+import com.example.morello.data_layer.repositories.GroupRepository
+import com.example.morello.data_layer.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,6 +23,7 @@ val CollectSession.dueDays: Int
     get() = DAYS.between(OffsetDateTime.now(), due).toInt()
 
 data class SessionListUiState(
+    val isLeader: Boolean = false,
     val overdueSessions: List<CollectSession>,
     val ongoingSessions: List<CollectSession>,
     val closedSessions: List<CollectSession>,
@@ -38,7 +41,9 @@ data class SessionListUiState(
 
 @HiltViewModel
 class SessionListViewModel @Inject constructor(
-    val sessionRepository: CollectSessionRepository,
+    private val sessionRepository: CollectSessionRepository,
+    private val groupRepository: GroupRepository,
+    private val userRepository: UserRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val groupId = savedStateHandle.get<Int>(OwnerGroupHomeRoute.groupId)!!
@@ -74,7 +79,15 @@ class SessionListViewModel @Inject constructor(
 
     fun refreshUiState() {
         viewModelScope.launch {
+            val groupDetail = groupRepository.getGroupDetail(groupId)
+            val userDetail = userRepository.fetchUserDetail()
+            val isLeader = groupDetail.leader.id == userDetail.id
             _sessions.update { sessionRepository.getCollectSessions(groupId) }
+            _uiState.update {
+                it.copy(
+                    isLeader = isLeader,
+                )
+            }
         }
     }
 }

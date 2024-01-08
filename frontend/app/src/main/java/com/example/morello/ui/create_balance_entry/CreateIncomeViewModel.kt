@@ -327,7 +327,7 @@ class CreateIncomeViewModel @Inject constructor(
                             name = it.name.value,
                             description = it.description,
                             amount = it.amount,
-                            recordedAt = OffsetDateTime.now(),
+                            recordedAt = it.dateTime,
                         )
                     },
                 )

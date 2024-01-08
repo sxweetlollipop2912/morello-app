@@ -15,6 +15,8 @@ from .serializers import (
 )
 from group.mixins import GroupPermissionMixin
 from drf_spectacular.utils import extend_schema
+from rest_framework.permissions import IsAuthenticated
+from group.permissions import IsGroupAdminOrModerator
 
 # Create your views here.
 

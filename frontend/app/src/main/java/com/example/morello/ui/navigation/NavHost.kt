@@ -82,8 +82,10 @@ fun NavGraphBuilder.ownerGroupHomeGraph(
                     navController.navigate(SessionListRoute.base)
                 },
                 onCollectSessionDetail = { sessionId ->
-                    Log.d("NavHost", "Moving to: ${SessionDetailRoute.base}/$sessionId")
                     navController.navigate("${SessionDetailRoute.base}/$sessionId")
+                },
+                onBalanceEntryDetail = { entryId ->
+                    navController.navigate("${BalanceEntryDetailRoute.base}/$entryId")
                 },
                 onBack = {
                     navController.popBackStack()

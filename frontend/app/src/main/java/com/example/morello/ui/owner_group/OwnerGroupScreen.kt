@@ -14,10 +14,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingDown
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddToPhotos
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -62,6 +66,7 @@ fun OwnerGroupScreen(
     modifier: Modifier = Modifier,
 ) {
     val (
+        isLeader,
         groupDetail,
         groupBalance,
     ) = uiState
@@ -78,59 +83,53 @@ fun OwnerGroupScreen(
     Scaffold(
         modifier = modifier,
         floatingActionButton = {
-            Box(
-                modifier = Modifier
-                    .animateContentSize()
-                    .padding(vertical = 16.dp, horizontal = 8.dp)
-            ) {
-                var fabExpanded by remember { mutableStateOf(false) }
+            if (isLeader) {
+                Box(
+                    modifier = Modifier
+                        .animateContentSize()
+                        .padding(vertical = 16.dp, horizontal = 8.dp)
+                ) {
+                    var fabExpanded by remember { mutableStateOf(false) }
 
-                if (!fabExpanded) {
-                    FloatingActionButton(
-                        onClick = { fabExpanded = true },
-                        shape = RoundedCornerShape(50.dp),
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Expand",
-                        )
-                    }
-                } else {
-                    Column {
-                        val spacing = 10.dp
+                    if (!fabExpanded) {
                         FloatingActionButton(
-                            onClick = { /*TODO*/ },
+                            onClick = { fabExpanded = true },
                             shape = RoundedCornerShape(50.dp),
                         ) {
-                            Icon(Icons.Default.Add, contentDescription = "Expand")
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Expand",
+                            )
                         }
-                        Spacer(modifier = Modifier.height(spacing))
-                        FloatingActionButton(
-                            onClick = { /*TODO*/ },
-                            shape = RoundedCornerShape(50.dp),
-                        ) {
-                            Icon(Icons.Default.Add, contentDescription = "Expand")
-                        }
-                        Spacer(modifier = Modifier.height(spacing))
-                        FloatingActionButton(
-                            onClick = onAddNewExpenseEntry,
-                            shape = RoundedCornerShape(50.dp),
-                        ) {
-                            Icon(Icons.Default.Add, contentDescription = "Add new expense")
-                        }
-                        Spacer(modifier = Modifier.height(spacing))
-                        FloatingActionButton(
-                            onClick = onAddNewIncomeEntry,
-                            shape = RoundedCornerShape(50.dp),
-                        ) {
-                            Icon(Icons.Default.Add, contentDescription = "Add new income")
-                        }
-                        Spacer(modifier = Modifier.height(spacing))
-                        FloatingActionButton(
-                            onClick = { fabExpanded = false },
-                            shape = RoundedCornerShape(50.dp),
-                        ) {
-                            Icon(Icons.Default.Clear, contentDescription = "Collapse")
+                    } else {
+                        Column {
+                            val spacing = 10.dp
+                            FloatingActionButton(
+                                onClick = onAddNewExpenseEntry,
+                                shape = RoundedCornerShape(50.dp),
+                            ) {
+                                Icon(
+                                    Icons.AutoMirrored.Default.TrendingDown,
+                                    contentDescription = "Add new expense"
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(spacing))
+                            FloatingActionButton(
+                                onClick = onAddNewIncomeEntry,
+                                shape = RoundedCornerShape(50.dp),
+                            ) {
+                                Icon(
+                                    Icons.AutoMirrored.Default.TrendingUp,
+                                    contentDescription = "Add new income"
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(spacing))
+                            FloatingActionButton(
+                                onClick = { fabExpanded = false },
+                                shape = RoundedCornerShape(50.dp),
+                            ) {
+                                Icon(Icons.Default.Clear, contentDescription = "Collapse")
+                            }
                         }
                     }
                 }

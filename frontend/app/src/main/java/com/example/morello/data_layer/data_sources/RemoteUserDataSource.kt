@@ -13,6 +13,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+class WrongUsernameOrPasswordException : Exception("Wrong username or password")
+
 class RemoteUserDataSource @Inject constructor(
     private val balanceApi: BalanceApi,
     private val userApi: UserApi,
@@ -23,11 +25,13 @@ class RemoteUserDataSource @Inject constructor(
     suspend fun login(username: String, password: String): LoginResponse {
         return withContext(dispatcher) {
             val res = userLoginRegisterApi.login(LoginRequest(username, password))
-            Log.d("RemoteUserDataSource", res.toString())
+            if (res.code() == 401) {
+                throw WrongUsernameOrPasswordException()
+            }
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
-                throw Exception(res.errorBody().toString())
+                throw Exception("Fail to connect to server")
             }
         }
     }
