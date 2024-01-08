@@ -14,7 +14,7 @@ fun BalanceEntryDetailRoute(
     modifier: Modifier,
 ) {
     val uiState = viewModel.uiState
-    LaunchedEffect(key1 = uiState.state) {
+    LaunchedEffect(key1 = groupId, key2 = entryId) {
         when (uiState.state) {
             State.Uninitialized -> {
                 viewModel.init(groupId, entryId)
@@ -25,7 +25,10 @@ fun BalanceEntryDetailRoute(
     }
     BalanceEntryDetailScreen(
         uiState = uiState,
-        onBack = onBack,
+        onBack = {
+            viewModel.finish()
+            onBack()
+        },
         modifier = modifier,
     )
 }

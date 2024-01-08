@@ -46,6 +46,9 @@ class BalanceEntryDetailViewModel @Inject constructor(
     var uiState: BalanceEntryDetailUiState by mutableStateOf(BalanceEntryDetailUiState.Empty)
         private set
 
+    fun finish() {
+        uiState = uiState.copy(state = State.Uninitialized)
+    }
     fun init(groupId: Int, entryId: Int) {
         uiState = uiState.copy(state = State.Loading)
         viewModelScope.launch {

@@ -1,6 +1,7 @@
 package com.example.morello.ui.balance_entry_detail
 
 import android.graphics.DashPathEffect
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -61,6 +63,9 @@ fun BalanceEntryDetailScreen(
         description,
         dateTime,
     ) = uiState
+    BackHandler {
+        onBack()
+    }
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     Scaffold(
         topBar = {
@@ -68,7 +73,7 @@ fun BalanceEntryDetailScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Default.ArrowBackIos,
+                            imageVector = Icons.Default.ArrowBackIosNew,
                             contentDescription = "Back"
                         )
                     }
