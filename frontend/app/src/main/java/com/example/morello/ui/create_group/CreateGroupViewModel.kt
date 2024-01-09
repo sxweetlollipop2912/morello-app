@@ -2,23 +2,32 @@ package com.example.morello.ui.create_group
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.morello.data_layer.data_types.GroupCreate
+import com.example.morello.data_layer.data_types.MemberCreate
 import com.example.morello.data_layer.repositories.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 data class CreateGroupUiState(
-    val groupName: String = "",
-    val membersList: List<String> = emptyList(),
+    val group: GroupCreate,
+    val membersList: List<String>,
     val submitError: String = "",
     val state: State = State.Idle,
 ) {
 
     companion object {
-        val new get() = CreateGroupUiState()
+        val new get() = CreateGroupUiState(
+            group = GroupCreate(
+                name = "",
+                description = "",
+            ),
+            membersList = emptyList(),
+        )
     }
 }
 
@@ -39,59 +48,67 @@ class CreateGroupViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     fun reset() {
-        _uiState.value = CreateGroupUiState.new
+        _uiState.update { CreateGroupUiState.new }
     }
 
     fun onGroupNameChanged(groupName: String) {
-        _uiState.value = _uiState.value.copy(groupName = groupName)
+        _uiState.update {
+            it.copy(
+                group = it.group.copy(name = groupName)
+            )
+        }
+    }
+
+    fun onDescriptionChanged(description: String) {
+        _uiState.update {
+            it.copy(
+                group = it.group.copy(description = description)
+            )
+        }
     }
 
     fun onMembersListChanged(membersList: List<String>) {
-        _uiState.value = _uiState.value.copy(membersList = membersList)
+        _uiState.update { it.copy(membersList = membersList) }
     }
 
     fun onSubmit() {
-        _uiState.value = _uiState.value.copy(state = State.Loading)
+        _uiState.update { it.copy(state = State.Loading) }
         viewModelScope.launch {
             try {
-//                groupRepository.createNewGroup(
-//                    newGroupRequest = NewGroupRequest(
-//                        name = _uiState.value.groupName,
-//                        description = "",
-//                    ),
-//                    members = _uiState.value.membersList.map {
-//                        NewMemberRequest(it)
-//                    }
-//                )
-                _uiState.value = _uiState.value.copy(state = State.Success)
+                val groupDetail = groupRepository.createGroup(_uiState.value.group)
+                val groupId = groupDetail.id
+                _uiState.value.membersList.forEach {
+                    groupRepository.createMember(groupId, MemberCreate(it))
+                }
+
+                _uiState.update { it.copy(state = State.Success) }
             } catch (e: Exception) {
-                _uiState.value =
-                    _uiState.value.copy(state = State.Error, submitError = e.message ?: "")
+                _uiState.update { it.copy(state = State.Error, submitError = e.message ?: "") }
             }
         }
     }
 
-    fun isEmpty(): Boolean {
+    private fun isEmpty(): Boolean {
         val (
-            groupName,
+            group,
             membersList,
             _,
             _,
         ) = _uiState.value
-        return groupName.isEmpty() && membersList.isEmpty()
+        return group.name.isEmpty() && group.description.isEmpty() && membersList.isEmpty()
     }
 
     fun tryToGoBack() {
         if (!isEmpty()) {
-            _uiState.value = _uiState.value.copy(state = State.TryToGoBack)
+            _uiState.update { it.copy(state = State.TryToGoBack) }
         } else {
-            _uiState.value = _uiState.value.copy(state = State.ConfirmGoBack)
+            _uiState.update { it.copy(state = State.ConfirmGoBack) }
         }
     }
 
     fun confirmGoBack() {
         if (_uiState.value.state == State.TryToGoBack) {
-            _uiState.value = _uiState.value.copy(state = State.ConfirmGoBack)
+            _uiState.update { it.copy(state = State.ConfirmGoBack) }
         } else {
             throw IllegalStateException(
                 "confirm_go_back() called when state is not TryToGoBack"
@@ -101,7 +118,7 @@ class CreateGroupViewModel @Inject constructor(
 
     fun cancelGoBack() {
         if (_uiState.value.state == State.TryToGoBack) {
-            _uiState.value = _uiState.value.copy(state = State.Idle)
+            _uiState.update { it.copy(state = State.Idle) }
         } else {
             throw IllegalStateException(
                 "cancel_go_back() called when state is not ConfirmGoBack"

@@ -24,6 +24,7 @@ fun CreateGroupRoute(
     CreateGroupScreen(
         uiState = uiState,
         onGroupNameChanged = viewModel::onGroupNameChanged,
+        onDescriptionChanged = viewModel::onDescriptionChanged,
         onMembersListChanged = viewModel::onMembersListChanged,
         onSubmit = {
             viewModel.onSubmit()
