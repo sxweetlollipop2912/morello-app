@@ -1,7 +1,10 @@
 package com.example.morello.ui.create_group
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +22,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -62,9 +66,6 @@ fun CreateGroupScreen(
 ) {
     var isAddingMember by rememberSaveable { mutableStateOf(false) }
     var editingMemberName by rememberSaveable { mutableStateOf("") }
-
-    val focusManager = LocalFocusManager.current
-    val (first, second) = remember { FocusRequester.createRefs() }
 
     BackHandler(onBack = onBack)
     if (uiState.state == State.TryToGoBack) {
@@ -124,44 +125,31 @@ fun CreateGroupScreen(
             val titleTextStyle = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Bold,
             )
-            Text(text = "Group name", style = titleTextStyle)
+            Text(text = "Enter group details", style = titleTextStyle)
+            Spacer(modifier = Modifier.padding(3.dp))
             OutlinedTextField(
+                label = { Text(text = "Group name") },
                 value = uiState.group.name,
                 onValueChange = onGroupNameChanged,
                 shape = MaterialTheme.shapes.medium,
                 singleLine = true,
-                keyboardActions = KeyboardActions(
-                    onAny = {
-                        focusManager.moveFocus(FocusDirection.Down)
-                    }
-                ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .handleReopenKeyboard(focusManager, first)
-                    .focusRequester(first)
-                    .focusProperties { next = second }
             )
-            Spacer(modifier = Modifier.padding(8.dp))
-            Text(text = "Description", style = titleTextStyle)
+            Spacer(modifier = Modifier.padding(5.dp))
             OutlinedTextField(
+                label = { Text(text = "Description") },
                 value = uiState.group.description,
                 onValueChange = onDescriptionChanged,
                 shape = MaterialTheme.shapes.medium,
-                keyboardActions = KeyboardActions(
-                    onAny = {
-                        focusManager.moveFocus(FocusDirection.Down)
-                    }
-                ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .handleReopenKeyboard(focusManager, second)
-                    .focusRequester(second)
             )
             Spacer(modifier = Modifier.padding(8.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(text = "Members (${uiState.membersList.size})")
+                Text(text = "Members (${uiState.membersList.size})", style = titleTextStyle)
                 IconButton(onClick = {
                     isAddingMember = true
                 }) {
