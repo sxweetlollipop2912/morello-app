@@ -1,28 +1,36 @@
-package com.example.morello.ui.theme.login
+package com.example.morello.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.morello.data_layer.repositories.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
+import javax.inject.Inject
+
+enum class LoginState {
+    Input,
+    Loading,
+    Success,
+    Error,
+}
 
 data class LoginUiState(
     val email: String,
     val password: String,
-    val isLoading: Boolean,
     val isLoginButtonEnabled: Boolean,
     val rememberMe: Boolean = false,
     val showPassword: Boolean = false,
+    val loginState: LoginState = LoginState.Input,
     val error: String?,
 ) {
     companion object {
         val Empty = LoginUiState(
             email = "",
             password = "",
-            isLoading = false,
             isLoginButtonEnabled = false,
             rememberMe = false,
             error = null
@@ -30,7 +38,8 @@ data class LoginUiState(
     }
 }
 
-class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState.Empty)
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
@@ -56,19 +65,31 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
         }
     }
 
-    fun setRememberMe(rememberMe: Boolean) {
+    fun updatePasswordVisibility(showPassword: Boolean) {
+        _uiState.value = _uiState.value.copy(showPassword = showPassword)
+    }
+
+    fun updateRememberMeStatus(rememberMe: Boolean) {
         _uiState.value = _uiState.value.copy(rememberMe = rememberMe)
     }
 
     fun submitLogin() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            _uiState.value = _uiState.value.copy(loginState = LoginState.Loading)
             try {
                 userRepository.login(_uiState.value.email, _uiState.value.password)
+                _uiState.value = _uiState.value.copy(
+                    loginState = LoginState.Success,
+                    error = null
+                )
+            } catch (e: SocketTimeoutException) {
+                _uiState.value =
+                    _uiState.value.copy(loginState = LoginState.Error, error = "Connection timeout")
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(error = e.message)
+                _uiState.value =
+                    _uiState.value.copy(loginState = LoginState.Error, error = e.message)
+
             }
-            _uiState.value = _uiState.value.copy(isLoading = false)
         }
     }
 }

@@ -5,25 +5,29 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.example.morello.ui.theme.login.LoginScreen
-import com.example.morello.ui.theme.login.LoginViewModel
 
 @Composable
 fun LoginRoute(
     viewModel: LoginViewModel,
+    switchToSignIn: () -> Unit,
+    switchToForgotPassword: () -> Unit,
+    onGoogleLoginRequest: () -> Unit,
+    onFacebookLoginRequest: () -> Unit,
+    onLoginSuccess: () -> Unit,
     modifier: Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     LoginScreen(
         uiState = uiState,
-        onEmailChanged = { viewModel.updateEmail(it) },
-        onPasswordChanged = { viewModel.updatePassword(it) },
-        onLoginButtonClicked = { viewModel.submitLogin() },
-        onForgotPasswordClicked = { /*TODO*/ },
-        onRegisterClicked = { /*TODO*/ },
-        onRememberMeChanged = { viewModel.setRememberMe(it) },
-        onBack = { /*TODO*/ },
-        onShowPasswordChanged = { /*TODO*/ },
-        onGoogleLoginClicked = { /*TODO*/ },
+        onEmailChanged = viewModel::updateEmail,
+        onPasswordChanged = viewModel::updatePassword,
+        onLoginButtonClicked = viewModel::submitLogin,
+        onForgotPasswordClicked = switchToForgotPassword,
+        onRememberMeChanged = viewModel::updateRememberMeStatus,
+        onShowPasswordChanged = viewModel::updatePasswordVisibility,
+        onSignInClicked = switchToSignIn,
+        onGoogleLoginClicked = onGoogleLoginRequest,
+        onLoginSuccess = onLoginSuccess,
         modifier = modifier,
     )
 }

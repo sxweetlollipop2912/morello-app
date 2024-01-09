@@ -15,6 +15,8 @@ from .serializers import (
 )
 from group.mixins import GroupPermissionMixin
 from drf_spectacular.utils import extend_schema
+from rest_framework.permissions import IsAuthenticated
+from group.permissions import IsGroupAdminOrModerator
 
 # Create your views here.
 
@@ -42,7 +44,10 @@ class CollectSessionViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
-        serializer = CollectSessionCreateSerializer(data=request.data)
+        group_id = self.kwargs["group_pk"]
+        serializer = CollectSessionCreateSerializer(
+            data=request.data, context={"group_id": group_id}
+        )
         serializer.is_valid(raise_exception=True)
         collect_session = serializer.save()
         serializer = CollectSessionDetailSerializer(
@@ -82,7 +87,7 @@ class CollectSessionViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
         session = self.get_object()
         session.close()
         return Response(
-            {"success": "Collect session closed"}, status=status.HTTP_200_OK
+            {"message": "Collect session closed"}, status=status.HTTP_200_OK
         )
 
     @action(
@@ -96,11 +101,11 @@ class CollectSessionViewSet(GroupPermissionMixin, viewsets.ModelViewSet):
         collect_entry = session.collect_entries.filter(member_id=member_id).first()
         if not collect_entry:
             return Response(
-                {"error": "Member not found in this session"},
+                {"message": "Member not found in this session"},
                 status=status.HTTP_404_NOT_FOUND,
             )
 
         serializer = CollectEntryUpdateSerializer(collect_entry, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({"success": "Member status updated"}, status=status.HTTP_200_OK)
+        return Response({"message": "Member status updated"}, status=status.HTTP_200_OK)

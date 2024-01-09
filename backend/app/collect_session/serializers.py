@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import CollectSession, CollectEntry
 from member.models import Member
-from django.db.models import F
 
 
 class CollectSessionListSerializer(serializers.ModelSerializer):
@@ -80,9 +79,17 @@ class CollectSessionDetailSerializer(serializers.ModelSerializer):
         return obj.get_expected_amount()
 
     def get_member_statuses(self, obj):
-        return obj.collect_entries.annotate(
-            id=F("member_id_id"), name=F("member_id__name"), status=F("status")
-        ).values("id", "name", "status")
+        entries = obj.collect_entries.values(
+            "member_id_id", "member_id__name", "status"
+        )
+        return [
+            {
+                "id": entry["member_id_id"],
+                "name": entry["member_id__name"],
+                "status": entry["status"],
+            }
+            for entry in entries
+        ]
 
 
 class CollectSessionCreateSerializer(serializers.ModelSerializer):
@@ -103,7 +110,10 @@ class CollectSessionCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         member_ids = validated_data.pop("member_ids")
-        collect_session = CollectSession.objects.create(**validated_data)
+        group_id = self.context["group_id"]
+        collect_session = CollectSession.objects.create(
+            group_id_id=group_id, **validated_data
+        )
         for member_id in member_ids:
             CollectEntry.objects.create(session_id=collect_session, member_id=member_id)
         return collect_session

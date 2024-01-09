@@ -1,57 +1,37 @@
 package com.example.morello.data_layer.data_sources
 
-import com.example.morello.data_layer.data_sources.apis.CollectSessionApi
-import com.example.morello.data_layer.data_sources.apis.ModeratorApi
-import com.example.morello.data_layer.data_sources.apis.client.ErrorResponse
-import com.example.morello.data_layer.data_sources.data_types.CollectSession
-import com.example.morello.data_layer.data_sources.data_types.CollectSessionEntry
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
+import com.example.morello.data_layer.apis.CollectSessionApi
+import com.example.morello.data_layer.data_types.CollectEntryUpdate
+import com.example.morello.data_layer.data_types.CollectSession
+import com.example.morello.data_layer.data_types.CollectSessionCreate
+import com.example.morello.data_layer.data_types.CollectSessionDetail
+import com.example.morello.data_layer.data_types.CollectSessionUpdate
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class RemoteCollectSessionDataSource(
-    private val moderatorApi: ModeratorApi,
+class RemoteCollectSessionDataSource @Inject constructor(
     private val collectSessionApi: CollectSessionApi,
-    private val ioDispatcher: CoroutineDispatcher,
 ) {
-    suspend fun getCollectSessionEntries(
-        groupId: Int,
-        collectSessionId: Int
-    ): List<CollectSessionEntry> {
-        return withContext(ioDispatcher) {
-            val res =
-                collectSessionApi.getCollectSessionEntriesBySessionId(groupId, collectSessionId)
-                    .execute()
+    private val dispatcher = Dispatchers.IO
+
+    suspend fun getCollectSessions(groupId: Int): List<CollectSession> {
+        return withContext(dispatcher) {
+            val res = collectSessionApi.getCollectSessions(groupId)
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
-                val err = ErrorResponse.fromResponseBody(res.errorBody())
-                throw Exception("Error getting collect session entries")
+                throw Exception("Error getting collect sessions")
             }
         }
     }
 
-    suspend fun updateCollectSessionEntry(
-        groupId: Int,
-        sessionId: Int,
-        entry: CollectSessionEntry
-    ) {
-        withContext(ioDispatcher) {
-            val res = collectSessionApi.updateCollectSessionEntry(
+    suspend fun getCollectSessionDetail(groupId: Int, sessionId: Int): CollectSessionDetail {
+        return withContext(dispatcher) {
+            val res = collectSessionApi.getCollectSessionDetail(
                 groupId,
-                sessionId,
-                entry.id,
-                entry
-            ).execute()
-            if (!res.isSuccessful) {
-                throw Exception("Error updating collect session entry")
-            }
-        }
-    }
-
-    suspend fun getCollectSessions(groupId: Int): List<CollectSession> {
-        return withContext(ioDispatcher) {
-            val res = collectSessionApi.getCollectSessionsByGroupId(groupId).execute()
+                sessionId
+            )
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
@@ -60,39 +40,74 @@ class RemoteCollectSessionDataSource(
         }
     }
 
-    suspend fun deleteCollectSession(groupId: Int, collectSessionId: Int) {
-        withContext(ioDispatcher) {
-            val res = collectSessionApi.deleteCollectSession(
+    suspend fun createCollectSession(groupId: Int, collectSession: CollectSessionCreate) {
+        withContext(dispatcher) {
+            val res = collectSessionApi.createCollectSession(
                 groupId,
-                collectSessionId
-            ).execute()
+                collectSession
+            )
             if (!res.isSuccessful) {
-                throw Exception("Error deleting collect session")
+                throw Exception("Error creating collect session")
             }
         }
     }
 
-    suspend fun updateCollectSession(groupId: Int, collectSession: CollectSession) {
-        withContext(ioDispatcher) {
+    suspend fun updateCollectSession(
+        groupId: Int,
+        sessionId: Int,
+        collectSession: CollectSessionUpdate
+    ) {
+        withContext(dispatcher) {
             val res = collectSessionApi.updateCollectSession(
                 groupId,
-                collectSession.id,
+                sessionId,
                 collectSession
-            ).execute()
+            )
             if (!res.isSuccessful) {
                 throw Exception("Error updating collect session")
             }
         }
     }
 
-    suspend fun createCollectSession(groupId: Int, collectSession: CollectSession) {
-        withContext(ioDispatcher) {
-            val res = collectSessionApi.addCollectSessionToGroup(
+    suspend fun closeCollectSession(groupId: Int, sessionId: Int) {
+        withContext(dispatcher) {
+            val res = collectSessionApi.closeCollectSession(
                 groupId,
-                collectSession
-            ).execute()
+                sessionId
+            )
             if (!res.isSuccessful) {
-                throw Exception("Error creating collect session")
+                throw Exception("Error closing collect session")
+            }
+        }
+    }
+
+    suspend fun deleteCollectSession(groupId: Int, sessionId: Int) {
+        withContext(dispatcher) {
+            val res = collectSessionApi.deleteCollectSession(
+                groupId,
+                sessionId
+            )
+            if (!res.isSuccessful) {
+                throw Exception("Error deleting collect session")
+            }
+        }
+    }
+
+    suspend fun updateCollectEntry(
+        groupId: Int,
+        sessionId: Int,
+        entryId: Int,
+        collectEntry: CollectEntryUpdate
+    ) {
+        withContext(dispatcher) {
+            val res = collectSessionApi.updateCollectEntry(
+                groupId,
+                sessionId,
+                entryId,
+                collectEntry
+            )
+            if (!res.isSuccessful) {
+                throw Exception("Error updating collect session entry status")
             }
         }
     }

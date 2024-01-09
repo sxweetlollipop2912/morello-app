@@ -1,46 +1,44 @@
 package com.example.morello.data_layer.data_sources
 
-import com.example.morello.data_layer.data_sources.apis.BalanceEntryApi
-import com.example.morello.data_layer.data_sources.apis.GroupApi
-import com.example.morello.data_layer.data_sources.apis.MemberApi
-import com.example.morello.data_layer.data_sources.apis.client.RetrofitClient
-import com.example.morello.data_layer.data_sources.apis.client.UserApi
-import com.example.morello.data_layer.data_sources.data_types.LoginRequest
-import com.example.morello.data_layer.data_sources.data_types.RegisterRequest
-import com.example.morello.data_layer.data_sources.data_types.User
-import kotlinx.coroutines.CoroutineDispatcher
+import android.util.Log
+import com.example.morello.data_layer.apis.BalanceApi
+import com.example.morello.data_layer.apis.UserApi
+import com.example.morello.data_layer.apis.UserLoginRegisterApi
+import com.example.morello.data_layer.data_types.LoginRequest
+import com.example.morello.data_layer.data_types.LoginResponse
+import com.example.morello.data_layer.data_types.RegisterRequest
+import com.example.morello.data_layer.data_types.RegisterResponse
+import com.example.morello.data_layer.data_types.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class RemoteUserDataSource {
-    private val retrofit = RetrofitClient.getClient()
-    private val userApi = retrofit.create(UserApi::class.java)
-    private val balanceEntryApi = retrofit.create(BalanceEntryApi::class.java)
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+class WrongUsernameOrPasswordException : Exception("Wrong username or password")
 
-    suspend fun login(username: String, password: String): String {
-        return withContext(ioDispatcher) {
-            val res = userApi.login(LoginRequest(username, password)).execute()
+class RemoteUserDataSource @Inject constructor(
+    private val balanceApi: BalanceApi,
+    private val userApi: UserApi,
+    private val userLoginRegisterApi: UserLoginRegisterApi,
+) {
+    private val dispatcher = Dispatchers.IO
+
+    suspend fun login(username: String, password: String): LoginResponse {
+        return withContext(dispatcher) {
+            val res = userLoginRegisterApi.login(LoginRequest(username, password))
+            if (res.code() == 401) {
+                throw WrongUsernameOrPasswordException()
+            }
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
-                throw Exception("Error logging in")
+                throw Exception("Fail to connect to server")
             }
         }
     }
 
-    suspend fun logout() {
-        withContext(ioDispatcher) {
-            val res = userApi.logout().execute()
-            if (!res.isSuccessful) {
-                throw Exception("Error logging out")
-            }
-        }
-    }
-
-    suspend fun register(username: String, password: String, email: String): String {
-        return withContext(ioDispatcher) {
-            val res = userApi.register(RegisterRequest(username, password, email)).execute()
+    suspend fun register(username: String, password: String, email: String): RegisterResponse {
+        return withContext(dispatcher) {
+            val res = userLoginRegisterApi.register(RegisterRequest(username, password, email))
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
@@ -49,9 +47,9 @@ class RemoteUserDataSource {
         }
     }
 
-    suspend fun fetchUserDetail(userId: Int): User {
-        return withContext(ioDispatcher) {
-            val res = userApi.fetchUserDetail(userId).execute()
+    suspend fun fetchUserDetail(): User {
+        return withContext(dispatcher) {
+            val res = userApi.fetchUserDetail()
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {
