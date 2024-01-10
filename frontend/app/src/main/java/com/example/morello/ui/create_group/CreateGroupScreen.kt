@@ -223,18 +223,20 @@ fun AddMemberDialog(
                         onEditingMemberNameChanged(it)
                     },
                     label = { Text(text = "Member Name") },
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done,
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            if (errorMessage.isEmpty()) {
+                    trailingIcon = {
+                        if (currentEditingMemberName.isNotEmpty() && errorMessage.isEmpty()) {
+                            IconButton(onClick = {
                                 onAddMember()
                                 onDismissRequest()
                                 onEditingMemberNameChanged("")
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Done,
+                                    contentDescription = "Create new member"
+                                )
                             }
                         }
-                    ),
+                    },
                     isError = errorMessage.isNotEmpty(),
                     supportingText = { Text(text = errorMessage) },
                     modifier = modifier.focusRequester(focusRequester),
