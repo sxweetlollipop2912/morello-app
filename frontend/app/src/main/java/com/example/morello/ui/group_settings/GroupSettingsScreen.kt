@@ -66,13 +66,17 @@ fun GroupSettingsScreen(
                         value = groupName,
                         onValueChange = { groupName = it },
                         readOnly = !editing,
-                        textStyle = MaterialTheme.typography.headlineMedium
+                        textStyle = MaterialTheme.typography.headlineMedium.copy(
+                            color = MaterialTheme.colorScheme.onSurface
+                        ),
                     )
                     BasicTextField(
                         value = groupDescription,
                         onValueChange = { groupDescription = it },
                         readOnly = !editing,
-                        textStyle = MaterialTheme.typography.bodyMedium
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                     )
                 }
                 Button(
