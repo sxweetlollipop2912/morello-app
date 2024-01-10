@@ -1,0 +1,217 @@
+Suite/Test/Step Name,Browser,Description,Tag,Start time,End time,Duration,Status
+21125063,,,,08-01-2024 17:13:05,08-01-2024 17:20:21,7m - 16.668s,PASSED
+,,,,,,,
+Test Cases/UC03-UI01-Input1,,,,08-01-2024 17:13:05,08-01-2024 17:13:54,49.346s,PASSED
+"startExistingApplication(""com.example.morello"")",,,,08-01-2024 17:13:06,08-01-2024 17:13:27,21.214s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot10202081585241260803.png"")",,,,08-01-2024 17:13:27,08-01-2024 17:13:28,0.833s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText""), ""admin@morello.app"")",,,,08-01-2024 17:13:28,08-01-2024 17:13:30,1.969s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText (1)""), ""admin"")",,,,08-01-2024 17:13:30,08-01-2024 17:13:31,1.404s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button""), 0)",,,,08-01-2024 17:13:31,08-01-2024 17:13:32,0.763s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot1533464508948811551.png"")",,,,08-01-2024 17:13:32,08-01-2024 17:13:33,0.872s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.view.View""), 0)",,,,08-01-2024 17:13:33,08-01-2024 17:13:35,2.796s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot10946887393192006368.png"")",,,,08-01-2024 17:13:35,08-01-2024 17:13:36,0.926s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (1)""), 0)",,,,08-01-2024 17:13:36,08-01-2024 17:13:38,1.328s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (1)""), 0)",,,,08-01-2024 17:13:38,08-01-2024 17:13:39,1.437s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText""), ""345678"")",,,,08-01-2024 17:13:39,08-01-2024 17:13:41,1.944s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText (1)""), ""Medical Insurance"")",,,,08-01-2024 17:13:41,08-01-2024 17:13:42,1.270s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText (2)""), ""Medical insurance fee in new school year"")",,,,08-01-2024 17:13:42,08-01-2024 17:13:44,1.266s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button""), 0)",,,,08-01-2024 17:13:44,08-01-2024 17:13:44,0.615s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (2)""), 0)",,,,08-01-2024 17:13:44,08-01-2024 17:13:47,2.854s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (3)""), 0)",,,,08-01-2024 17:13:47,08-01-2024 17:13:50,2.593s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.TextView - Create""), 0)",,,,08-01-2024 17:13:50,08-01-2024 17:13:50,0.536s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot8929733198654938877.png"")",,,,08-01-2024 17:13:50,08-01-2024 17:13:51,0.804s,PASSED
+"verifyElementVisible(findTestObject(""Object Repository/UC03-UI01/android.widget.TextView - family""), 0)",,,,08-01-2024 17:13:51,08-01-2024 17:13:53,1.949s,PASSED
+"verifyElementExist(findTestObject(""Object Repository/UC03-UI01/android.view.View (1)""), 0)",,,,08-01-2024 17:13:53,08-01-2024 17:13:54,0.992s,PASSED
+closeApplication(),,,,08-01-2024 17:13:54,08-01-2024 17:13:54,0.488s,PASSED
+,,,,,,,
+Test Cases/UC03-UI01-Input2,,,,08-01-2024 17:13:54,08-01-2024 17:14:38,44.015s,PASSED
+"startExistingApplication(""com.example.morello"")",,,,08-01-2024 17:13:55,08-01-2024 17:14:12,17.329s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot10202081585241260803.png"")",,,,08-01-2024 17:14:12,08-01-2024 17:14:13,0.747s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText""), ""admin@morello.app"")",,,,08-01-2024 17:14:13,08-01-2024 17:14:15,1.909s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText (1)""), ""admin"")",,,,08-01-2024 17:14:15,08-01-2024 17:14:15,0.904s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button""), 0)",,,,08-01-2024 17:14:15,08-01-2024 17:14:16,0.801s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot1533464508948811551.png"")",,,,08-01-2024 17:14:16,08-01-2024 17:14:17,0.854s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.view.View""), 0)",,,,08-01-2024 17:14:17,08-01-2024 17:14:20,2.865s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot10946887393192006368.png"")",,,,08-01-2024 17:14:20,08-01-2024 17:14:21,0.876s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (1)""), 0)",,,,08-01-2024 17:14:21,08-01-2024 17:14:22,1.273s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (1)""), 0)",,,,08-01-2024 17:14:22,08-01-2024 17:14:24,1.419s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText""), ""100000"")",,,,08-01-2024 17:14:24,08-01-2024 17:14:25,1.566s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText (1)""), ""Buying time for this semester"")",,,,08-01-2024 17:14:25,08-01-2024 17:14:26,0.919s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText (2)""), ""This semester is cursed"")",,,,08-01-2024 17:14:26,08-01-2024 17:14:27,0.538s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button""), 0)",,,,08-01-2024 17:14:27,08-01-2024 17:14:28,1.039s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (2)""), 0)",,,,08-01-2024 17:14:28,08-01-2024 17:14:30,2.865s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (3)""), 0)",,,,08-01-2024 17:14:30,08-01-2024 17:14:33,2.177s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.TextView - Create""), 0)",,,,08-01-2024 17:14:33,08-01-2024 17:14:34,1.818s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot8929733198654938877.png"")",,,,08-01-2024 17:14:34,08-01-2024 17:14:35,0.825s,PASSED
+"verifyElementVisible(findTestObject(""Object Repository/UC03-UI01/android.widget.TextView - family""), 0)",,,,08-01-2024 17:14:35,08-01-2024 17:14:37,1.738s,PASSED
+"verifyElementExist(findTestObject(""UC03-UI01/android.view.View (1)""), 0)",,,,08-01-2024 17:14:37,08-01-2024 17:14:38,1.011s,PASSED
+closeApplication(),,,,08-01-2024 17:14:38,08-01-2024 17:14:38,0.460s,PASSED
+,,,,,,,
+Test Cases/UC03-UI01-Input3,,,,08-01-2024 17:14:38,08-01-2024 17:15:24,45.903s,PASSED
+"startExistingApplication(""com.example.morello"")",,,,08-01-2024 17:14:39,08-01-2024 17:14:56,17.352s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot10202081585241260803.png"")",,,,08-01-2024 17:14:56,08-01-2024 17:14:57,0.720s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText""), ""admin@morello.app"")",,,,08-01-2024 17:14:57,08-01-2024 17:15:00,3.101s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText (1)""), ""admin"")",,,,08-01-2024 17:15:00,08-01-2024 17:15:00,0.773s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button""), 0)",,,,08-01-2024 17:15:00,08-01-2024 17:15:02,1.148s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot1533464508948811551.png"")",,,,08-01-2024 17:15:02,08-01-2024 17:15:02,0.854s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.view.View""), 0)",,,,08-01-2024 17:15:02,08-01-2024 17:15:05,2.732s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot10946887393192006368.png"")",,,,08-01-2024 17:15:05,08-01-2024 17:15:06,0.871s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (1)""), 0)",,,,08-01-2024 17:15:06,08-01-2024 17:15:08,1.748s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (1)""), 0)",,,,08-01-2024 17:15:08,08-01-2024 17:15:09,1.249s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText""), ""123456"")",,,,08-01-2024 17:15:09,08-01-2024 17:15:11,1.902s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText (1)""), ""Monthly Union Fee"")",,,,08-01-2024 17:15:11,08-01-2024 17:15:12,1.291s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText (2)""), ""Monthly fee that we pay our Union"")",,,,08-01-2024 17:15:12,08-01-2024 17:15:13,0.549s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button""), 0)",,,,08-01-2024 17:15:13,08-01-2024 17:15:14,0.947s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (2)""), 0)",,,,08-01-2024 17:15:14,08-01-2024 17:15:16,2.612s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (3)""), 0)",,,,08-01-2024 17:15:16,08-01-2024 17:15:19,2.198s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.TextView - Create""), 0)",,,,08-01-2024 17:15:19,08-01-2024 17:15:20,1.245s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot8929733198654938877.png"")",,,,08-01-2024 17:15:20,08-01-2024 17:15:21,0.767s,PASSED
+"verifyElementVisible(findTestObject(""Object Repository/UC03-UI01/android.widget.TextView - family""), 0)",,,,08-01-2024 17:15:21,08-01-2024 17:15:22,1.617s,PASSED
+"verifyElementExist(findTestObject(""Object Repository/UC03-UI01/android.view.View (1)""), 0)",,,,08-01-2024 17:15:22,08-01-2024 17:15:24,1.580s,PASSED
+closeApplication(),,,,08-01-2024 17:15:24,08-01-2024 17:15:24,0.578s,PASSED
+,,,,,,,
+Test Cases/UC03-UI01-Input4,,,,08-01-2024 17:15:24,08-01-2024 17:16:10,46.098s,PASSED
+"startExistingApplication(""com.example.morello"")",,,,08-01-2024 17:15:24,08-01-2024 17:15:42,17.989s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot10202081585241260803.png"")",,,,08-01-2024 17:15:42,08-01-2024 17:15:43,0.736s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText""), ""admin@morello.app"")",,,,08-01-2024 17:15:43,08-01-2024 17:15:45,1.933s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText (1)""), ""admin"")",,,,08-01-2024 17:15:45,08-01-2024 17:15:46,0.826s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button""), 0)",,,,08-01-2024 17:15:46,08-01-2024 17:15:47,0.783s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot1533464508948811551.png"")",,,,08-01-2024 17:15:47,08-01-2024 17:15:48,0.873s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.view.View""), 0)",,,,08-01-2024 17:15:48,08-01-2024 17:15:51,3.231s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot10946887393192006368.png"")",,,,08-01-2024 17:15:51,08-01-2024 17:15:52,0.875s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (1)""), 0)",,,,08-01-2024 17:15:52,08-01-2024 17:15:54,2.091s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (1)""), 0)",,,,08-01-2024 17:15:54,08-01-2024 17:15:55,1.132s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText""), ""654321"")",,,,08-01-2024 17:15:55,08-01-2024 17:15:57,1.621s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText (1)""), ""Pizza for the class"")",,,,08-01-2024 17:15:57,08-01-2024 17:15:58,1.197s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText (2)""), ""We love pizza"")",,,,08-01-2024 17:15:58,08-01-2024 17:15:58,0.655s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button""), 0)",,,,08-01-2024 17:15:58,08-01-2024 17:16:00,1.780s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (2)""), 0)",,,,08-01-2024 17:16:00,08-01-2024 17:16:03,2.768s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (3)""), 0)",,,,08-01-2024 17:16:03,08-01-2024 17:16:05,2.214s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.TextView - Create""), 0)",,,,08-01-2024 17:16:05,08-01-2024 17:16:06,0.684s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot8929733198654938877.png"")",,,,08-01-2024 17:16:06,08-01-2024 17:16:07,0.808s,PASSED
+"verifyElementVisible(findTestObject(""Object Repository/UC03-UI01/android.widget.TextView - family""), 0)",,,,08-01-2024 17:16:07,08-01-2024 17:16:09,2.326s,PASSED
+"verifyElementExist(findTestObject(""Object Repository/UC03-UI01/android.view.View (1)""), 0)",,,,08-01-2024 17:16:09,08-01-2024 17:16:10,0.993s,PASSED
+closeApplication(),,,,08-01-2024 17:16:10,08-01-2024 17:16:10,0.509s,PASSED
+,,,,,,,
+Test Cases/UC03-UI01-Input5,,,,08-01-2024 17:16:10,08-01-2024 17:16:56,45.031s,PASSED
+"startExistingApplication(""com.example.morello"")",,,,08-01-2024 17:16:11,08-01-2024 17:16:28,17.710s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot10202081585241260803.png"")",,,,08-01-2024 17:16:28,08-01-2024 17:16:29,0.742s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText""), ""admin@morello.app"")",,,,08-01-2024 17:16:29,08-01-2024 17:16:31,1.939s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText (1)""), ""admin"")",,,,08-01-2024 17:16:31,08-01-2024 17:16:32,1.361s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button""), 0)",,,,08-01-2024 17:16:32,08-01-2024 17:16:33,0.752s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot1533464508948811551.png"")",,,,08-01-2024 17:16:33,08-01-2024 17:16:34,0.868s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.view.View""), 0)",,,,08-01-2024 17:16:34,08-01-2024 17:16:36,2.542s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot10946887393192006368.png"")",,,,08-01-2024 17:16:36,08-01-2024 17:16:37,0.906s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (1)""), 0)",,,,08-01-2024 17:16:37,08-01-2024 17:16:39,1.466s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (1)""), 0)",,,,08-01-2024 17:16:39,08-01-2024 17:16:40,1.619s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText""), ""333333"")",,,,08-01-2024 17:16:40,08-01-2024 17:16:42,1.783s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText (1)""), ""Fireworks for New Year 2024"")",,,,08-01-2024 17:16:42,08-01-2024 17:16:43,1.151s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI01/android.widget.EditText (2)""), ""For fun"")",,,,08-01-2024 17:16:43,08-01-2024 17:16:44,1.077s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button""), 0)",,,,08-01-2024 17:16:44,08-01-2024 17:16:45,0.610s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (2)""), 0)",,,,08-01-2024 17:16:45,08-01-2024 17:16:48,3.159s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.Button (3)""), 0)",,,,08-01-2024 17:16:48,08-01-2024 17:16:50,1.375s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI01/android.widget.TextView - Create""), 0)",,,,08-01-2024 17:16:50,08-01-2024 17:16:51,1.683s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot8929733198654938877.png"")",,,,08-01-2024 17:16:51,08-01-2024 17:16:52,0.789s,PASSED
+"verifyElementVisible(findTestObject(""Object Repository/UC03-UI01/android.widget.TextView - family""), 0)",,,,08-01-2024 17:16:52,08-01-2024 17:16:54,1.876s,PASSED
+"verifyElementExist(findTestObject(""Object Repository/UC03-UI01/android.view.View (1)""), 0)",,,,08-01-2024 17:16:54,08-01-2024 17:16:55,1.042s,PASSED
+closeApplication(),,,,08-01-2024 17:16:55,08-01-2024 17:16:56,0.501s,PASSED
+,,,,,,,
+Test Cases/UC03-UI03-Input1,,,,08-01-2024 17:16:56,08-01-2024 17:17:35,39.676s,PASSED
+"startExistingApplication(""com.example.morello"")",,,,08-01-2024 17:16:56,08-01-2024 17:17:13,17.449s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot11681619649043454598.png"")",,,,08-01-2024 17:17:13,08-01-2024 17:17:14,0.744s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText""), ""admin@morello.app"")",,,,08-01-2024 17:17:14,08-01-2024 17:17:16,1.915s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText (1)""), ""admin"")",,,,08-01-2024 17:17:16,08-01-2024 17:17:17,0.976s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button""), 0)",,,,08-01-2024 17:17:17,08-01-2024 17:17:17,0.804s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot9247040380917115946.png"")",,,,08-01-2024 17:17:17,08-01-2024 17:17:18,0.876s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.view.View""), 0)",,,,08-01-2024 17:17:18,08-01-2024 17:17:21,2.693s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot12377891300602375905.png"")",,,,08-01-2024 17:17:21,08-01-2024 17:17:22,0.874s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (1)""), 0)",,,,08-01-2024 17:17:22,08-01-2024 17:17:23,1.444s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (1)""), 0)",,,,08-01-2024 17:17:23,08-01-2024 17:17:25,1.407s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText""), ""345678"")",,,,08-01-2024 17:17:25,08-01-2024 17:17:26,1.557s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText (1)""), ""Medical Insurance"")",,,,08-01-2024 17:17:26,08-01-2024 17:17:27,1.125s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button""), 0)",,,,08-01-2024 17:17:27,08-01-2024 17:17:29,1.169s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (2)""), 0)",,,,08-01-2024 17:17:29,08-01-2024 17:17:31,2.234s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (3)""), 0)",,,,08-01-2024 17:17:31,08-01-2024 17:17:33,2.230s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.TextView - Create""), 0)",,,,08-01-2024 17:17:33,08-01-2024 17:17:34,1.112s,PASSED
+"verifyElementExist(findTestObject(""Object Repository/UC03-UI03/android.widget.TextView - Error creating balance entry""), 0)",,,,08-01-2024 17:17:34,08-01-2024 17:17:35,0.579s,PASSED
+closeApplication(),,,,08-01-2024 17:17:35,08-01-2024 17:17:35,0.422s,PASSED
+,,,,,,,
+Test Cases/UC03-UI03-Input2,,,,08-01-2024 17:17:35,08-01-2024 17:18:18,42.456s,PASSED
+"startExistingApplication(""com.example.morello"")",,,,08-01-2024 17:17:35,08-01-2024 17:17:54,18.499s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot11681619649043454598.png"")",,,,08-01-2024 17:17:54,08-01-2024 17:17:55,0.768s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText""), ""admin@morello.app"")",,,,08-01-2024 17:17:55,08-01-2024 17:17:58,2.995s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText (1)""), ""admin"")",,,,08-01-2024 17:17:58,08-01-2024 17:17:58,0.794s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button""), 0)",,,,08-01-2024 17:17:58,08-01-2024 17:17:59,0.862s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot9247040380917115946.png"")",,,,08-01-2024 17:17:59,08-01-2024 17:18:00,0.905s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.view.View""), 0)",,,,08-01-2024 17:18:00,08-01-2024 17:18:03,2.675s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot12377891300602375905.png"")",,,,08-01-2024 17:18:03,08-01-2024 17:18:04,0.900s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (1)""), 0)",,,,08-01-2024 17:18:04,08-01-2024 17:18:05,1.330s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (1)""), 0)",,,,08-01-2024 17:18:05,08-01-2024 17:18:06,1.178s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText""), ""123456"")",,,,08-01-2024 17:18:06,08-01-2024 17:18:08,1.658s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText (1)""), ""Hello"")",,,,08-01-2024 17:18:08,08-01-2024 17:18:09,1.553s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button""), 0)",,,,08-01-2024 17:18:09,08-01-2024 17:18:10,0.625s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (2)""), 0)",,,,08-01-2024 17:18:10,08-01-2024 17:18:13,2.760s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (3)""), 0)",,,,08-01-2024 17:18:13,08-01-2024 17:18:15,2.128s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.TextView - Create""), 0)",,,,08-01-2024 17:18:15,08-01-2024 17:18:16,1.107s,PASSED
+"verifyElementExist(findTestObject(""Object Repository/UC03-UI03/android.widget.TextView - Error creating balance entry""), 0)",,,,08-01-2024 17:18:16,08-01-2024 17:18:17,1.208s,PASSED
+closeApplication(),,,,08-01-2024 17:18:17,08-01-2024 17:18:18,0.431s,PASSED
+,,,,,,,
+Test Cases/UC03-UI03-Input3,,,,08-01-2024 17:18:18,08-01-2024 17:18:58,40.010s,PASSED
+"startExistingApplication(""com.example.morello"")",,,,08-01-2024 17:18:18,08-01-2024 17:18:35,17.354s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot11681619649043454598.png"")",,,,08-01-2024 17:18:35,08-01-2024 17:18:36,1.051s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText""), ""admin@morello.app"")",,,,08-01-2024 17:18:36,08-01-2024 17:18:38,2.026s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText (1)""), ""admin"")",,,,08-01-2024 17:18:38,08-01-2024 17:18:39,0.771s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button""), 0)",,,,08-01-2024 17:18:39,08-01-2024 17:18:40,0.750s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot9247040380917115946.png"")",,,,08-01-2024 17:18:40,08-01-2024 17:18:41,0.865s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.view.View""), 0)",,,,08-01-2024 17:18:41,08-01-2024 17:18:43,2.751s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot12377891300602375905.png"")",,,,08-01-2024 17:18:43,08-01-2024 17:18:44,0.947s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (1)""), 0)",,,,08-01-2024 17:18:44,08-01-2024 17:18:46,1.284s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (1)""), 0)",,,,08-01-2024 17:18:46,08-01-2024 17:18:47,1.196s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText""), ""654321"")",,,,08-01-2024 17:18:47,08-01-2024 17:18:48,1.745s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText (1)""), ""Allo"")",,,,08-01-2024 17:18:48,08-01-2024 17:18:50,1.141s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button""), 0)",,,,08-01-2024 17:18:50,08-01-2024 17:18:50,0.572s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (2)""), 0)",,,,08-01-2024 17:18:50,08-01-2024 17:18:52,2.199s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (3)""), 0)",,,,08-01-2024 17:18:52,08-01-2024 17:18:54,2.136s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.TextView - Create""), 0)",,,,08-01-2024 17:18:54,08-01-2024 17:18:56,1.624s,PASSED
+"verifyElementExist(findTestObject(""Object Repository/UC03-UI03/android.widget.TextView - Error creating balance entry""), 0)",,,,08-01-2024 17:18:56,08-01-2024 17:18:57,0.965s,PASSED
+closeApplication(),,,,08-01-2024 17:18:57,08-01-2024 17:18:58,0.565s,PASSED
+,,,,,,,
+Test Cases/UC03-UI03-Input4,,,,08-01-2024 17:18:58,08-01-2024 17:19:41,43.206s,PASSED
+"startExistingApplication(""com.example.morello"")",,,,08-01-2024 17:18:58,08-01-2024 17:19:17,19.750s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot11681619649043454598.png"")",,,,08-01-2024 17:19:17,08-01-2024 17:19:18,0.735s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText""), ""admin@morello.app"")",,,,08-01-2024 17:19:18,08-01-2024 17:19:20,1.935s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText (1)""), ""admin"")",,,,08-01-2024 17:19:20,08-01-2024 17:19:21,1.333s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button""), 0)",,,,08-01-2024 17:19:21,08-01-2024 17:19:22,0.784s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot9247040380917115946.png"")",,,,08-01-2024 17:19:22,08-01-2024 17:19:23,0.867s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.view.View""), 0)",,,,08-01-2024 17:19:23,08-01-2024 17:19:26,2.742s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot12377891300602375905.png"")",,,,08-01-2024 17:19:26,08-01-2024 17:19:27,0.915s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (1)""), 0)",,,,08-01-2024 17:19:27,08-01-2024 17:19:28,1.180s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (1)""), 0)",,,,08-01-2024 17:19:28,08-01-2024 17:19:30,1.562s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText""), ""333333"")",,,,08-01-2024 17:19:30,08-01-2024 17:19:31,1.728s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText (1)""), ""Okela"")",,,,08-01-2024 17:19:31,08-01-2024 17:19:32,1.148s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button""), 0)",,,,08-01-2024 17:19:32,08-01-2024 17:19:34,1.158s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (2)""), 0)",,,,08-01-2024 17:19:34,08-01-2024 17:19:36,2.587s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (3)""), 0)",,,,08-01-2024 17:19:36,08-01-2024 17:19:38,2.192s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.TextView - Create""), 0)",,,,08-01-2024 17:19:38,08-01-2024 17:19:39,0.665s,PASSED
+"verifyElementExist(findTestObject(""Object Repository/UC03-UI03/android.widget.TextView - Error creating balance entry""), 0)",,,,08-01-2024 17:19:39,08-01-2024 17:19:40,1.358s,PASSED
+closeApplication(),,,,08-01-2024 17:19:40,08-01-2024 17:19:41,0.491s,PASSED
+,,,,,,,
+Test Cases/UC03-UI03-Input5,,,,08-01-2024 17:19:41,08-01-2024 17:20:21,40.597s,PASSED
+"startExistingApplication(""com.example.morello"")",,,,08-01-2024 17:19:41,08-01-2024 17:19:58,17.484s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot11681619649043454598.png"")",,,,08-01-2024 17:19:58,08-01-2024 17:19:59,0.743s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText""), ""admin@morello.app"")",,,,08-01-2024 17:19:59,08-01-2024 17:20:01,1.901s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText (1)""), ""admin"")",,,,08-01-2024 17:20:01,08-01-2024 17:20:02,1.279s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button""), 0)",,,,08-01-2024 17:20:02,08-01-2024 17:20:03,0.792s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot9247040380917115946.png"")",,,,08-01-2024 17:20:03,08-01-2024 17:20:04,0.980s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.view.View""), 0)",,,,08-01-2024 17:20:04,08-01-2024 17:20:07,2.643s,PASSED
+"takeScreenshot(""C:\Users\tansa\AppData\Local\Temp\screenshot12377891300602375905.png"")",,,,08-01-2024 17:20:07,08-01-2024 17:20:08,0.916s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (1)""), 0)",,,,08-01-2024 17:20:08,08-01-2024 17:20:09,1.174s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (1)""), 0)",,,,08-01-2024 17:20:09,08-01-2024 17:20:10,1.233s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText""), ""65235"")",,,,08-01-2024 17:20:10,08-01-2024 17:20:12,1.824s,PASSED
+"sendKeys(findTestObject(""Object Repository/UC03-UI03/android.widget.EditText (1)""), ""Hello guys"")",,,,08-01-2024 17:20:12,08-01-2024 17:20:13,1.153s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button""), 0)",,,,08-01-2024 17:20:13,08-01-2024 17:20:14,0.919s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (2)""), 0)",,,,08-01-2024 17:20:14,08-01-2024 17:20:17,2.823s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.Button (3)""), 0)",,,,08-01-2024 17:20:17,08-01-2024 17:20:19,2.192s,PASSED
+"tap(findTestObject(""Object Repository/UC03-UI03/android.widget.TextView - Create""), 0)",,,,08-01-2024 17:20:19,08-01-2024 17:20:20,0.967s,PASSED
+"verifyElementExist(findTestObject(""Object Repository/UC03-UI03/android.widget.TextView - Error creating balance entry""), 0)",,,,08-01-2024 17:20:20,08-01-2024 17:20:21,1.073s,PASSED
+closeApplication(),,,,08-01-2024 17:20:21,08-01-2024 17:20:21,0.442s,PASSED
