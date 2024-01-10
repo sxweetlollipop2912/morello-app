@@ -21,13 +21,14 @@ data class CreateGroupUiState(
 ) {
 
     companion object {
-        val new get() = CreateGroupUiState(
-            group = GroupCreate(
-                name = "",
-                description = "",
-            ),
-            membersList = emptyList(),
-        )
+        val new
+            get() = CreateGroupUiState(
+                group = GroupCreate(
+                    name = "",
+                    description = "",
+                ),
+                membersList = emptyList(),
+            )
     }
 }
 

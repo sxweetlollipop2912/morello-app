@@ -1,11 +1,9 @@
 package com.example.morello.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -74,7 +72,6 @@ fun FixedSignNumberEditField(
                 onValueChange(formattedStrToCurrency(newTfv.text.substring(1)))
             } else {
                 onValueChange(formattedStrToCurrency(newTfv.text))
-                Log.d("FixedSignNumberEditField", "newTfv.text: ${newTfv.text}")
             }
         },
         shape = shape,

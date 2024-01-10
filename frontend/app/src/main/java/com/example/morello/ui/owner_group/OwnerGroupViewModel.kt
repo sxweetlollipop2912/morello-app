@@ -86,11 +86,7 @@ class OwnerGroupViewModel @Inject constructor(
         viewModelScope.launch {
             val user = userRepository.fetchUserDetail()
             val groupDetail = groupRepository.getGroupDetail(groupId)
-            val isLeader = if (user.id != groupDetail.leader.id) {
-                false
-            } else {
-                true
-            }
+            val isLeader = user.id == groupDetail.leader.id
             _uiState.update {
                 it.copy(
                     isLeader = isLeader,

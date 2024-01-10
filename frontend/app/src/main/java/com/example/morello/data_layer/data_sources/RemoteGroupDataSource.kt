@@ -1,6 +1,5 @@
 package com.example.morello.data_layer.data_sources
 
-import android.util.Log
 import com.example.morello.data_layer.apis.GroupApi
 import com.example.morello.data_layer.data_types.Group
 import com.example.morello.data_layer.data_types.GroupCreate
@@ -17,10 +16,7 @@ class RemoteGroupDataSource @Inject constructor(
 
     suspend fun getGroups(): List<Group> {
         return withContext(dispatcher) {
-            Log.d("HERE", "HERE")
             val res = groupApi.getGroups()
-            Log.d("DONE", "DONE")
-            Log.d("RemoteGroupDataSource", res.toString())
             if (res.isSuccessful) {
                 return@withContext res.body()!!
             } else {

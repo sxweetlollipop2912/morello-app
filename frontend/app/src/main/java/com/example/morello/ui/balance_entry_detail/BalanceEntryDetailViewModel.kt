@@ -1,6 +1,5 @@
 package com.example.morello.ui.balance_entry_detail
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -49,6 +48,7 @@ class BalanceEntryDetailViewModel @Inject constructor(
     fun finish() {
         uiState = uiState.copy(state = State.Uninitialized)
     }
+
     fun init(groupId: Int, entryId: Int) {
         uiState = uiState.copy(state = State.Loading)
         viewModelScope.launch {

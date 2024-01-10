@@ -95,12 +95,12 @@ object GroupSettingsRoute : NavRoute {
         get() = "settings"
 }
 
-object GroupMembersRoute: NavRoute {
+object GroupMembersRoute : NavRoute {
     override val base: String
         get() = "members"
 }
 
-object GroupModeratorsRoute: NavRoute {
+object GroupModeratorsRoute : NavRoute {
     override val base: String
         get() = "moderators"
 }

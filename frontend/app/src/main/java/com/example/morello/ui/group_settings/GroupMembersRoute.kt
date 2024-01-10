@@ -1,6 +1,5 @@
 package com.example.morello.ui.group_settings
 
-import GroupMembersRoute
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
