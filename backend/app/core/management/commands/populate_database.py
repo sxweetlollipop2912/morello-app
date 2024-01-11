@@ -86,7 +86,7 @@ class Command(BaseCommand):
                     balance_entry = BalanceEntry.objects.create(
                         group_id=group,
                         name=faker.word(),
-                        amount=faker.random_int(min=1, max=1000),
+                        amount=faker.random_int(min=1, max=1000) * 1000,
                         description=faker.sentence(),
                         recorded_at=timezone.make_aware(faker.date_time_this_year()),
                     )
@@ -97,7 +97,7 @@ class Command(BaseCommand):
                     description=faker.sentence(),
                     start=timezone.make_aware(faker.date_time_this_year() - timezone.timedelta(days=faker.random_int(min=1, max=30))),
                     due=timezone.make_aware(faker.date_time_this_year() + timezone.timedelta(days=faker.random_int(min=-30, max=30))),
-                    payment_per_member=faker.random_int(min=1, max=1000),
+                    payment_per_member=faker.random_int(min=1, max=1000) * 1000,
                     is_open=is_open,
                     balance_entry_id=balance_entry,
                 )
