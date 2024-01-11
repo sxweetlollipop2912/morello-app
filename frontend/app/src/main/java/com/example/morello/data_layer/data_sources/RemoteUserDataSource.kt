@@ -1,6 +1,5 @@
 package com.example.morello.data_layer.data_sources
 
-import android.util.Log
 import com.example.morello.data_layer.apis.BalanceApi
 import com.example.morello.data_layer.apis.UserApi
 import com.example.morello.data_layer.apis.UserLoginRegisterApi

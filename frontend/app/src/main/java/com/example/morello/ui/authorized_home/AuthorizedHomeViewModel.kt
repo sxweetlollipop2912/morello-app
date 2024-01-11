@@ -56,7 +56,11 @@ class AuthorizedHomeViewModel @Inject constructor(
             it.name.contains(uiState.searchQuery, ignoreCase = true)
         }
         uiState.copy(
-            groups = filteredGroups,
+            groups = filteredGroups.sortedWith(
+                compareByDescending<Group> { it.isLeader }
+                    .thenByDescending { it.updatedAt }
+                    .thenBy { it.name }
+            )
         )
     }.stateIn(
         viewModelScope,

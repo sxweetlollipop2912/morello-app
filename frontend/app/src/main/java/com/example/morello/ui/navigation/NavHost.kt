@@ -18,7 +18,6 @@ import OwnerGroupHomeRoute
 import RegisterRoute
 import SessionDetailRoute
 import SessionListRoute
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -39,13 +38,12 @@ import com.example.morello.ui.create_balance_entry.CreateIncomeRoute
 import com.example.morello.ui.create_group.CreateGroupRoute
 import com.example.morello.ui.forgot_password.ForgotPasswordCodeValidationScreen
 import com.example.morello.ui.forgot_password.ForgotPasswordEmailScreen
-import com.example.morello.ui.login.LoginRoute
-import com.example.morello.ui.owner_group.OwnerGroupRoute
-import com.example.morello.ui.register.RegisterRoute
-import com.example.morello.ui.balance_entry_list.BalanceEntryListRoute
 import com.example.morello.ui.group_settings.GroupMembersRoute
 import com.example.morello.ui.group_settings.GroupModeratorsRoute
 import com.example.morello.ui.group_settings.GroupSettingsRoute
+import com.example.morello.ui.login.LoginRoute
+import com.example.morello.ui.owner_group.OwnerGroupRoute
+import com.example.morello.ui.register.RegisterRoute
 import com.example.morello.ui.session_detail.SessionDetailRoute
 import com.example.morello.ui.session_detail.SessionDetailViewModel
 import com.example.morello.ui.session_list.SessionListRoute

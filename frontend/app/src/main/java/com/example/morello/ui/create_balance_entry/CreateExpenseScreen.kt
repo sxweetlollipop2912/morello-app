@@ -1,9 +1,6 @@
 package com.example.morello.ui.create_balance_entry
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -36,10 +33,7 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.focusRestorer
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
@@ -54,8 +48,6 @@ import com.example.morello.ui.components.FixedSignNumberEditField
 import com.example.morello.ui.components.FormBackHandler
 import com.example.morello.ui.components.StandaloneDatePickerDialogWithButton
 import com.example.morello.ui.components.rememberFormBackHandlerState
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 

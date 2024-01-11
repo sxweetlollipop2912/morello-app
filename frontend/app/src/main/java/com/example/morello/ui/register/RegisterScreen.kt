@@ -229,7 +229,7 @@ fun RegisterScreen(
                     }
                 }
             }
-            Spacer(modifier = Modifier.padding(spacing))
+            Spacer(modifier = Modifier.padding(spacing / 2))
             if (!uiState.error.isNullOrEmpty()) {
                 Text(
                     text = uiState.error,
@@ -240,15 +240,21 @@ fun RegisterScreen(
             Button(
                 onClick = onRegisterButtonClicked,
                 enabled = uiState.isRegisterButtonEnabled,
-                shape = MaterialTheme.shapes.medium,
+                shape = MaterialTheme.shapes.large,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Create account")
+                Text(
+                    text = "Create account",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
                 if (uiState.registerState == RegisterState.Loading) {
                     Spacer(modifier = Modifier.padding(4.dp))
                     CircularProgressIndicator(
                         color = MaterialTheme.colorScheme.secondary,
                         trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        modifier = Modifier.padding(0.dp).size(32.dp),
                     )
                 }
             }
@@ -257,13 +263,13 @@ fun RegisterScreen(
                 shape = MaterialTheme.shapes.small,
                 onClick = { /* TODO */ }, modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Login with Google")
+                Text(text = "Register with Google")
             }
             OutlinedButton(
                 shape = MaterialTheme.shapes.small,
                 onClick = { /* TODO */ }, modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Login with Facebook")
+                Text(text = "Register with Facebook")
             }
         }
     }
