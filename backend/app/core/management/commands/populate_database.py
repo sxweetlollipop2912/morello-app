@@ -66,9 +66,9 @@ class Command(BaseCommand):
                 BalanceEntry.objects.create(
                     group_id=group,
                     name=faker.word(),
-                    amount=faker.random_int(min=1, max=1000),
+                    amount=faker.random_int(min=10, max=2000) * (1 if faker.random_int(min=0, max=1) else -1) * 1000,
                     description=faker.sentence(),
-                    recorded_at=timezone.make_aware(faker.date_time_this_year()),
+                    recorded_at=timezone.make_aware(faker.date_time_this_year() - timezone.timedelta(days=faker.random_int(min=1, max=30))),
                 )
 
             # Create some mock moderators
@@ -95,8 +95,8 @@ class Command(BaseCommand):
                     group_id=group,
                     name=faker.word(),
                     description=faker.sentence(),
-                    start=timezone.make_aware(faker.date_time_this_year()),
-                    due=timezone.make_aware(faker.date_time_this_year()),
+                    start=timezone.make_aware(faker.date_time_this_year() - timezone.timedelta(days=faker.random_int(min=1, max=30))),
+                    due=timezone.make_aware(faker.date_time_this_year() + timezone.timedelta(days=faker.random_int(min=-30, max=30))),
                     payment_per_member=faker.random_int(min=1, max=1000),
                     is_open=is_open,
                     balance_entry_id=balance_entry,
