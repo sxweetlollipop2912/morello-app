@@ -1,6 +1,7 @@
 package com.example.morello.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -17,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun PasswordFormField(
@@ -46,13 +48,13 @@ fun PasswordFormField(
         } else {
             PasswordVisualTransformation()
         },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        suffix = {
+        trailingIcon = {
             IconToggleButton(
                 checked = showPassword,
                 onCheckedChange = onShowPasswordChanged,
-                modifier = Modifier
+                modifier = Modifier.padding(vertical = 0.dp),
             ) {
                 Icon(
                     imageVector = if (showPassword) {
