@@ -55,7 +55,12 @@ fun BalanceEntryDetailScreen(
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(text = "Balance Entry Detail") },
+            TopAppBar(title = { Text(
+                text = "Balance Entry Detail",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                ),
+            ) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(

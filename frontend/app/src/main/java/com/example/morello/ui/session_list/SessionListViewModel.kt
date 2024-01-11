@@ -57,11 +57,11 @@ class SessionListViewModel @Inject constructor(
         }
         uiState.copy(
             overdueSessions = filteredSessions.filter { it.isOpen && it.dueDays < 0 }
-                .sortedBy { it.dueDays },
+                .sortedWith(compareBy<CollectSession> { it.dueDays }.thenBy { it.name }),
             ongoingSessions = filteredSessions.filter { it.isOpen && it.dueDays >= 0 }
-                .sortedBy { it.dueDays },
+                .sortedWith(compareBy<CollectSession> { it.dueDays }.thenBy { it.name }),
             closedSessions = filteredSessions.filter { !it.isOpen }
-                .sortedByDescending { it.updatedAt },
+                .sortedWith(compareByDescending<CollectSession> { it.updatedAt }.thenBy { it.name }),
         )
     }.stateIn(
         viewModelScope,

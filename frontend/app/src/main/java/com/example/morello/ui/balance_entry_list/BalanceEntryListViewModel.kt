@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import java.time.temporal.ChronoUnit.DAYS
 
 data class BalanceEntryListUiState(
     val isLeader: Boolean = false,
@@ -47,7 +48,9 @@ class BalanceEntryListViewModel @Inject constructor(
                     it.description.contains(uiState.searchQuery, ignoreCase = true)
         }
         uiState.copy(
-            entries = filteredEntries.sortedByDescending { it.recordedAt },
+            entries = filteredEntries.sortedWith(
+                compareByDescending<BalanceEntry> { it.recordedAt.truncatedTo(DAYS) }
+                    .thenBy { it.name }),
         )
     }.stateIn(
         viewModelScope,

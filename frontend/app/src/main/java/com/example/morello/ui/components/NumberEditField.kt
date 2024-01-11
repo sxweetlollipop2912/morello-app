@@ -34,7 +34,10 @@ fun FixedSignNumberEditField(
     negativeSign: Boolean,
     textStyle: TextStyle = MaterialTheme.typography.headlineLarge.copy(
         textAlign = TextAlign.End,
-        color = MaterialTheme.colorScheme.error,
+        color = if (negativeSign)
+            MaterialTheme.colorScheme.error
+        else
+            MaterialTheme.colorScheme.primary,
     ),
     onValueChange: (Currency) -> Unit,
     prefix: @Composable () -> Unit = {},

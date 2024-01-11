@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.morello.data_layer.data_types.Balance
+import com.example.morello.data_layer.data_types.BalanceEntry
 import com.example.morello.data_layer.data_types.CollectSession
 import com.example.morello.data_layer.data_types.GroupDetail
 import com.example.morello.data_layer.data_types.User
@@ -68,7 +69,9 @@ class OwnerGroupViewModel @Inject constructor(
             it.copy(
                 groupDetail = it.groupDetail.copy(
                     recentOpenSessions = it.groupDetail.recentOpenSessions.sortedBy { it.dueDays },
-                    recentBalanceEntries = it.groupDetail.recentBalanceEntries.sortedByDescending { it.recordedAt },
+                    recentBalanceEntries = it.groupDetail.recentBalanceEntries.sortedWith(
+                        compareByDescending<BalanceEntry> { it.recordedAt.truncatedTo(ChronoUnit.DAYS) }
+                            .thenBy { it.name }),
                 )
             )
         )
